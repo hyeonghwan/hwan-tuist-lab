@@ -11,7 +11,7 @@ typealias City = CityInfo.City
 extension Array where Element == City {
     func searchPrefix(_ text: String) -> Self {
         self.filter {
-            $0.name.hasPrefix(text) || $0.enName.lowercased().hasPrefix(text)
+            $0.searchKeyword(text)
         }
     }
 }
@@ -20,14 +20,20 @@ struct CityInfo {
     struct City {
         let name: String
         let enName: String
-        let explain: String
+        let explain: [String]
         let image: String
         let domesticTravel: Bool
+        
+        func searchKeyword(_ text: String) -> Bool {
+            self.name.hasPrefix(text) ||
+            self.enName.lowercased().hasPrefix(text) ||
+            self.explain.filter { $0.hasPrefix(text) }.count >= 1
+        }
         
         init(city_name: String, city_english_name: String, city_explain: String, city_image: String, domestic_travel: Bool) {
             self.name = city_name
             self.enName = city_english_name
-            self.explain = city_explain
+            self.explain = city_explain.split(separator: ", ").map { String($0) }
             self.image = city_image
             self.domesticTravel = domestic_travel
         }
