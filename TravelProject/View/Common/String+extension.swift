@@ -17,21 +17,17 @@ extension String {
     }
     
     func highlightKeyword(
-        _ keyword: String?,
-        foregroundColor: UIColor = .white,
-        backgroundColor: UIColor = .systemIndigo.withAlphaComponent(0.6)
+        _ keyword: String,
+        foregroundColor: UIColor = .label,
+        backgroundColor: UIColor = .systemYellow.withAlphaComponent(0.4)
     ) -> NSAttributedString
     {
         let attributed = NSMutableAttributedString(string: self)
-        
-        guard let keyword else {
-            return attributed
-        }
 
         let nsText = self.lowercased() as NSString
-        let searchRange = NSRange(location: 0, length: nsText.length)
+        var searchRange = NSRange(location: 0, length: nsText.length)
 
-        if let foundRange = nsText.range(of: keyword, options: [], range: searchRange).nonEmpty {
+        while let foundRange = nsText.range(of: keyword, options: [], range: searchRange).nonEmpty {
             attributed.addAttributes(
                 [
                     .foregroundColor: foregroundColor,
@@ -39,6 +35,8 @@ extension String {
                 ],
                 range: foundRange
             )
+            let nextLocation: Int = foundRange.location + foundRange.length
+            searchRange = NSRange(location: nextLocation, length: nsText.length - nextLocation)
         }
         return attributed
     }

@@ -72,9 +72,9 @@ final class CityCell: UITableViewCell, CellIdentifialble {
         }
     }
     
-    func set(info: City, prefix: String?) {
+    func set(info: City, contains: String?) {
         load(image: info.image)
-        labelSetting(info: info, prefix: prefix)
+        labelSetting(info: info, contains: contains)
     }
     
     private func load(image: String) {
@@ -101,28 +101,28 @@ final class CityCell: UITableViewCell, CellIdentifialble {
         }
     }
     
-    private func labelSetting(info: City, prefix: String?) {
-        self.cityNameLabel.attributedText = makeCityName(info: info, prefix: prefix)
-        self.cityListlabel.attributedText = makeCityList(info: info, prefix: prefix)
+    private func labelSetting(info: City, contains: String?) {
+        self.cityNameLabel.attributedText = makeCityName(info: info, contains: contains)
+        self.cityListlabel.attributedText = makeCityList(info: info, contains: contains)
     }
 
-    private func makeCityName(info: City, prefix: String?) -> NSAttributedString {
-        if let prefix {
+    private func makeCityName(info: City, contains: String?) -> NSAttributedString {
+        if let contains {
             let nameText = NSMutableAttributedString()
-            nameText.append(info.name.highlightKeyword(prefix))
+            nameText.append(info.name.highlightKeyword(contains))
             nameText.append(NSAttributedString(string: " | "))
-            nameText.append(info.enName.highlightKeyword(prefix))
+            nameText.append(info.enName.highlightKeyword(contains))
             return nameText
         } else {
             return NSAttributedString(string: "\(info.name) | \(info.enName)")
         }
     }
 
-    private func makeCityList(info: City, prefix: String?) -> NSAttributedString {
-        if let prefix {
+    private func makeCityList(info: City, contains: String?) -> NSAttributedString {
+        if let contains {
             let listText = NSMutableAttributedString()
             for (index, text) in info.explain.enumerated() {
-                listText.append(text.highlightKeyword(prefix))
+                listText.append(text.highlightKeyword(contains))
                 if index != info.explain.count - 1 {
                     listText.append(.separator)
                 }

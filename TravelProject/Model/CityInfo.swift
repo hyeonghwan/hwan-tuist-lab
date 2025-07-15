@@ -25,9 +25,9 @@ struct CityInfo {
         let domesticTravel: Bool
         
         func searchKeyword(_ text: String) -> Bool {
-            self.name.hasPrefix(text) ||
-            self.enName.lowercased().hasPrefix(text) ||
-            self.explain.filter { $0.hasPrefix(text) }.count >= 1
+            self.name.contains(text) ||
+            self.enName.lowercased().contains(text) ||
+            self.explain.filter { $0.contains(text) }.count >= 1
         }
         
         init(city_name: String, city_english_name: String, city_explain: String, city_image: String, domestic_travel: Bool) {

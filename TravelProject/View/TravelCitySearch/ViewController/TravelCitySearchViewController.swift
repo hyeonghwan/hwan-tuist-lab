@@ -13,7 +13,7 @@ final class TravelCitySearchViewController: UIViewController {
     private weak var header: CitySearchHeaderView?
     @IBOutlet weak var tableView: UITableView!
     private var cityList: [City] = CityInfo.city
-    private lazy var filteredCityList: [ViewModel] = cityList.map { ViewModel(city: $0, prefix: nil)} {
+    private lazy var filteredCityList: [ViewModel] = cityList.map { ViewModel(city: $0, contains: nil)} {
         didSet {
             tableView.reloadData()
         }
@@ -27,7 +27,7 @@ final class TravelCitySearchViewController: UIViewController {
     
     struct ViewModel {
         let city: City
-        let prefix: String?
+        let contains: String?
     }
     
     override func viewDidLoad() {
@@ -53,7 +53,7 @@ final class TravelCitySearchViewController: UIViewController {
                     guard let self else { return }
                     let filterCity = self.filterUsingSelected(index: query.index)
                     let resultList = query.text.isEmpty ? filterCity : filterCity.searchPrefix(query.text)
-                    self.filteredCityList = resultList.map { ViewModel(city: $0, prefix: query.text) }
+                    self.filteredCityList = resultList.map { ViewModel(city: $0, contains: query.text) }
                 }
         }
     }
@@ -84,7 +84,7 @@ final class TravelCitySearchViewController: UIViewController {
         self.view.endEditing(true)
         self.header?.searchField.text = ""
         let city = filterUsingSelected(index: header?.segmentedControl.selectedSegmentIndex ?? 0)
-        filteredCityList = city.map { ViewModel(city: $0, prefix: nil) }
+        filteredCityList = city.map { ViewModel(city: $0, contains: nil) }
     }
     
     private func mapToTextAndIndex(_ text: String?) -> Query? {
@@ -117,6 +117,11 @@ extension TravelCitySearchViewController: UITextFieldDelegate {
 }
 
 extension TravelCitySearchViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        view.endEditing(true)
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
     }
@@ -135,7 +140,7 @@ extension TravelCitySearchViewController: UITableViewDelegate, UITableViewDataSo
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CityCell.id, for: indexPath) as? CityCell else {
             return UITableViewCell()
         }
-        cell.set(info: viewModel.city, prefix: viewModel.prefix)
+        cell.set(info: viewModel.city, contains: viewModel.contains)
         cell.selectionStyle = .none
         return cell
     }
