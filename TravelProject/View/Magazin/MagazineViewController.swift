@@ -22,6 +22,10 @@ final class MagazineViewController: UIViewController {
             forCellReuseIdentifier: MagazineCell.id
         )
     }
+    
+    override func didReceiveMemoryWarning() {
+        print("\(Self.self), \(#function)")
+    }
 }
 
 extension MagazineViewController: UITableViewDelegate, UITableViewDataSource {

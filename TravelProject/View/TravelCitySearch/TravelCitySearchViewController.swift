@@ -8,6 +8,26 @@
 import UIKit
 import Combine
 
+// 여행 국가 탐색 화면 만들기 (옵션이지만, 해보시길권장드립니다)
+// 여행 프로젝트에서,새로운 탭바를 추가하여 CityInfo.swift 를 활용해 여행 국가 탐색 화면을 구성해봅니다.
+// 세그먼트컨트롤과 텍스트필드를 통해 데이터를 필터해보는게 더 중요하기 때문에, 시간이 충분하지 않다면 XIB Cell
+// Design 은 레이블 만 얹어서 구성해보셔도 됩니다!
+// - 구조체는 제공된 데이터를 유추해서, 직접 생성해보세요
+// - city_name, city_english_name, city_explain, city_image 4가지 정보를 활용해주세요.
+// - city_image는 Kingfisher 라이브러리를 활용합니다.
+// 1. UITableViewController + XIB Cell 로 구성하기
+// 2. CityInfo.swift 데이터를 활용해 테이블뷰에 데이터 표현하기
+// 3. UITableView HeaderView에 UISegmentedControl 를 추가해, 세그먼트
+// 선택에 따라 해당하는 도시 정보만 테이블뷰에 보여주기 (domestic_travel 활
+// 용)
+// 4. UISegmentedControl 상단에 UITextField 를 추가해
+//      1) 엔터키 클릭 시 검색 2) 실시간 검색 기능을 구현하기
+//- 만약 세그먼트를 국내로 설정하고 텍스트필드에서 검색하는 경우, 국내에 해당하는 데이터 중에서 검색 기능을 구현해보세요.
+//- city_name, city_english_name, city_explain 에서 하나라도 검색 키워드가 포함되어 있다면 검색 결과로 보여줍니다.
+//- (옵션) 대소문자 구분없이 검색 하기
+//- (옵션) 서치바에서 공백을 입력한 경우, whitespace 처리하기
+//- (옵션) 검색 키워드에 해당하는 글자에 텍스트 컬러 일부 변경해보기
+
 final class TravelCitySearchViewController: UIViewController {
     private weak var header: CitySearchHeaderView?
     @IBOutlet weak var tableView: UITableView!
@@ -32,10 +52,16 @@ final class TravelCitySearchViewController: UIViewController {
             action: #selector(segmentedValueChanged(_:)),
             for: .valueChanged
         )
-        
         searchFieldSubscribe()
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: {
+            UIControl().sendAction(Selector(("_performMemoryWarning")), to: UIApplication.shared, for: nil)
+        })
     }
+    
+    override func didReceiveMemoryWarning() {
+        print("\(Self.self), \(#function)")
+    }
+    
     private func searchFieldSubscribe() {
         if let header {
             header.searchField.delegate = self
