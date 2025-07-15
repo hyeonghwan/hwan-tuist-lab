@@ -20,6 +20,11 @@ final class TravelCitySearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableViewSetting()
+        header?.segmentedControl.addTarget(
+            self,
+            action: #selector(segmentedValueChanged(_:)),
+            for: .valueChanged
+        )
         
         searchFieldSubscribe()
         
@@ -48,6 +53,24 @@ final class TravelCitySearchViewController: UIViewController {
         view.endEditing(true)
     }
     
+    @objc private func segmentedValueChanged(_ sender: UISegmentedControl) {
+        self.view.endEditing(true)
+        self.header?.searchField.text = ""
+        filteredCityList = filterUsingSelected(index: header?.segmentedControl.selectedSegmentIndex ?? 0)
+    }
+    private func filterUsingSelected(index: Int) -> [City] {
+        return switch index {
+        case 0:
+            cityList
+        case 1:
+            cityList.filter(\.domesticTravel)
+        case 2:
+            cityList.filter { !$0.domesticTravel }
+        default:
+            []
+        }
+    }
+}
 
 extension TravelCitySearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
