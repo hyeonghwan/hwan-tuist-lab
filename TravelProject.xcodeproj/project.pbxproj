@@ -45,6 +45,7 @@
 		17F79F952E26AB4900A72E19 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F79F912E26AB4900A72E19 /* RatingView.swift */; };
 		17F79F962E26AB4900A72E19 /* TravelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F79F932E26AB4900A72E19 /* TravelCell.swift */; };
 		17F79F972E26AB4900A72E19 /* StarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F79F922E26AB4900A72E19 /* StarView.swift */; };
+		17F79F992E26BD0A00A72E19 /* EmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F79F982E26BD0A00A72E19 /* EmptyCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,6 +88,7 @@
 		17F79F912E26AB4900A72E19 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		17F79F922E26AB4900A72E19 /* StarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarView.swift; sourceTree = "<group>"; };
 		17F79F932E26AB4900A72E19 /* TravelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelCell.swift; sourceTree = "<group>"; };
+		17F79F982E26BD0A00A72E19 /* EmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,6 +250,7 @@
 			children = (
 				17F79F7E2E26AA8900A72E19 /* CityCell.swift */,
 				17F79F7F2E26AA8900A72E19 /* CitySearchHeaderView.swift */,
+				17F79F982E26BD0A00A72E19 /* EmptyCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -399,6 +402,7 @@
 				17F79F942E26AB4900A72E19 /* AdCell.swift in Sources */,
 				17F79F952E26AB4900A72E19 /* RatingView.swift in Sources */,
 				17F79F962E26AB4900A72E19 /* TravelCell.swift in Sources */,
+				17F79F992E26BD0A00A72E19 /* EmptyCell.swift in Sources */,
 				17F79F972E26AB4900A72E19 /* StarView.swift in Sources */,
 				17B7AC062E23B38A009F1F25 /* SceneDelegate.swift in Sources */,
 				17F79F802E26AA8900A72E19 /* CitySearchHeaderView.swift in Sources */,

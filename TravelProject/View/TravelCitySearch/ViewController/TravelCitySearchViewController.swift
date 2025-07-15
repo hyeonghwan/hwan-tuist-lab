@@ -8,7 +8,6 @@
 import UIKit
 import Combine
 
-// - (옵션) 검색 키워드에 해당하는 글자에 텍스트 컬러 일부 변경해보기
 final class TravelCitySearchViewController: UIViewController {
     private weak var header: CitySearchHeaderView?
     @IBOutlet weak var tableView: UITableView!
@@ -18,7 +17,12 @@ final class TravelCitySearchViewController: UIViewController {
             tableView.reloadData()
         }
     }
+    private lazy var emptyContent: Bool = false
     private var subscription: AnyCancellable?
+    
+    var searchText: String {
+        self.header?.searchField.text ?? ""
+    }
     
     private struct Query {
         var index: Int
@@ -45,7 +49,7 @@ final class TravelCitySearchViewController: UIViewController {
         if let header {
             header.searchField.delegate = self
             subscription = header.searchField.editingChanged
-                .debounce(for: 0.5, scheduler: RunLoop.main)
+                .debounce(for: 0.3, scheduler: RunLoop.main)
                 .compactMap { [weak self] text in
                     self?.mapToTextAndIndex(text)
                 }
@@ -73,6 +77,11 @@ final class TravelCitySearchViewController: UIViewController {
         tableView.register(
             UINib(nibName: CityCell.id, bundle: nil),
             forCellReuseIdentifier: CityCell.id
+        )
+        
+        tableView.register(
+            EmptyCell.self,
+            forCellReuseIdentifier: EmptyCell.id
         )
     }
     
@@ -131,10 +140,24 @@ extension TravelCitySearchViewController: UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        filteredCityList.count
+        if filteredCityList.count == 0 {
+            emptyContent = true
+            return 1
+        } else {
+            emptyContent = false
+            return filteredCityList.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if emptyContent {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: EmptyCell.id, for: indexPath) as? EmptyCell else {
+                return UITableViewCell()
+            }
+            cell.set(keyword: searchText)
+            return cell
+        }
+        
         let viewModel = filteredCityList[indexPath.row]
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CityCell.id, for: indexPath) as? CityCell else {
