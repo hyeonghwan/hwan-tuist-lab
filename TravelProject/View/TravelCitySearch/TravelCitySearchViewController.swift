@@ -30,6 +30,7 @@ final class TravelCitySearchViewController: UIViewController {
         
     }
     private func searchFieldSubscribe() {
+            header.searchField.delegate = self
     }
     private func tableViewSetting() {
         tableView.rowHeight = UITableView.automaticDimension
@@ -69,6 +70,13 @@ final class TravelCitySearchViewController: UIViewController {
         default:
             []
         }
+    }
+}
+
+extension TravelCitySearchViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.endEditing(true)
+        return true
     }
 }
 
