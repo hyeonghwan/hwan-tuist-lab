@@ -25,7 +25,29 @@ final class TravelViewController: UIViewController {
 
 extension TravelViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: false)
+        // tableView.deselectRow(at: indexPath, animated: false)
+        // - [도시 상세 정보 화면] 에서 관광지셀을 선택하면 push 로 전환되는 화면입니다.
+        // - [다른 관광지 보러 가기] 를 선택하면 pop 이 됩니다.
+        let model = travelInfo[indexPath.row]
+        
+        if let isAd = model.ad, isAd {
+            guard let vc = storyboard?.instantiateViewController(
+                withIdentifier: AdViewController.id
+            ) as? AdViewController else {
+                return
+            }
+            vc.adText = model.title
+            vc.modalPresentationStyle = .fullScreen
+            present(vc, animated: true)
+        } else {
+            guard let vc = storyboard?.instantiateViewController(
+                withIdentifier: TouristAttractionViewController.id
+            ) as? TouristAttractionViewController else {
+                return
+            }
+            vc.info = model
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
