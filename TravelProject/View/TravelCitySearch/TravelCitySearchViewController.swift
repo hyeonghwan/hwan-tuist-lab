@@ -16,6 +16,12 @@ final class TravelCitySearchViewController: UIViewController {
             tableView.reloadData()
         }
     }
+    private var subscription: AnyCancellable?
+    
+    private struct Query {
+        var index: Int
+        var text: String
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,8 +36,21 @@ final class TravelCitySearchViewController: UIViewController {
         
     }
     private func searchFieldSubscribe() {
+        if let header {
             header.searchField.delegate = self
+            subscription = header.searchField.editingChanged
+                .debounce(for: 0.5, scheduler: RunLoop.main)
+                .compactMap { [weak self] text in
+                    self?.mapToTextAndIndex(text)
+                }
+                .sink { [weak self] query in
+                    guard let self else { return }
+                    let filterCity = self.filterUsingSelected(index: query.index)
+                    self.filteredCityList = query.text.isEmpty ? filterCity : filterCity.searchPrefix(query.text)
+                }
+        }
     }
+    
     private func tableViewSetting() {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 180
@@ -59,6 +78,15 @@ final class TravelCitySearchViewController: UIViewController {
         self.header?.searchField.text = ""
         filteredCityList = filterUsingSelected(index: header?.segmentedControl.selectedSegmentIndex ?? 0)
     }
+    
+    private func mapToTextAndIndex(_ text: String?) -> Query? {
+        guard let loweredText = text?.lowercased().removeSpace() else {
+            return nil
+        }
+        let index = header?.segmentedControl.selectedSegmentIndex ?? 0
+        return Query(index: index, text: loweredText)
+    }
+    
     private func filterUsingSelected(index: Int) -> [City] {
         return switch index {
         case 0:
