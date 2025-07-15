@@ -13,4 +13,8 @@ final class TravelCitySearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    @IBAction func keyboardDismiss(_ sender: Any) {
+        view.endEditing(true)
+    }
+    
 }

@@ -237,6 +237,9 @@
                             <constraint firstItem="oHl-Td-0VT" firstAttribute="trailing" secondItem="qW6-4x-RtY" secondAttribute="trailing" id="cMG-Mp-gf2"/>
                             <constraint firstItem="qW6-4x-RtY" firstAttribute="bottom" secondItem="oHl-Td-0VT" secondAttribute="bottom" id="hre-qM-lcp"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="vKs-pZ-Frf" appends="YES" id="DHT-jo-esc"/>
+                        </connections>
                     </view>
                     <tabBarItem key="tabBarItem" title="Search" image="magnifyingglass" catalog="system" id="ZXK-yn-SL4"/>
                     <navigationItem key="navigationItem" title="인기 도서" id="bhh-Gh-mlN"/>
@@ -245,6 +248,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="59r-QB-qwM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="vKs-pZ-Frf">
+                    <connections>
+                        <action selector="keyboardDismiss:" destination="MMF-ch-cIr" id="W4Z-qW-R1J"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-616" y="2312"/>
         </scene>
