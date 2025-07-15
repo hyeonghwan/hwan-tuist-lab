@@ -72,7 +72,7 @@ final class CityCell: UITableViewCell, CellIdentifialble {
         }
     }
     
-    func set(info: City) {
+    func set(info: City, prefix: String?) {
         if let url = URL(string: info.image) {
             cityImageView.kf.indicatorType = .activity
             cityImageView.kf.setImage(

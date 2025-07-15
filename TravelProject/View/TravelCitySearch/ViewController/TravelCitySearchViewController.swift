@@ -13,7 +13,7 @@ final class TravelCitySearchViewController: UIViewController {
     private weak var header: CitySearchHeaderView?
     @IBOutlet weak var tableView: UITableView!
     private var cityList: [City] = CityInfo.city
-    private lazy var filteredCityList: [City] = cityList {
+    private lazy var filteredCityList: [ViewModel] = cityList.map { ViewModel(city: $0, prefix: nil)} {
         didSet {
             tableView.reloadData()
         }
@@ -23,6 +23,11 @@ final class TravelCitySearchViewController: UIViewController {
     private struct Query {
         var index: Int
         var text: String
+    }
+    
+    struct ViewModel {
+        let city: City
+        let prefix: String?
     }
     
     override func viewDidLoad() {
@@ -47,7 +52,8 @@ final class TravelCitySearchViewController: UIViewController {
                 .sink { [weak self] query in
                     guard let self else { return }
                     let filterCity = self.filterUsingSelected(index: query.index)
-                    self.filteredCityList = query.text.isEmpty ? filterCity : filterCity.searchPrefix(query.text)
+                    let resultList = query.text.isEmpty ? filterCity : filterCity.searchPrefix(query.text)
+                    self.filteredCityList = resultList.map { ViewModel(city: $0, prefix: query.text) }
                 }
         }
     }
@@ -77,7 +83,8 @@ final class TravelCitySearchViewController: UIViewController {
     @objc private func segmentedValueChanged(_ sender: UISegmentedControl) {
         self.view.endEditing(true)
         self.header?.searchField.text = ""
-        filteredCityList = filterUsingSelected(index: header?.segmentedControl.selectedSegmentIndex ?? 0)
+        let city = filterUsingSelected(index: header?.segmentedControl.selectedSegmentIndex ?? 0)
+        filteredCityList = city.map { ViewModel(city: $0, prefix: nil) }
     }
     
     private func mapToTextAndIndex(_ text: String?) -> Query? {
@@ -123,12 +130,12 @@ extension TravelCitySearchViewController: UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let model = filteredCityList[indexPath.row]
+        let viewModel = filteredCityList[indexPath.row]
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CityCell.id, for: indexPath) as? CityCell else {
             return UITableViewCell()
         }
-        cell.set(info: model)
+        cell.set(info: viewModel.city, prefix: viewModel.prefix)
         cell.selectionStyle = .none
         return cell
     }
