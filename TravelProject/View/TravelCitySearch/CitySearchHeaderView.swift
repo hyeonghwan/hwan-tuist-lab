@@ -14,11 +14,13 @@ final class CitySearchHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.loadXib()
+        searchField.addLeftPadding()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         self.loadXib()
+        searchField.addLeftPadding()
     }
 }
 
@@ -29,5 +31,13 @@ extension UIView {
         guard let customView = nibs?.first as? UIView else { return }
         customView.frame = self.bounds
         self.addSubview(customView)
+    }
+}
+
+fileprivate extension UITextField {
+    func addLeftPadding() {
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: self.frame.height))
+        self.leftView = paddingView
+        self.leftViewMode = ViewMode.always
     }
 }
