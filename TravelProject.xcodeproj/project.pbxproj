@@ -35,6 +35,7 @@
 		17BBA2EA2E2411370062A41C /* AddPurchasedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BBA2E92E2411370062A41C /* AddPurchasedCell.swift */; };
 		17BBA2EC2E24113C0062A41C /* ShoppingListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BBA2EB2E24113C0062A41C /* ShoppingListCell.swift */; };
 		17BBA2EE2E2412570062A41C /* ImageGen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BBA2ED2E2412570062A41C /* ImageGen.swift */; };
+		17F79F4C2E262B8B00A72E19 /* CityInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F79F4B2E262B8B00A72E19 /* CityInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,7 @@
 		17BBA2E92E2411370062A41C /* AddPurchasedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPurchasedCell.swift; sourceTree = "<group>"; };
 		17BBA2EB2E24113C0062A41C /* ShoppingListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListCell.swift; sourceTree = "<group>"; };
 		17BBA2ED2E2412570062A41C /* ImageGen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGen.swift; sourceTree = "<group>"; };
+		17F79F4B2E262B8B00A72E19 /* CityInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +141,7 @@
 			children = (
 				17B7AC1D2E23B4BA009F1F25 /* MagazinInfo.swift */,
 				17B7AC2F2E23C172009F1F25 /* TravelInfo.swift */,
+				17F79F4B2E262B8B00A72E19 /* CityInfo.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -291,6 +294,7 @@
 				17B7AC392E23C7E6009F1F25 /* TravelCell.swift in Sources */,
 				17BBA2E02E240D3F0062A41C /* DigitFormatter.swift in Sources */,
 				17B7AC082E23B38A009F1F25 /* MagazineViewController.swift in Sources */,
+				17F79F4C2E262B8B00A72E19 /* CityInfo.swift in Sources */,
 				17B7AC3B2E23D935009F1F25 /* RatingView.swift in Sources */,
 				17BBA2EA2E2411370062A41C /* AddPurchasedCell.swift in Sources */,
 				17B7AC042E23B38A009F1F25 /* AppDelegate.swift in Sources */,
