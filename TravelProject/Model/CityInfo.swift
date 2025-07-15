@@ -6,7 +6,25 @@
 
 import Foundation
  
+typealias City = CityInfo.City
+
 struct CityInfo {
+    struct City {
+        let name: String
+        let enName: String
+        let explain: String
+        let image: String
+        let domesticTravel: Bool
+        
+        init(city_name: String, city_english_name: String, city_explain: String, city_image: String, domestic_travel: Bool) {
+            self.name = city_name
+            self.enName = city_english_name
+            self.explain = city_explain
+            self.image = city_image
+            self.domesticTravel = domestic_travel
+        }
+    }
+    
     let city: [City] = [
         City(city_name: "방콕", city_english_name: "Bangkok", city_explain: "방콕, 파타야, 후아힌, 코사멧, 코사무이", city_image: "https://images.unsplash.com/photo-1716872491897-078d9b89be49?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", domestic_travel: false),
         City(city_name: "오사카", city_english_name: "Osaka", city_explain: "오사카, 교토, 고베, 나라", city_image: "https://images.unsplash.com/photo-1716881768763-4088391a445e?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", domestic_travel: false),
