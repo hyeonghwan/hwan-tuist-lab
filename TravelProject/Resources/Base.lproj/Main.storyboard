@@ -216,7 +216,7 @@
             </objects>
             <point key="canvasLocation" x="-1448" y="2304"/>
         </scene>
-        <!--인기 도서-->
+        <!--인기 도시-->
         <scene sceneID="fD4-aV-foO">
             <objects>
                 <viewController storyboardIdentifier="TravelCitySearchViewController" id="MMF-ch-cIr" customClass="TravelCitySearchViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
@@ -242,7 +242,7 @@
                         </connections>
                     </view>
                     <tabBarItem key="tabBarItem" title="Search" image="magnifyingglass" catalog="system" id="ZXK-yn-SL4"/>
-                    <navigationItem key="navigationItem" title="인기 도서" id="bhh-Gh-mlN"/>
+                    <navigationItem key="navigationItem" title="인기 도시" id="bhh-Gh-mlN"/>
                     <connections>
                         <outlet property="tableView" destination="qW6-4x-RtY" id="GP5-0I-0tM"/>
                     </connections>

@@ -27,7 +27,7 @@
                         <segment title="해외"/>
                     </segments>
                 </segmentedControl>
-                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="국가를 입력해주세요" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7BJ-xQ-nLG">
+                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="찾으실 내용을 입력해주세요" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7BJ-xQ-nLG">
                     <rect key="frame" x="16" y="59" width="364" height="44"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="tfU-MJ-KaT"/>
