@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 final class TravelCitySearchViewController: UIViewController {
     private weak var header: CitySearchHeaderView?
