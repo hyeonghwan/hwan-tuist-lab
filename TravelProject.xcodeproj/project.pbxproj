@@ -40,11 +40,9 @@
 		17F79F502E2632D000A72E19 /* AdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F79F4F2E2632D000A72E19 /* AdViewController.swift */; };
 		17F79F562E2636B700A72E19 /* TravelCitySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F79F542E2636B700A72E19 /* TravelCitySearchViewController.swift */; };
 		17F79F582E2637D900A72E19 /* CitySearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F79F572E2637D900A72E19 /* CitySearchHeaderView.swift */; };
-		17F79F5A2E2637E200A72E19 /* SearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F79F592E2637E200A72E19 /* SearchField.swift */; };
 		17F79F5E2E263B9500A72E19 /* CitySearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 17F79F5D2E263B9500A72E19 /* CitySearchHeaderView.xib */; };
 		17F79F602E263E9800A72E19 /* CityCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 17F79F5F2E263E9800A72E19 /* CityCell.xib */; };
 		17F79F622E26404600A72E19 /* CityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F79F612E26404600A72E19 /* CityCell.swift */; };
-		17F79F642E2656B200A72E19 /* CALayer+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F79F632E2656B200A72E19 /* CALayer+extension.swift */; };
 		17F79F662E26728B00A72E19 /* UIControl+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F79F652E26728B00A72E19 /* UIControl+extension.swift */; };
 		17F79F682E267BCE00A72E19 /* String+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F79F672E267BCE00A72E19 /* String+extension.swift */; };
 /* End PBXBuildFile section */
@@ -84,11 +82,9 @@
 		17F79F4F2E2632D000A72E19 /* AdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdViewController.swift; sourceTree = "<group>"; };
 		17F79F542E2636B700A72E19 /* TravelCitySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelCitySearchViewController.swift; sourceTree = "<group>"; };
 		17F79F572E2637D900A72E19 /* CitySearchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitySearchHeaderView.swift; sourceTree = "<group>"; };
-		17F79F592E2637E200A72E19 /* SearchField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchField.swift; sourceTree = "<group>"; };
 		17F79F5D2E263B9500A72E19 /* CitySearchHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CitySearchHeaderView.xib; sourceTree = "<group>"; };
 		17F79F5F2E263E9800A72E19 /* CityCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CityCell.xib; sourceTree = "<group>"; };
 		17F79F612E26404600A72E19 /* CityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityCell.swift; sourceTree = "<group>"; };
-		17F79F632E2656B200A72E19 /* CALayer+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+extension.swift"; sourceTree = "<group>"; };
 		17F79F652E26728B00A72E19 /* UIControl+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+extension.swift"; sourceTree = "<group>"; };
 		17F79F672E267BCE00A72E19 /* String+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -242,8 +238,6 @@
 				17F79F672E267BCE00A72E19 /* String+extension.swift */,
 				17F79F572E2637D900A72E19 /* CitySearchHeaderView.swift */,
 				17F79F612E26404600A72E19 /* CityCell.swift */,
-				17F79F632E2656B200A72E19 /* CALayer+extension.swift */,
-				17F79F592E2637E200A72E19 /* SearchField.swift */,
 			);
 			path = TravelCitySearch;
 			sourceTree = "<group>";
@@ -338,14 +332,12 @@
 				17BBA2E02E240D3F0062A41C /* DigitFormatter.swift in Sources */,
 				17B7AC082E23B38A009F1F25 /* MagazineViewController.swift in Sources */,
 				17F79F502E2632D000A72E19 /* AdViewController.swift in Sources */,
-				17F79F5A2E2637E200A72E19 /* SearchField.swift in Sources */,
 				17F79F662E26728B00A72E19 /* UIControl+extension.swift in Sources */,
 				17F79F4C2E262B8B00A72E19 /* CityInfo.swift in Sources */,
 				17F79F582E2637D900A72E19 /* CitySearchHeaderView.swift in Sources */,
 				17F79F682E267BCE00A72E19 /* String+extension.swift in Sources */,
 				17B7AC3B2E23D935009F1F25 /* RatingView.swift in Sources */,
 				17BBA2EA2E2411370062A41C /* AddPurchasedCell.swift in Sources */,
-				17F79F642E2656B200A72E19 /* CALayer+extension.swift in Sources */,
 				17B7AC042E23B38A009F1F25 /* AppDelegate.swift in Sources */,
 				17B7AC212E23B53D009F1F25 /* DateFommater.swift in Sources */,
 				17BBA2EC2E24113C0062A41C /* ShoppingListCell.swift in Sources */,
