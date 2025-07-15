@@ -73,7 +73,12 @@ final class CityCell: UITableViewCell, CellIdentifialble {
     }
     
     func set(info: City, prefix: String?) {
-        if let url = URL(string: info.image) {
+        load(image: info.image)
+        labelSetting(info: info, prefix: prefix)
+    }
+    
+    private func load(image: String) {
+        if let url = URL(string: image) {
             cityImageView.kf.indicatorType = .activity
             cityImageView.kf.setImage(
                 with: url,
@@ -94,7 +99,37 @@ final class CityCell: UITableViewCell, CellIdentifialble {
                     renderingMode: .alwaysOriginal
                 )
         }
-        self.cityNameLabel.text = "\(info.name) | \(info.enName)"
-        self.cityListlabel.text = info.explain
+    }
+    
+    private func labelSetting(info: City, prefix: String?) {
+        self.cityNameLabel.attributedText = makeCityName(info: info, prefix: prefix)
+        self.cityListlabel.attributedText = makeCityList(info: info, prefix: prefix)
+    }
+
+    private func makeCityName(info: City, prefix: String?) -> NSAttributedString {
+        if let prefix {
+            let nameText = NSMutableAttributedString()
+            nameText.append(info.name.highlightKeyword(prefix))
+            nameText.append(NSAttributedString(string: " | "))
+            nameText.append(info.enName.highlightKeyword(prefix))
+            return nameText
+        } else {
+            return NSAttributedString(string: "\(info.name) | \(info.enName)")
+        }
+    }
+
+    private func makeCityList(info: City, prefix: String?) -> NSAttributedString {
+        if let prefix {
+            let listText = NSMutableAttributedString()
+            for (index, text) in info.explain.enumerated() {
+                listText.append(text.highlightKeyword(prefix))
+                if index != info.explain.count - 1 {
+                    listText.append(.separator)
+                }
+            }
+            return listText
+        } else {
+            return NSAttributedString(string: info.explain.joined(separator: ", "))
+        }
     }
 }
