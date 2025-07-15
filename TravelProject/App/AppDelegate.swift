@@ -14,13 +14,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // KingfisherManager.shared.cache.clearMemoryCache()
-        // KingfisherManager.shared.cache.clearDiskCache()
         return true
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
-        print("\(Self.self), \(#function)")
         KingfisherManager.shared.cache.clearMemoryCache()
     }
 

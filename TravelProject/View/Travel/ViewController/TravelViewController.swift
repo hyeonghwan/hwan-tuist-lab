@@ -21,10 +21,6 @@ final class TravelViewController: UIViewController {
             forCellReuseIdentifier: AdCell.id
         )
     }
-    
-    override func didReceiveMemoryWarning() {
-        print("\(Self.self), \(#function)")
-    }
 }
 
 extension TravelViewController: UITableViewDelegate, UITableViewDataSource {
