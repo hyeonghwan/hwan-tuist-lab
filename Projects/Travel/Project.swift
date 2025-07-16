@@ -1,5 +1,6 @@
-import ProjectDescription
-import TuistPlugin
+git @preconcurrency import ProjectDescription
+@preconcurrency import ProjectDescriptionHelpers
+@preconcurrency import TuistPlugin
 
 let project = ProjectFactory.createApp(
     name: "Travel",
@@ -13,7 +14,7 @@ let project = ProjectFactory.createApp(
         defaultSettings: .init()
     ),
     dependencies: [
-        .external(name: "Kingfisher")
+        .SPM.kingfisher
     ],
-    infoPlist: .default
+    infoPlist: .storyBoardDefault
 )
