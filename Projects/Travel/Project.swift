@@ -1,4 +1,4 @@
-git @preconcurrency import ProjectDescription
+@preconcurrency import ProjectDescription
 @preconcurrency import ProjectDescriptionHelpers
 @preconcurrency import TuistPlugin
 
@@ -14,7 +14,10 @@ let project = ProjectFactory.createApp(
         defaultSettings: .init()
     ),
     dependencies: [
-        .SPM.kingfisher
+        .package(product: "Kingfisher", type: .runtime, condition: nil)
+    ],
+    packages: [
+        .remote(url: "https://github.com/onevcat/Kingfisher", requirement: .upToNextMajor(from: Version(8, 4, 0)))
     ],
     infoPlist: .storyBoardDefault
 )
