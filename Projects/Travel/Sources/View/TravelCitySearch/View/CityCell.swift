@@ -105,7 +105,7 @@ final class CityCell: UITableViewCell, CellIdentifialble {
         self.cityNameLabel.attributedText = makeCityName(info: info, contains: contains)
         self.cityListlabel.attributedText = makeCityList(info: info, contains: contains)
     }
-
+    
     private func makeCityName(info: City, contains: String?) -> NSAttributedString {
         if let contains {
             let nameText = NSMutableAttributedString()
@@ -117,7 +117,7 @@ final class CityCell: UITableViewCell, CellIdentifialble {
             return NSAttributedString(string: "\(info.name) | \(info.enName)")
         }
     }
-
+    
     private func makeCityList(info: City, contains: String?) -> NSAttributedString {
         if let contains {
             let listText = NSMutableAttributedString()
