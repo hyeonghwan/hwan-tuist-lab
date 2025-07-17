@@ -12,7 +12,7 @@
         <!--도시 상세 정보-->
         <scene sceneID="J6s-wU-lRh">
             <objects>
-                <viewController id="0F6-7o-hHG" customClass="TravelViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="0F6-7o-hHG" customClass="TravelViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VjF-BO-TLt">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -44,7 +44,7 @@
         <!--Tourist Attraction View Controller-->
         <scene sceneID="s5N-6x-9pj">
             <objects>
-                <viewController storyboardIdentifier="TouristAttractionViewController" id="Q7K-nD-RCe" customClass="TouristAttractionViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TouristAttractionViewController" id="Q7K-nD-RCe" customClass="TouristAttractionViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nj3-el-6eP">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -113,7 +113,7 @@
         <!--Ad View Controller-->
         <scene sceneID="SRg-Nh-VWV">
             <objects>
-                <viewController storyboardIdentifier="AdViewController" id="2rS-mE-ffz" customClass="AdViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AdViewController" id="2rS-mE-ffz" customClass="AdViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ogx-Ml-edv">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -219,7 +219,7 @@
         <!--인기 도시-->
         <scene sceneID="fD4-aV-foO">
             <objects>
-                <viewController storyboardIdentifier="TravelCitySearchViewController" id="MMF-ch-cIr" customClass="TravelCitySearchViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TravelCitySearchViewController" id="MMF-ch-cIr" customClass="TravelCitySearchViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BD1-zP-vaz">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -255,6 +255,14 @@
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-616" y="2312"/>
+        </scene>
+        <!--CityDetailViewController-->
+        <scene sceneID="LXa-zQ-ucO">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="CityDetailViewController" storyboardName="CityDetail" referencedIdentifier="CityDetailViewController" id="XAn-Nv-Qch" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="N4u-wu-nni" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="142" y="2149"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="oTx-GI-0z1">
@@ -298,7 +306,7 @@
         <!--SeSAC TREVEL-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="MagazineViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MagazineViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -331,7 +339,7 @@
         <!--game-->
         <scene sceneID="foQ-ae-jTU">
             <objects>
-                <viewController id="rAi-Lv-t2g" customClass="ThreeSixNineViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="rAi-Lv-t2g" customClass="ThreeSixNineViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JNQ-Z0-Q5v">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -414,7 +422,7 @@
         <!--쇼핑-->
         <scene sceneID="nvB-FQ-Ytg">
             <objects>
-                <viewController id="OOL-01-D9X" customClass="ShoppingViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="OOL-01-D9X" customClass="ShoppingViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="AS8-8Z-nQF">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -464,13 +472,13 @@
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29803921570000003" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
