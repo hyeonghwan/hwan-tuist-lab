@@ -132,7 +132,14 @@ extension TravelCitySearchViewController: UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: false)
+        view.endEditing(true)
+        let model = self.filteredCityList[indexPath.row]
+        guard let detailView = storyboard?.instantiateViewController(withIdentifier: CityDetailViewController.id) as? CityDetailViewController else {
+            return
+        }
+        detailView.information = model.city
+        self.navigationController?.pushViewController(detailView, animated: true)
+        self.tableView.deselectRow(at: indexPath, animated: false)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -164,7 +171,6 @@ extension TravelCitySearchViewController: UITableViewDelegate, UITableViewDataSo
             return UITableViewCell()
         }
         cell.set(info: viewModel.city, contains: viewModel.contains)
-        cell.selectionStyle = .none
         return cell
     }
 }
