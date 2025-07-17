@@ -79,19 +79,8 @@ final class CityCell: UITableViewCell, CellIdentifialble {
     
     private func load(image: String) {
         if let url = URL(string: image) {
-            cityImageView.kf.indicatorType = .activity
-            cityImageView.kf.setImage(
-                with: url,
-                placeholder: nil,
-                options: [.transition(.fade(0.3))],
-                completionHandler: { [weak self] result in
-                    if case .success = result {
-                        self?.setLayer = true
-                        self?.setNeedsLayout()
-                        self?.layoutIfNeeded()
-                    }
-                }
-            )
+            let size = CGSize(width: UIScreen.main.bounds.width, height: 200)
+            cityImageView.kf.downSizingImage(url: url, size: size)
         } else {
             cityImageView.image =  ImageGen.clockwise?
                 .withTintColor(

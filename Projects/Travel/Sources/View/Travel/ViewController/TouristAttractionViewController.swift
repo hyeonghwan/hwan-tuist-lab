@@ -37,13 +37,8 @@ final class TouristAttractionViewController: UIViewController, VCIdentifiable {
     
     func set(info: Travel) {
         if let url = URL(string: info.travel_image ?? "") {
-            imageView.kf.indicatorType = .activity
-            imageView.kf.setImage(
-              with: url,
-              placeholder: nil,
-              options: [.transition(.fade(1.2))],
-              completionHandler: nil
-            )
+            let size = CGSize(width: UIScreen.main.bounds.width, height: 200)
+            imageView.kf.downSizingImage(url: url, size: size)
         } else {
             imageView.image =  ImageGen.clockwise?
                 .withTintColor(
