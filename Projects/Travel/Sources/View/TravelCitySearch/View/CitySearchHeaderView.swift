@@ -6,21 +6,40 @@
 //
 
 import UIKit
+import Combine
 
-final class CitySearchHeaderView: UIView {
+final class CitySearchHeaderView: UICollectionReusableView, CellIdentifialble {
+    
     @IBOutlet weak var searchField: UITextField!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
+    var retainSearchField: Bool = false {
+        didSet {
+            if retainSearchField {
+                self.setNeedsDisplay()
+            }
+        }
+    }
+    var subscriptions = Set<AnyCancellable>()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.loadXib()
-        searchField.addLeftPadding()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         self.loadXib()
-        searchField.addLeftPadding()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        subscriptions.removeAll()
+    }
+    
+    override func draw(_ rect: CGRect) {
+        if retainSearchField {
+            searchField.becomeFirstResponder()
+        }
     }
 }
 
