@@ -16,12 +16,17 @@ public enum R {
 
 public enum P {
     public static let travelApp: Path = .relativeToRoot("Projects/Travel")
+    public static let upDownApp: Path = .relativeToRoot("Projects/UpDown")
 }
 
 public extension TargetDependency.PRO {
     static let travel = TargetDependency.project(
         target: "Travel",
         path: P.travelApp
+    )
+    static let upDown = TargetDependency.project(
+        target: "UpDown",
+        path: P.upDownApp
     )
 }
 
