@@ -460,6 +460,16 @@
             </objects>
             <point key="canvasLocation" x="143" y="-642"/>
         </scene>
+        <!--CityCollectionSearchViewController-->
+        <scene sceneID="ESv-Sb-4Mg">
+            <objects>
+                <viewControllerPlaceholder storyboardName="CityCollectionSearchViewController" id="d6H-FW-7tm" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="P8x-T7-GZl"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="llX-Ag-hp8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1690" y="-449"/>
+        </scene>
     </scenes>
     <resources>
         <image name="airplane" catalog="system" width="128" height="115"/>
