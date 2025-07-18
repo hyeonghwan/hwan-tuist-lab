@@ -17,7 +17,7 @@ let project = ProjectFactory.createApp(
         .package(product: "Kingfisher", type: .runtime, condition: nil)
     ],
     packages: [
-        .remote(url: "https://github.com/onevcat/Kingfisher", requirement: .upToNextMajor(from: Version(8, 4, 0)))
+        R.kingfisher
     ],
     infoPlist: .storyBoardDefault
 )
