@@ -23,6 +23,13 @@ final class CityCollectionCell: UICollectionViewCell, CellIdentifialble {
         super.prepareForReuse()
         cityImageView.kf.cancelDownloadTask()
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        contentView.layoutIfNeeded()
+        cityImageView.layer.cornerRadius = cityImageView.bounds.width / 2
+    }
+    
     func set(info: City, contains: String?) {
         load(image: info.image)
         labelSetting(info: info, contains: contains)
