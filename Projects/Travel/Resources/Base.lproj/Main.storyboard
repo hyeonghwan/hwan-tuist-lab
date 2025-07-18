@@ -275,11 +275,12 @@
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="UdM-NU-Vuf" kind="relationship" relationship="viewControllers" id="2ab-m2-ajK"/>
-                        <segue destination="gsT-Zu-PNo" kind="relationship" relationship="viewControllers" id="rKP-6L-gdf"/>
-                        <segue destination="rAi-Lv-t2g" kind="relationship" relationship="viewControllers" id="OXB-kp-kvU"/>
-                        <segue destination="zVO-RM-XFj" kind="relationship" relationship="viewControllers" id="e20-Tq-V72"/>
-                        <segue destination="9VY-2R-mze" kind="relationship" relationship="viewControllers" id="lkN-J7-ZBB"/>
+                        <segue destination="d6H-FW-7tm" kind="relationship" relationship="viewControllers" id="eLi-bf-lC2"/>
+                        <segue destination="9VY-2R-mze" kind="relationship" relationship="viewControllers" id="D37-q8-cpQ"/>
+                        <segue destination="UdM-NU-Vuf" kind="relationship" relationship="viewControllers" id="SDo-fL-Nob"/>
+                        <segue destination="gsT-Zu-PNo" kind="relationship" relationship="viewControllers" id="uJc-QQ-Urm"/>
+                        <segue destination="rAi-Lv-t2g" kind="relationship" relationship="viewControllers" id="Zpf-di-Fcd"/>
+                        <segue destination="zVO-RM-XFj" kind="relationship" relationship="viewControllers" id="iDw-A7-J6K"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8mW-74-M2R" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -482,13 +483,13 @@
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29803921570000003" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
