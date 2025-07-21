@@ -81,13 +81,29 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
                 object: nil
             )
     }
+    
     private func chatRoomSetting() {
+        let initialChats: [ChatViewModel] = (chatRoom?.chatList ?? []).map {
+            ChatViewModel(chat: $0, isTruncated: nil)
+        }
+        
+        let groupedByDate = Dictionary(grouping: initialChats) { viewModel in
+            let dateKey = String(viewModel.chat.date.prefix(10))
+            return dateKey
+        }
+        let sortedKeys = groupedByDate.keys.sorted()
+        self.sectionModels = sortedKeys.map { key in
+            let date = key.toDate("yyyy-MM-dd") ?? Date()
+            return ChatSection(date: date, items: groupedByDate[key] ?? [])
+        }
     }
+    
     private func gestureSetting() {
         let tapGesture = UITapGestureRecognizer()
         tapGesture.addTarget(self, action: #selector(tapGestureOccur(_:)))
         collectionView.addGestureRecognizer(tapGesture)
     }
+    
     private func sendButtonSetting() {
         self.inputContainerView.addSubview(sendButton)
         NSLayoutConstraint.activate([
