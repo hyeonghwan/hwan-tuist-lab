@@ -20,10 +20,6 @@ typealias ChatViewModel = ChatRoomViewController.ChatViewModel
 
 final class ChatRoomViewController: UIViewController, CellIdentifialble {
     
-    enum Section {
-        case model(ChatViewModel)
-    }
-    
     struct ChatSection: Hashable {
         let date: Date // 섹션을 구분할 날짜 (시간은 제거된 yyyy-MM-dd)
         var items: [ChatViewModel]
@@ -165,6 +161,17 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
     
     @objc
     private func tapGestureOccur(_ sender: UITapGestureRecognizer) {
+        guard sender.state == .ended else { return }
+        let touchPoint = sender.location(in: collectionView)
+        if let indexPath = collectionView.indexPathForItem(at: touchPoint) {
+            if let cell = collectionView.cellForItem(at: indexPath) as? ChatCell {
+                let pointContentContainerView = collectionView.convert(touchPoint, to: cell.contentContainerView)
+                if cell.contentContainerView.bounds.contains(pointContentContainerView) {
+                    moveToWhenLargeChatCellTapped(indexPath)
+                    return
+                }
+            }
+        }
         self.view.endEditing(true)
     }
     
