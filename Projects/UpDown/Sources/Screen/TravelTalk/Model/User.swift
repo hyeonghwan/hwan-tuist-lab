@@ -7,7 +7,7 @@
   
 import Foundation
 
-struct User {
+struct User: Hashable {
     let name: String //유저 닉네임
     let image: String //유저 프로필
 }

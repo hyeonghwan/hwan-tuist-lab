@@ -19,6 +19,29 @@ import UIKit
 typealias ChatViewModel = ChatRoomViewController.ChatViewModel
 
 final class ChatRoomViewController: UIViewController, CellIdentifialble {
+    
+    enum Section {
+        case model(ChatViewModel)
+    }
+    
+    struct ChatSection: Hashable {
+        let date: Date // 섹션을 구분할 날짜 (시간은 제거된 yyyy-MM-dd)
+        var items: [ChatViewModel]
+    }
+
+    struct ChatViewModel: Hashable {
+        let chat: Chat
+        var isTruncated: CGFloat?
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(chat.id)
+        }
+        
+        static func == (lhs: ChatViewModel, rhs: ChatViewModel) -> Bool {
+            lhs.chat.id == rhs.chat.id
+        }
+    }
+    
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var messageInputView: MessageInputView!
     @IBOutlet weak var inputViewHeightAnchor: NSLayoutConstraint!
@@ -32,6 +55,7 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
         return button
     }()
     var chatRoom: ChatRoom?
+    private var sectionModels: [ChatSection] = []
     private var isScrolledToBottom: Bool = false
     
     override func viewDidLoad() {
