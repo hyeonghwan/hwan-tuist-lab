@@ -16,15 +16,7 @@ import UIKit
 // - ‘메시지를 입력하세요’ 라인 텍스트뷰를, 세줄까지 늘려보기 (카카오톡처럼)  O
 // - 실제로 전송 버튼 클릭 시 채팅 데이터 추가하기                      O
 
-// MARK: Keyboard appear 시 이미 keyboardLayout Guide 에 의해서 collectionView.boundes.height 가 줄어들고 변해서 bottom 이였음에도 불구하고 false를 반환함
-// -> scrollViewDidScroll delegate method 로 변경
-// private var isScrolledToBottom: Bool {
-//     guard collectionView.contentSize.height > collectionView.bounds.height else {
-//         return true
-//     }
-//     let bottomOffsetY = collectionView.contentSize.height - collectionView.bounds.height + collectionView.contentInset.bottom
-//     return collectionView.contentOffset.y >= bottomOffsetY - 1.0
-// }
+typealias ChatViewModel = ChatRoomViewController.ChatViewModel
 
 final class ChatRoomViewController: UIViewController, CellIdentifialble {
     @IBOutlet weak var collectionView: UICollectionView!
@@ -94,6 +86,18 @@ fileprivate extension ChatRoomViewController {
         ) {
             self.scrollToBottom(animated: false)
         }
+    }
+}
+
+// MARK: ScrollView Delegate
+extension ChatRoomViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard collectionView.contentSize.height > collectionView.bounds.height else {
+            isScrolledToBottom = true
+            return
+        }
+        let bottomOffsetY = collectionView.contentSize.height - collectionView.bounds.height + collectionView.contentInset.bottom
+        isScrolledToBottom = collectionView.contentOffset.y >= bottomOffsetY - 30
     }
 }
 
