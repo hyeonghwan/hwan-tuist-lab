@@ -6,4 +6,65 @@
 //  Copyright © 2025 com.hwan. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+// - 채팅 버블 날짜를 11:11 오전 형태로 구성합니다.                   O
+// - 고정된 형태로 채팅버블을 구성하되, Dynamic Height 대응하기        O
+// - 채팅 목록이 긴 경우, 테이블뷰의 스크롤을 가장 하단으로 내려보기        O
+// - 오토레이아웃 수정을 통해 글자에 따라 채팅버블 유동적으로 조절하기       O
+// - 날짜가 달라졌을 때, 날짜 구분선 넣어보기                         O
+// - ‘메시지를 입력하세요’ 라인 텍스트뷰를, 세줄까지 늘려보기 (카카오톡처럼)  O
+// - 실제로 전송 버튼 클릭 시 채팅 데이터 추가하기                      O
+
+// MARK: Keyboard appear 시 이미 keyboardLayout Guide 에 의해서 collectionView.boundes.height 가 줄어들고 변해서 bottom 이였음에도 불구하고 false를 반환함
+// -> scrollViewDidScroll delegate method 로 변경
+// private var isScrolledToBottom: Bool {
+//     guard collectionView.contentSize.height > collectionView.bounds.height else {
+//         return true
+//     }
+//     let bottomOffsetY = collectionView.contentSize.height - collectionView.bounds.height + collectionView.contentInset.bottom
+//     return collectionView.contentOffset.y >= bottomOffsetY - 1.0
+// }
+
+final class ChatRoomViewController: UIViewController, CellIdentifialble {
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var messageInputView: MessageInputView!
+    @IBOutlet weak var inputViewHeightAnchor: NSLayoutConstraint!
+    @IBOutlet weak var inputContainerView: UIView!
+    private let sendButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(ImageGen.paper_plane, for: .normal)
+        button.setImage(ImageGen.paper_plane?.withTintColor(.secondaryLabel), for: .disabled)
+        button.isEnabled = false
+        return button
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.navigationItem.title = chatRoom?.chatroomName ?? ""
+        chatRoomSetting()
+        messageInputViewSetting()
+        collectionViewSetting()
+        sendButtonSetting()
+        gestureSetting()
+        keyboardSetting()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.view.endEditing(true)
+    }
+    
+    private func keyboardSetting() {
+    }
+    private func chatRoomSetting() {
+    }
+    private func gestureSetting() {
+    }
+    private func sendButtonSetting() {
+    }
+    private func collectionViewSetting() {
+    }
+    private func messageInputViewSetting() {
+    }
+}
