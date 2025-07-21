@@ -156,11 +156,56 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
             activeWhenAwayFrom: .top
         )
     }
+    
+    @objc
+    private func messageSend(_ sender: UIButton) {
+        insertChatIteminCollectionView()
+        clearViewAfterSend()
+    }
+    
     @objc
     private func tapGestureOccur(_ sender: UITapGestureRecognizer) {
         self.view.endEditing(true)
     }
     
+    private func clearViewAfterSend() {
+        self.messageInputView.text = ""
+        self.sendButton.isEnabled = false
+        _ = updateInputViewHeightIfNeeded(messageInputView)
+        messageInputView.setToPlaceHolderIfNeeded()
+    }
+    
+    private func insertChatIteminCollectionView() {
+        let newChat = Chat(
+            user: ChatList.me,
+            date: Date().toFormat("yyyy-MM-dd HH:mm"),
+            message: messageInputView.text!
+        )
+        let newViewModel = ChatViewModel(chat: newChat, isTruncated: nil)
+        let today = Calendar.current.startOfDay(for: Date.now)
+        if let lastSection = sectionModels.last, Calendar.current.isDate(lastSection.date, inSameDayAs: today) {
+            let sectionIndex = sectionModels.count - 1
+            sectionModels[sectionIndex].items.append(newViewModel)
+            let itemIndex = sectionModels[sectionIndex].items.count - 1
+            let indexPath = IndexPath(item: itemIndex, section: sectionIndex)
+            collectionView.insertItems(at: [indexPath])
+        } else {
+            let newSection = ChatSection(date: today, items: [newViewModel])
+            sectionModels.append(newSection)
+            let sectionIndex = sectionModels.count - 1
+            collectionView.insertSections(IndexSet(integer: sectionIndex))
+        }
+    }
+    
+    private func moveToWhenLargeChatCellTapped(_ indexPath: IndexPath) {
+        let model = sectionModels[indexPath.section].items[indexPath.row]
+        if model.isTruncated != nil {
+            if let vc = storyboard?.instantiateViewController(withIdentifier: ChatDetailViewController.id) as? ChatDetailViewController {
+                vc.text = model.chat.message
+                navigationController?.pushViewController(vc, animated: true)
+            }
+        }
+    }
 }
 
 // MARK: Keyboard Action
