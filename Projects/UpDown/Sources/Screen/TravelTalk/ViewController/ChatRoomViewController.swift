@@ -114,8 +114,32 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
         ])
         sendButton.addTarget(self, action: #selector(messageSend(_:)), for: .touchUpInside)
     }
+    
     private func collectionViewSetting() {
+        let layout = BottomAlignedFlowLayout()
+        layout.minimumLineSpacing = 8
+        collectionView.collectionViewLayout = layout
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(
+            UINib(nibName: ChatOtherCell.id, bundle: nil),
+            forCellWithReuseIdentifier: ChatOtherCell.id
+        )
+        collectionView.register(
+            UINib(nibName: ChatMeCell.id, bundle: nil),
+            forCellWithReuseIdentifier: ChatMeCell.id
+        )
+        collectionView.register(
+            SectionDateHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: SectionDateHeaderView.id
+        )
+        
+        collectionView.allowsSelection = false
+        collectionView.keyboardDismissMode = .interactive
+        collectionView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
     }
+    
     private func messageInputViewSetting() {
     }
     @objc
