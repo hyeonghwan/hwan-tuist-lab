@@ -20,7 +20,7 @@ final class ShoppingListCell: UITableViewCell, CellIdentifialble {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        addLayout()
+        configureLayout()
         checkButton.addTarget(self, action: #selector(checkButtonTapped(_:)), for: .touchUpInside)
         startButton.addTarget(self, action: #selector(favoriteButtonTapped(_:)), for: .touchUpInside)
     }
@@ -54,7 +54,7 @@ final class ShoppingListCell: UITableViewCell, CellIdentifialble {
         favoriteAction?(indexPath, !origin)
     }
     
-    private func addLayout() {
+    private func configureLayout() {
         self.contentView.backgroundColor = .systemGray6
         self.contentView.layer.cornerRadius = 8
         

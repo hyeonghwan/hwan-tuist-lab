@@ -28,7 +28,7 @@ final class TouristAttractionViewController: UIViewController, VCIdentifiable {
             action: #selector(buttonTapped(_:)),
             for: .touchUpInside
         )
-        addLayout()
+        configureLayout()
         
         if let info {
             set(info: info)
@@ -50,7 +50,7 @@ final class TouristAttractionViewController: UIViewController, VCIdentifiable {
         self.descriptionLabel.text = info.description
     }
     
-    private func addLayout() {
+    private func configureLayout() {
         self.otherTouristGoButton.layer.cornerRadius = 12
         self.imageView.layer.cornerRadius = 12
     }
