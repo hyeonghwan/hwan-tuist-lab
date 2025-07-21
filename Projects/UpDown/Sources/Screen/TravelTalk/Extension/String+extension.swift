@@ -7,3 +7,14 @@
 //
 
 import Foundation
+
+extension String {
+    var isNotEmpty: Bool { !isEmpty }
+    var space: Self { " " }
+    var empty: Self { "" }
+    
+    
+    func removeAllWhitespace() -> String {
+        self.components(separatedBy: .whitespacesAndNewlines).joined()
+    }
+}
