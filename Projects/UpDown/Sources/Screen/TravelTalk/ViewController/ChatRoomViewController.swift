@@ -31,6 +31,7 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
         button.isEnabled = false
         return button
     }()
+    var chatRoom: ChatRoom?
     private var isScrolledToBottom: Bool = false
     
     override func viewDidLoad() {
