@@ -39,6 +39,7 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
         button.isEnabled = false
         return button
     }()
+    private var isScrolledToBottom: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,6 +57,12 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
     }
     
     private func keyboardSetting() {
+        NotificationCenter.default
+            .addObserver(self,
+                selector: #selector(keyboardWillShow(notification:)),
+                name: UIResponder.keyboardWillShowNotification,
+                object: nil
+            )
     }
     private func chatRoomSetting() {
     }
@@ -68,3 +75,37 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
     private func messageInputViewSetting() {
     }
 }
+
+// MARK: Keyboard Action
+fileprivate extension ChatRoomViewController {
+    @objc func keyboardWillShow(notification: Notification) {
+        guard isScrolledToBottom else { return }
+        guard
+            let userInfo = notification.userInfo,
+            let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval
+        else {
+            return
+        }
+        
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            options: .curveLinear
+        ) {
+            self.scrollToBottom(animated: false)
+        }
+    }
+}
+
+// MARK: UITextViewDelegate
+extension ChatRoomViewController: UITextViewDelegate {
+    private func scrollToBottom(animated: Bool) {
+        guard collectionView.contentSize.height > collectionView.bounds.height else {
+            return
+        }
+        let bottomOffset = CGPoint(
+            x: 0,
+            y: collectionView.contentSize.height - collectionView.bounds.height + collectionView.contentInset.bottom
+        )
+        collectionView.setContentOffset(bottomOffset, animated: animated)
+    }
