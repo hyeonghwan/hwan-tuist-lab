@@ -59,6 +59,9 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
     private func chatRoomSetting() {
     }
     private func gestureSetting() {
+        let tapGesture = UITapGestureRecognizer()
+        tapGesture.addTarget(self, action: #selector(tapGestureOccur(_:)))
+        collectionView.addGestureRecognizer(tapGesture)
     }
     private func sendButtonSetting() {
     }
@@ -66,6 +69,11 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
     }
     private func messageInputViewSetting() {
     }
+    @objc
+    private func tapGestureOccur(_ sender: UITapGestureRecognizer) {
+        self.view.endEditing(true)
+    }
+    
 }
 
 // MARK: Keyboard Action
