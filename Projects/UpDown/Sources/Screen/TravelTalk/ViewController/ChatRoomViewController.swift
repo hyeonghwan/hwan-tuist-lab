@@ -145,6 +145,16 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
     }
     
     private func messageInputViewSetting() {
+        messageInputView.delegate = self
+        let constraint = view.keyboardLayoutGuide.topAnchor
+            .constraint(
+                equalToSystemSpacingBelow: inputContainerView.bottomAnchor,
+                multiplier: 1.0
+            )
+        view.keyboardLayoutGuide.setConstraints(
+            [constraint],
+            activeWhenAwayFrom: .top
+        )
     }
     @objc
     private func tapGestureOccur(_ sender: UITapGestureRecognizer) {
@@ -198,6 +208,75 @@ extension ChatRoomViewController: UITextViewDelegate {
         )
         collectionView.setContentOffset(bottomOffset, animated: animated)
     }
+    
+    private func setCusorPositionIfPlaceHolder(_ textView: UITextView) {
+        if let inputView = textView as? MessageInputView, inputView.focusState == .placeHolder {
+            inputView.selectedTextRange = inputView.textRange(from: inputView.beginningOfDocument, to: inputView.beginningOfDocument)
+        }
+    }
+    
+    private func updateInputViewHeightIfNeeded(_ inputView: MessageInputView) -> Bool {
+        let newInputViewHeight = inputView.sizeThatFitViewHeight()
+        if newInputViewHeight != inputViewHeightAnchor.constant {
+            inputViewHeightAnchor.constant = newInputViewHeight
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    private func messageSendButtonUpdateIfNeeded() {
+        let inputText = messageInputView.text.removeAllWhitespace()
+        let focus = messageInputView.focusState
+        if focus == .placeHolder {
+            sendButton.isEnabled = false
+            return
+        }
+        
+        if inputText.isEmpty {
+            sendButton.isEnabled = false
+            return
+        }
+        sendButton.isEnabled = true
+    }
+    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        setCusorPositionIfPlaceHolder(textView)
+        return true
+    }
+    
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        setCusorPositionIfPlaceHolder(textView)
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        guard let inputView = textView as? MessageInputView else {
+            return
+        }
+        
+        let wasBottom = isScrolledToBottom
+        
+        inputView.setToPlaceHolderIfNeeded()
+        
+        let isChange = updateInputViewHeightIfNeeded(inputView)
+        
+        if isChange && wasBottom {
+             scrollToBottom(animated: true)
+        }
+        
+        messageSendButtonUpdateIfNeeded()
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard let inputView = textView as? MessageInputView else {
+            return false
+        }
+        inputView.setToFocusIfNeeded(text: text)
+        return true
+    }
+}
 
 // MARK: UICollectionViewDelegateFlowLayout
 extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
