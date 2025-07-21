@@ -6,4 +6,8 @@
 //  Copyright © 2025 com.hwan. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+protocol ChatCell {
+    var contentContainerView: UIView! { get }
+}
