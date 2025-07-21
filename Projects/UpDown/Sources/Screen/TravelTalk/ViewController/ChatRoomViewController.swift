@@ -54,6 +54,9 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
         button.isEnabled = false
         return button
     }()
+    private let chatOtherCell = Bundle.main.loadNibNamed(ChatOtherCell.id, owner: nil, options: nil)?.first as! ChatOtherCell
+    private let chatMeCell = Bundle.main.loadNibNamed(ChatMeCell.id, owner: nil, options: nil)?.first as! ChatMeCell
+    
     var chatRoom: ChatRoom?
     private var sectionModels: [ChatSection] = []
     private var isScrolledToBottom: Bool = false
@@ -68,6 +71,7 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
         gestureSetting()
         keyboardSetting()
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.view.endEditing(true)
@@ -194,3 +198,41 @@ extension ChatRoomViewController: UITextViewDelegate {
         )
         collectionView.setContentOffset(bottomOffset, animated: animated)
     }
+
+// MARK: UICollectionViewDelegateFlowLayout
+extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let model = sectionModels[indexPath.section].items[indexPath.row]
+        if model.chat.user == ChatList.me {
+            chatMeCell.configure(info: model)
+            chatMeCell.layoutIfNeeded()
+            let (height, isTruncated) = chatMeCell.layoutHeightFitting()
+            
+            let size = CGSize(
+                width: windowWidth,
+                height: height
+            )
+            sectionModels[indexPath.section].items[indexPath.row].isTruncated = isTruncated
+            return size
+        } else {
+            chatOtherCell.configure(info: model)
+            chatOtherCell.layoutIfNeeded()
+            let (height, isTruncated) = chatOtherCell.layoutHeightFitting()
+            let size = CGSize(
+                width: windowWidth,
+                height: height
+            )
+            sectionModels[indexPath.section].items[indexPath.row].isTruncated = isTruncated
+            return size
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: windowWidth, height: 30)
+    }
+}
+
