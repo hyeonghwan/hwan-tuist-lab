@@ -89,6 +89,14 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
         collectionView.addGestureRecognizer(tapGesture)
     }
     private func sendButtonSetting() {
+        self.inputContainerView.addSubview(sendButton)
+        NSLayoutConstraint.activate([
+            sendButton.widthAnchor.constraint(equalToConstant: 30),
+            sendButton.heightAnchor.constraint(equalToConstant: 30),
+            inputContainerView.trailingAnchor.constraint(equalTo: sendButton.trailingAnchor, constant: 12),
+            inputContainerView.bottomAnchor.constraint(equalTo: sendButton.bottomAnchor, constant: 12)
+        ])
+        sendButton.addTarget(self, action: #selector(messageSend(_:)), for: .touchUpInside)
     }
     private func collectionViewSetting() {
     }
