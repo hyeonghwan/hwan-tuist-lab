@@ -236,3 +236,43 @@ extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+// MARK: UICollectionViewDataSource
+extension ChatRoomViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        sectionModels.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        sectionModels[section].items.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader {
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionDateHeaderView.id, for: indexPath) as? SectionDateHeaderView else {
+                fatalError("헤더 뷰를 가져올 수 없습니다.")
+            }
+            let sectionModel = sectionModels[indexPath.section]
+            header.configure(with: sectionModel.date)
+            return header
+        }
+        return UICollectionReusableView()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let model = sectionModels[indexPath.section].items[indexPath.row]
+        if model.chat.user == ChatList.me {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ChatMeCell.id, for: indexPath) as? ChatMeCell else {
+                return UICollectionViewCell()
+            }
+            cell.configure(info: model)
+            return cell
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ChatOtherCell.id, for: indexPath) as? ChatOtherCell else {
+                return UICollectionViewCell()
+            }
+            cell.configure(info: model)
+            return cell
+        }
+    }
+}
+
