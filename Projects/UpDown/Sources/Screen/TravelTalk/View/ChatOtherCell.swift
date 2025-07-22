@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Design
 
 final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
     
@@ -90,7 +91,7 @@ final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
             bottomLabelButtonSpacing.constant = 120
             bottomLabelButtonSpacing.priority = .defaultHigh
         } else {
-            labelBottomSpacing.constant = 12
+            labelBottomSpacing.constant = labelTopSpacing.constant
             viewAllLabel.isHidden = true
             viewAllButton.isHidden = true
             bottomLabelButtonSpacing.constant = 0
@@ -120,7 +121,11 @@ final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
         nicknameLabelHeight +
         contentLabelHeight
         
-        let isTruncated = contentLabel.isTruncated(with: contentLabelHeight)
+        let isTruncated = contentLabel.isTruncated(
+            width: estimatedWidth,
+            height: contentLabelHeight
+        )
+        
         let bottom: CGFloat = 8
         let height = viewAllLabel.sizeThatFits(CGSize(width: 60, height: 20)).height
         let bottomViewHeight = bottom + height + 8
@@ -130,23 +135,5 @@ final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
         } else {
             return (totalHeight, nil)
         }
-    }
-}
-
-extension UILabel {
-    func isTruncated(with constrainedHeight: CGFloat) -> Bool {
-        guard let labelText = self.text else { return false }
-        let requiredSize = CGSize(
-            width: self.frame.width,
-            height: CGFloat.greatestFiniteMagnitude
-        )
-        let attributes: [NSAttributedString.Key: Any] = [.font: self.font!]
-        let requiredRect = labelText.boundingRect(
-            with: requiredSize,
-            options: .usesLineFragmentOrigin,
-            attributes: attributes,
-            context: nil
-        )
-        return requiredRect.height > constrainedHeight
     }
 }

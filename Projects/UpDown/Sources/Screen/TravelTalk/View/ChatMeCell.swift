@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Design
 
 final class ChatMeCell: UICollectionViewCell, CellIdentifialble, ChatCell {
     @IBOutlet weak var contentContainerView: UIView!
@@ -87,7 +88,10 @@ final class ChatMeCell: UICollectionViewCell, CellIdentifialble, ChatCell {
             verticalFittingPriority: .fittingSizeLevel
         ).height
         
-        let isTruncated = contentLabel.isTruncated(with: contentLabelHeight)
+        let isTruncated = contentLabel.isTruncated(
+            width: estimatedWidth,
+            height: contentLabelHeight
+        )
         let bottom: CGFloat = 8
         let height = viewAllLabel.sizeThatFits(CGSize(width: 60, height: 20)).height
         let bottomViewHeight = bottom + height + 8
