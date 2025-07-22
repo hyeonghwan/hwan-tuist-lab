@@ -8,6 +8,7 @@
 
 import UIKit
 import HwanMacros
+import HwanKit
 
 typealias ChatViewModel = ChatRoomViewController.ChatViewModel
 
@@ -183,6 +184,7 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
             message: messageInputView.text!
         )
         let newViewModel = ChatViewModel(chat: newChat, isTruncated: nil)
+        
         let today = Calendar.current.startOfDay(for: Date.now)
         if let lastSection = sectionModels.last, Calendar.current.isDate(lastSection.date, inSameDayAs: today) {
             let sectionIndex = sectionModels.count - 1
@@ -353,11 +355,30 @@ extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
+        UIEdgeInsets(top: 8, left: 0, bottom: 16, right: 0)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: windowWidth, height: 30)
+    fileprivate var headerFont: UIFont {
+        .systemFont(ofSize: 14, weight: .light)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        referenceSizeForHeaderInSection section: Int
+    ) -> CGSize
+    {
+        let width = windowWidth
+        let height = self.sectionModels[section].date
+            .toFormat("yyyy년 MM월 dd일")
+            .height(
+                withConstrainedWidth: width,
+                font: headerFont
+            )
+        return CGSize(
+            width: width,
+            height: height + 16
+        )
     }
 }
 
@@ -374,10 +395,12 @@ extension ChatRoomViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionDateHeaderView.id, for: indexPath) as? SectionDateHeaderView else {
-                fatalError("헤더 뷰를 가져올 수 없습니다.")
+                logger.log(level: .fault, "\(Self.self)- \(indexPath.section) Section - SectionDateHeader casting Failed")
+                fatalError()
             }
             let sectionModel = sectionModels[indexPath.section]
             header.configure(with: sectionModel.date)
+            header.setFont(headerFont)
             return header
         }
         return UICollectionReusableView()
