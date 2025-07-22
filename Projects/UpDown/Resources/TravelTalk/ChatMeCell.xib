@@ -18,14 +18,14 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k0O-An-X02">
-                        <rect key="frame" x="99.333333333333343" y="4" width="288.66666666666663" height="92"/>
+                        <rect key="frame" x="83.333333333333343" y="4" width="304.66666666666663" height="92"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="253" verticalHuggingPriority="253" horizontalCompressionResistancePriority="753" verticalCompressionResistancePriority="753" text="잔디는 생물인거 아시죵? :) 매일 물을 주셔야 살 수 있습니다.!" lineBreakMode="tailTruncation" numberOfLines="25" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P5P-DP-GKg">
-                                <rect key="frame" x="12" y="8" width="264.66666666666669" height="76"/>
+                                <rect key="frame" x="12" y="8" width="280.66666666666669" height="76"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
-                                <lineBreakStrategy key="lineBreakStrategy" pushOut="YES"/>
+                                <lineBreakStrategy key="lineBreakStrategy" hangulWordPriority="YES"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="253" text="전체보기" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F7Y-98-XwS">
                                 <rect key="frame" x="12" y="64.333333333333329" width="45" height="15.666666666666671"/>
@@ -34,7 +34,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IsV-NE-q96">
-                                <rect key="frame" x="256.66666666666669" y="62.333333333333329" width="20" height="20"/>
+                                <rect key="frame" x="272.66666666666669" y="62.333333333333329" width="20" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="47N-zv-gG3"/>
                                     <constraint firstAttribute="width" constant="20" id="sRD-7J-9Di"/>
@@ -62,7 +62,7 @@
                         </constraints>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="254" verticalHuggingPriority="254" horizontalCompressionResistancePriority="754" verticalCompressionResistancePriority="754" text="06:40 오후" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cC7-gT-ZgX">
-                        <rect key="frame" x="42" y="81.666666666666671" width="53.333333333333343" height="14.333333333333329"/>
+                        <rect key="frame" x="26.000000000000004" y="81.666666666666671" width="53.333333333333343" height="14.333333333333329"/>
                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="11"/>
                         <color key="textColor" systemColor="secondaryLabelColor"/>
                         <nil key="highlightedColor"/>
