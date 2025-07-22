@@ -19,6 +19,8 @@ final class ChatMeCell: UICollectionViewCell, CellIdentifialble, ChatCell {
     @IBOutlet weak var bottomLabelButtonSpacing: NSLayoutConstraint!
     
     @IBOutlet weak var messageContentSpacing: NSLayoutConstraint!
+    @IBOutlet weak var messageLeadingContentSpacing: NSLayoutConstraint!
+    
     @IBOutlet weak var messageContainerSpacing: NSLayoutConstraint!
     @IBOutlet weak var dateContentSpacing: NSLayoutConstraint!
     @IBOutlet weak var dateLabelContainerSpacing: NSLayoutConstraint!
@@ -62,7 +64,7 @@ final class ChatMeCell: UICollectionViewCell, CellIdentifialble, ChatCell {
             bottomLabelButtonSpacing.constant = 120
             bottomLabelButtonSpacing.priority = .defaultHigh
         } else {
-            labelBottomSpacing.constant = 12
+            labelBottomSpacing.constant = messageContentSpacing.constant
             viewAllLabel.isHidden = true
             viewAllButton.isHidden = true
             bottomLabelButtonSpacing.constant = 0
@@ -75,7 +77,7 @@ final class ChatMeCell: UICollectionViewCell, CellIdentifialble, ChatCell {
         
         let width: CGFloat =
         dateLabelSize.width +
-        messageContentSpacing.constant * 2 +
+        messageLeadingContentSpacing.constant * 2 +
         dateContentSpacing.constant +
         dateLabelContainerSpacing.constant +
         contentTrailingSpacing.constant

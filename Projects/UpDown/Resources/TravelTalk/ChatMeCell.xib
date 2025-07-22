@@ -90,6 +90,7 @@
                 <outlet property="labelBottomSpacing" destination="Lkn-Ji-Fne" id="0fh-JJ-JyN"/>
                 <outlet property="messageContainerSpacing" destination="5gb-JK-yGE" id="hcT-nM-OCw"/>
                 <outlet property="messageContentSpacing" destination="6Px-v6-VVZ" id="jcz-tf-Pm2"/>
+                <outlet property="messageLeadingContentSpacing" destination="g0l-AU-eiX" id="2oy-RY-sZ3"/>
                 <outlet property="viewAllButton" destination="IsV-NE-q96" id="1mh-fB-fBJ"/>
                 <outlet property="viewAllLabel" destination="F7Y-98-XwS" id="Vy8-ds-Q7D"/>
             </connections>
