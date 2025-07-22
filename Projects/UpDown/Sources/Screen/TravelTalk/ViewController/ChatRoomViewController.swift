@@ -7,21 +7,15 @@
 //
 
 import UIKit
-
-// - 채팅 버블 날짜를 11:11 오전 형태로 구성합니다.                   O
-// - 고정된 형태로 채팅버블을 구성하되, Dynamic Height 대응하기        O
-// - 채팅 목록이 긴 경우, 테이블뷰의 스크롤을 가장 하단으로 내려보기        O
-// - 오토레이아웃 수정을 통해 글자에 따라 채팅버블 유동적으로 조절하기       O
-// - 날짜가 달라졌을 때, 날짜 구분선 넣어보기                         O
-// - ‘메시지를 입력하세요’ 라인 텍스트뷰를, 세줄까지 늘려보기 (카카오톡처럼)  O
-// - 실제로 전송 버튼 클릭 시 채팅 데이터 추가하기                      O
+import HwanMacros
 
 typealias ChatViewModel = ChatRoomViewController.ChatViewModel
 
+@Logging
 final class ChatRoomViewController: UIViewController, CellIdentifialble {
     
     struct ChatSection: Hashable {
-        let date: Date // 섹션을 구분할 날짜 (시간은 제거된 yyyy-MM-dd)
+        let date: Date
         var items: [ChatViewModel]
     }
 
@@ -406,4 +400,3 @@ extension ChatRoomViewController: UICollectionViewDataSource {
         }
     }
 }
-

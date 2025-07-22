@@ -7,7 +7,9 @@
 //
 
 import UIKit
+import HwanMacros
 
+@Logging
 final class TravelTalkViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var safeAreaBottomToCollectionViewBottom: NSLayoutConstraint!
