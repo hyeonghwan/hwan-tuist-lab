@@ -21,10 +21,11 @@
                         <rect key="frame" x="99.333333333333343" y="4" width="288.66666666666663" height="92"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="253" verticalHuggingPriority="253" horizontalCompressionResistancePriority="753" verticalCompressionResistancePriority="753" text="잔디는 생물인거 아시죵? :) 매일 물을 주셔야 살 수 있습니다.!" lineBreakMode="tailTruncation" numberOfLines="25" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P5P-DP-GKg">
-                                <rect key="frame" x="12" y="12" width="264.66666666666669" height="68"/>
+                                <rect key="frame" x="12" y="8" width="264.66666666666669" height="76"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
+                                <lineBreakStrategy key="lineBreakStrategy" pushOut="YES"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="253" text="전체보기" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F7Y-98-XwS">
                                 <rect key="frame" x="12" y="64.333333333333329" width="45" height="15.666666666666671"/>
@@ -47,10 +48,10 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                         <constraints>
-                            <constraint firstItem="P5P-DP-GKg" firstAttribute="top" secondItem="k0O-An-X02" secondAttribute="top" constant="12" id="6Px-v6-VVZ"/>
+                            <constraint firstItem="P5P-DP-GKg" firstAttribute="top" secondItem="k0O-An-X02" secondAttribute="top" constant="8" id="6Px-v6-VVZ"/>
                             <constraint firstAttribute="bottom" secondItem="F7Y-98-XwS" secondAttribute="bottom" constant="12" id="Bej-bj-wph"/>
                             <constraint firstAttribute="trailing" secondItem="IsV-NE-q96" secondAttribute="trailing" constant="12" id="Bow-9C-FOe"/>
-                            <constraint firstAttribute="bottom" secondItem="P5P-DP-GKg" secondAttribute="bottom" constant="12" id="Lkn-Ji-Fne"/>
+                            <constraint firstAttribute="bottom" secondItem="P5P-DP-GKg" secondAttribute="bottom" constant="8" id="Lkn-Ji-Fne"/>
                             <constraint firstAttribute="height" priority="249" constant="100" id="OqR-Wx-KBC"/>
                             <constraint firstItem="IsV-NE-q96" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="F7Y-98-XwS" secondAttribute="trailing" priority="249" constant="80" id="RUF-JB-4ZJ"/>
                             <constraint firstItem="P5P-DP-GKg" firstAttribute="leading" secondItem="k0O-An-X02" secondAttribute="leading" constant="12" id="g0l-AU-eiX"/>
