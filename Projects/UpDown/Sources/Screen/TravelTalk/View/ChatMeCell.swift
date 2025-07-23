@@ -21,6 +21,8 @@ final class ChatMeCell: UICollectionViewCell, CellIdentifialble, ChatCell {
     @IBOutlet weak var messageContentSpacing: NSLayoutConstraint!
     @IBOutlet weak var messageLeadingContentSpacing: NSLayoutConstraint!
     
+    @IBOutlet weak var messageTopContainerSpacing: NSLayoutConstraint!
+    @IBOutlet weak var messageBottomContainerSpacing: NSLayoutConstraint!
     @IBOutlet weak var messageContainerSpacing: NSLayoutConstraint!
     @IBOutlet weak var dateContentSpacing: NSLayoutConstraint!
     @IBOutlet weak var dateLabelContainerSpacing: NSLayoutConstraint!
@@ -43,10 +45,15 @@ final class ChatMeCell: UICollectionViewCell, CellIdentifialble, ChatCell {
     
     private func configureLayout() {
         contentContainerView.layer.cornerRadius = 12
-        contentContainerView.layer.borderWidth = 1
-        contentContainerView.layer.borderColor = UIColor.systemGray6.cgColor
+        contentContainerView.layer.borderWidth  = 1
+        contentContainerView.layer.borderColor  = UIColor.gray.withAlphaComponent(0.1).cgColor
+        contentContainerView.backgroundColor    = .black.withAlphaComponent(0.1)
+        
         viewAllLabel.isHidden = true
         viewAllButton.isHidden = true
+        
+        messageTopContainerSpacing.constant = 2
+        messageBottomContainerSpacing.constant = 2
     }
     
     func configure(info model: ChatViewModel) {
@@ -54,8 +61,9 @@ final class ChatMeCell: UICollectionViewCell, CellIdentifialble, ChatCell {
             .toDate("yyyy-MM-dd HH:mm")?
             .toFormat("hh:mm a")
         contentLabel.text = "\(model.chat.message)"
-        
         let isTruncated = model.isTruncated
+        
+        dateLabel.isHidden = model.isDateHidden
         
         if let isTruncated {
             labelBottomSpacing.constant = isTruncated
@@ -72,7 +80,7 @@ final class ChatMeCell: UICollectionViewCell, CellIdentifialble, ChatCell {
         }
     }
     
-    func layoutHeightFitting() -> (height: CGFloat, isTruncated: CGFloat?) {
+    func layoutHeightFitting(_ viewModel: ChatViewModel) -> (height: CGFloat, isTruncated: CGFloat?) {
         let dateLabelSize = dateLabel.sizeThatFits(CGSize(width: 100, height: 30))
         
         let width: CGFloat =
@@ -102,7 +110,8 @@ final class ChatMeCell: UICollectionViewCell, CellIdentifialble, ChatCell {
         =
         contentLabelHeight +
         messageContentSpacing.constant * 2 +
-        messageContainerSpacing.constant * 2
+        messageTopContainerSpacing.constant +
+        messageBottomContainerSpacing.constant
         
         if isTruncated {
             totalHeight += bottomViewHeight

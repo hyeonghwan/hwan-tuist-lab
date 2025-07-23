@@ -17,17 +17,17 @@ let project = ProjectFactory.createApp(
         defaultSettings: .init()
     ),
     dependencies: [
-        .SPM.kingfisher,
-        .SPM.hwanKit,
-        .SPM.hwanMacros
-//        .package(product: "Kingfisher", type: .runtime, condition: nil),
-//        .package(product: "HawnKit", type: .runtime, condition: nil),
-//        .package(product: "HwanMacros", type: .macro, condition: nil)
+//        .SPM.kingfisher,
+//        .SPM.hwanKit,
+//        .SPM.hwanMacros
+        .package(product: "Kingfisher", type: .runtime, condition: nil),
+        .package(product: "HawnKit", type: .runtime, condition: nil),
+        .package(product: "HwanMacros", type: .macro, condition: nil)
     ],
     packages: [
-//        R.kingfisher,
-//        R.hwanKit,
-//        R.hwanMacros
+        R.kingfisher,
+        R.hwanKit,
+        R.hwanMacros
     ],
     infoPlist: .storyBoardDefault
 )

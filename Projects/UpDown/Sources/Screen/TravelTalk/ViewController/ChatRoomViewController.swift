@@ -10,28 +10,8 @@ import UIKit
 import HwanMacros
 import HwanKit
 
-typealias ChatViewModel = ChatRoomViewController.ChatViewModel
-
 @Logging
 final class ChatRoomViewController: UIViewController, CellIdentifialble {
-    
-    struct ChatSection: Hashable {
-        let date: Date
-        var items: [ChatViewModel]
-    }
-
-    struct ChatViewModel: Hashable {
-        let chat: Chat
-        var isTruncated: CGFloat?
-        
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(chat.id)
-        }
-        
-        static func == (lhs: ChatViewModel, rhs: ChatViewModel) -> Bool {
-            lhs.chat.id == rhs.chat.id
-        }
-    }
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var messageInputView: MessageInputView!
@@ -61,6 +41,7 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
         sendButtonSetting()
         gestureSetting()
         keyboardSetting()
+        binding()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -75,6 +56,15 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
                 name: UIResponder.keyboardWillShowNotification,
                 object: nil
             )
+    }
+    
+    private func binding() {
+        self.sectionModels = ChatSection.divideSectionUsingDate(self.chatRoom)
+        for model in sectionModels {
+            for item in model.items {
+                logger.log(level: .debug, "\(item)")
+            }
+        }
     }
     
     private func chatRoomSetting() {
@@ -129,7 +119,6 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: SectionDateHeaderView.id
         )
-        
         collectionView.allowsSelection = false
         collectionView.keyboardDismissMode = .interactive
         collectionView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
@@ -178,20 +167,30 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
     }
     
     private func insertChatIteminCollectionView() {
-        let newChat = Chat(
-            user: ChatList.me,
-            date: Date().toFormat("yyyy-MM-dd HH:mm"),
-            message: messageInputView.text!
+        let newViewModel = ChatViewModel(
+            chat: Chat(
+                user: ChatList.me,
+                date: Date().toFormat("yyyy-MM-dd HH:mm"),
+                message: messageInputView.text!
+            ),
+            isTruncated: nil
         )
-        let newViewModel = ChatViewModel(chat: newChat, isTruncated: nil)
         
         let today = Calendar.current.startOfDay(for: Date.now)
         if let lastSection = sectionModels.last, Calendar.current.isDate(lastSection.date, inSameDayAs: today) {
             let sectionIndex = sectionModels.count - 1
+            let lastIndex = sectionModels[sectionIndex].items.count - 1
+            if var recentViewModel = sectionModels[sectionIndex].items.last {
+                let isSameUserAndMinute = recentViewModel.chat.isEqualDateAndUser(newViewModel.chat)
+                recentViewModel.isDateHidden = isSameUserAndMinute
+                sectionModels[sectionIndex].items[lastIndex] = recentViewModel
+            }
             sectionModels[sectionIndex].items.append(newViewModel)
             let itemIndex = sectionModels[sectionIndex].items.count - 1
+            let willReload = IndexPath(item: lastIndex, section: sectionIndex)
             let indexPath = IndexPath(item: itemIndex, section: sectionIndex)
             collectionView.insertItems(at: [indexPath])
+            collectionView.reloadItems(at: [indexPath, willReload])
         } else {
             let newSection = ChatSection(date: today, items: [newViewModel])
             sectionModels.append(newSection)
@@ -276,7 +275,7 @@ extension ChatRoomViewController: UITextViewDelegate {
     }
     
     private func messageSendButtonUpdateIfNeeded() {
-        let inputText = messageInputView.text.removeAllWhitespace()
+        let inputText = messageInputView.text.removeAllWhiteSpace
         let focus = messageInputView.focusState
         if focus == .placeHolder {
             sendButton.isEnabled = false
@@ -333,7 +332,7 @@ extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
         if model.chat.user == ChatList.me {
             chatMeCell.configure(info: model)
             chatMeCell.layoutIfNeeded()
-            let (height, isTruncated) = chatMeCell.layoutHeightFitting()
+            let (height, isTruncated) = chatMeCell.layoutHeightFitting(model)
             
             let size = CGSize(
                 width: windowWidth,
@@ -344,7 +343,7 @@ extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
         } else {
             chatOtherCell.configure(info: model)
             chatOtherCell.layoutIfNeeded()
-            let (height, isTruncated) = chatOtherCell.layoutHeightFitting()
+            let (height, isTruncated) = chatOtherCell.layoutHeightFitting(model)
             let size = CGSize(
                 width: windowWidth,
                 height: height
@@ -355,7 +354,7 @@ extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        UIEdgeInsets(top: 8, left: 0, bottom: 16, right: 0)
+        UIEdgeInsets(top: 12, left: 0, bottom: 20, right: 0)
     }
     
     fileprivate var headerFont: UIFont {
@@ -408,6 +407,7 @@ extension ChatRoomViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let model = sectionModels[indexPath.section].items[indexPath.row]
+        
         if model.chat.user == ChatList.me {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ChatMeCell.id, for: indexPath) as? ChatMeCell else {
                 return UICollectionViewCell()
