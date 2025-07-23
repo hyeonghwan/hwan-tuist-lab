@@ -21,6 +21,7 @@ public enum R {
 public enum P {
     public static let travelApp: Path = .relativeToRoot("Projects/Travel")
     public static let upDownApp: Path = .relativeToRoot("Projects/UpDown")
+    public static let networkSample: Path = .relativeToRoot("Projects/NetworkSample")
 }
 
 public extension TargetDependency.PRO {
@@ -31,6 +32,11 @@ public extension TargetDependency.PRO {
     static let upDown = TargetDependency.project(
         target: "UpDown",
         path: P.upDownApp
+    )
+    
+    static let networkSample = TargetDependency.project(
+        target: "NetworkSample",
+        path: P.networkSample
     )
 }
 

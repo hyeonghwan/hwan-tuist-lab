@@ -5,6 +5,7 @@ let workspace = Workspace(
     name: "hwan-tuist-lab",
     projects: [
         P.travelApp,
-        P.upDownApp
+        P.upDownApp,
+        P.networkSample
     ]
 )
