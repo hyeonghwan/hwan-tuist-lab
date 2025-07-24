@@ -19,12 +19,14 @@ let project = ProjectFactory.createApp(
     dependencies: [
         .package(product: "Kingfisher", type: .runtime, condition: nil),
         .package(product: "HawnKit", type: .runtime, condition: nil),
-        .package(product: "HwanMacros", type: .macro, condition: nil)
+        // .package(product: "HwanMacros", type: .macro, condition: nil),
+        .package(product: "Alamofire", type: .macro, condition: nil)
     ],
     packages: [
         R.kingfisher,
         R.hwanKit,
-        R.hwanMacros
+        // R.hwanMacros,
+        R.alamofire
     ],
     infoPlist: .codeDefault
 )
