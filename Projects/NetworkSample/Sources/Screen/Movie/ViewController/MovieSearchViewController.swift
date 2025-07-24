@@ -6,4 +6,8 @@
 //  Copyright © 2025 com.hwan. All rights reserved.
 //
 
-import Foundation
+import UIKit
+import Design
+
+final class MovieSearchViewController: BaseViewController {
+}
