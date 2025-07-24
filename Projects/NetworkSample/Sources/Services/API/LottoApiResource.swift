@@ -7,3 +7,22 @@
 //
 
 import Foundation
+
+
+struct LottoApiResource: APIResource {
+    typealias ResponseType = LottoDTO
+    
+    var API_KEY: String { "" }
+    
+    var method: HTTPMethod = .get
+    
+    var scheme: String {
+        "https"
+    }
+    var host: String {
+        "dhlottery.co.kr"
+    }
+    var path: String {
+        "/common.do"
+    }
+}
