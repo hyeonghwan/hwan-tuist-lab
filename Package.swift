@@ -5,7 +5,10 @@ import PackageDescription
     import ProjectDescription
     let packageSettings = PackageSettings(
         productTypes: [
-            "Kingfisher": .staticFramework
+            "Kingfisher": .staticFramework,
+            "HwanKit": .staticFramework,
+            "Alamofire": .staticFramework,
+            "HwanMacros": .macro
         ],
         baseSettings: .settings(
             configurations: [
@@ -14,7 +17,6 @@ import PackageDescription
             ]
         )
     )
-
 #endif
 
 let package = Package(
