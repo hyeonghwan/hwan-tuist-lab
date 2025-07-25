@@ -211,12 +211,9 @@ final class LottoViewController: BaseViewController {
     ///   - drwNo: 로또 회차
     ///   - completion: 데이터 송신시 Hadling 처리
     private func request(_ drwNo: Int, _ completion: @escaping (LottoDTO) -> Void) {
-        let resource = LottoApiResource()
         animationBalls(isAnimate: true)
-        CoreNetwork.shared.get(
-            resource: resource,
-            type: LottoDTO.self,
-            queries: [ "method": "getLottoNumber", "drwNo": "\(drwNo)"]) { [weak self] result in
+        let resource = LottoApiResource(query: LottoQuery(method: "getLottoNumber", drwNo: "\(drwNo)"))
+        CoreNetwork.shared.GET(resource: resource, type: LottoDTO.self) { [weak self] result in
                 switch result {
                 case let .success(dto):
                     completion(dto)
