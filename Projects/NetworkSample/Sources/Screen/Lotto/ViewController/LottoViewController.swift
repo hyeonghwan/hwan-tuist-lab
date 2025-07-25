@@ -36,12 +36,13 @@ final class LottoViewController: BaseViewController {
     }()
     
     private let separatorView: UIView = {
-       let view = UIView()
+        let view = UIView()
         view.backgroundColor = .separator.withAlphaComponent(0.5)
         return view
     }()
     
-    private let datePicker = UIPickerView()
+    private let pickerView = UIPickerView()
+    private var selectedRow: Int?
     
     private let countResultLabel: UILabel = {
         let label = UILabel()
@@ -81,8 +82,8 @@ final class LottoViewController: BaseViewController {
         return label
     }()
     
-    private var numbers = (1...1181).map { $0 }
-    private var cache: [Int: LottoResult] = [:]
+    private var numbers: [Int] = (1...1181).map { $0 }
+    private var dateDict = ["2025-07-12": 1180]
     
     override func addChild() {
         view.addSubview(textField)
@@ -99,10 +100,10 @@ final class LottoViewController: BaseViewController {
     
     override func addAttributes() {
         view.backgroundColor = .systemBackground
-        textField.inputView = datePicker
+        textField.inputView = pickerView
         textField.delegate = self
-        datePicker.delegate = self
-        datePicker.dataSource = self
+        pickerView.delegate = self
+        pickerView.dataSource = self
         
         horizontalStack.translatesAutoresizingMaskIntoConstraints = false
         
@@ -150,8 +151,43 @@ final class LottoViewController: BaseViewController {
         ])
     }
     
+    override func binding() {
+        Resolver.formatter.dateFormat = "yyyy-MM-dd"
+        Resolver.formatter.locale = Locale(identifier: "ko_KR")
+        
+        if let previousSaturday = Date.now.getPreviousSaturday() {
+            if let startDate = "2025-07-12".toDate("yyyy-MM-dd") {
+                let count = saturdaysBetween(startDate: startDate, endDate: previousSaturday)
+                var value = numbers.last!
+                for _ in 0..<count {
+                    value += 1
+                    numbers.append(value)
+                }
+            }
+        }
+        
+        NotificationCenter.default
+            .addObserver(self,
+                selector: #selector(keyboardWillShow(notification:)),
+                         name: UIResponder.keyboardDidShowNotification,
+                object: nil
+            )
+        
+        // TODO: 실패 처리
+        if let lastDrawNo = numbers.last {
+            request(lastDrawNo) { [weak self] dto in
+                self?.updateLottoBalls(dto: dto)
+            }
+        }
+    }
     
-    
+    @objc
+    private func keyboardWillShow(notification: Notification) {
+        if selectedRow == nil {
+            pickerView.selectRow(numbers.last! - 1, inComponent: 0, animated: true)
+            selectedRow = numbers.last!
+        }
+    }
     
     private func animationBalls(isAnimate: Bool = false) {
         let value = isAnimate == true ? nil : 0
@@ -161,6 +197,15 @@ final class LottoViewController: BaseViewController {
         }
     }
     
+    private func saturdaysBetween(startDate: Date, endDate: Date) -> Int {
+        guard startDate < endDate else { return 0 }
+        let calendar = Calendar.current
+        let diff = calendar.dateComponents([.day], from: startDate, to: endDate).day ?? 0
+        let numbers = (diff / 7) - 1
+        return numbers
+    }
+
+        
     /// Request Lotto Number drwno
     /// - Parameters:
     ///   - drwNo: 로또 회차
@@ -182,21 +227,29 @@ final class LottoViewController: BaseViewController {
             }
     }
     
-    private func dataLoadUsingFile() {
-        guard let url = Bundle.main.url(forResource: "Lotto", withExtension: "json") else {
-            return
-        }
-        if let data = try? Data(contentsOf: url) {
-            let decoder = JSONDecoder()
-            do {
-                let value = try decoder.decode([LottoResult].self, from: data)
-                cache = value.reduce(into: [Int: LottoResult]()) { origin, value in
-                    origin[value.drawNo] = value
-                }
-            } catch {
-                return
-            }
-        }
+    private func updateLottoBalls(dto: LottoDTO) {
+        lottoNumberViewList[0].number = dto.drwtNo1
+        lottoNumberViewList[1].number = dto.drwtNo2
+        lottoNumberViewList[2].number = dto.drwtNo3
+        lottoNumberViewList[3].number = dto.drwtNo4
+        lottoNumberViewList[4].number = dto.drwtNo5
+        lottoNumberViewList[5].number = dto.drwtNo6
+        lottoNumberViewList[7].number = dto.bnusNo
+        dateLabel.text = "\(dto.drwNoDate) 추첨"
+        textField.text = "\(dto.drwNo)"
+        
+        let color = [UIColor.systemRed, UIColor.systemBlue, UIColor.systemYellow, UIColor.systemGray].randomElement()!
+        let mutableString = NSMutableAttributedString()
+        mutableString.append(NSAttributedString(string: "\(dto.drwNo)회", attributes: [
+            .font : UIFont.boldSystemFont(ofSize: 23),
+            .foregroundColor : color.withAlphaComponent(0.6)
+        ]))
+        mutableString.append(NSAttributedString(string: " 당첨결과", attributes: [
+            .font : UIFont.systemFont(ofSize: 23),
+            .foregroundColor : UIColor.label
+        ]))
+        
+        countResultLabel.attributedText = mutableString
     }
 }
 
@@ -207,6 +260,7 @@ extension LottoViewController: UITextFieldDelegate {
 }
 
 extension LottoViewController: UIPickerViewDataSource, UIPickerViewDelegate {
+    
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -222,34 +276,8 @@ extension LottoViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let selectedNumber = numbers[row]
-        textField.text = "\(selectedNumber)"
-        
-        let color = [UIColor.systemRed, UIColor.systemBlue, UIColor.systemYellow, UIColor.systemGray].randomElement()!
-        
-        let mutableString = NSMutableAttributedString()
-        
-        mutableString.append(NSAttributedString(string: "\(selectedNumber)회", attributes: [
-            .font : UIFont.boldSystemFont(ofSize: 23),
-            .foregroundColor : color.withAlphaComponent(0.6)
-        ]))
-        
-        mutableString.append(NSAttributedString(string: " 당첨결과", attributes: [
-            .font : UIFont.systemFont(ofSize: 23),
-            .foregroundColor : UIColor.label
-        ]))
-        
-        countResultLabel.attributedText = mutableString
-        
         self.request(selectedNumber) { [weak self] dto in
-            guard let self else { return }
-            lottoNumberViewList[0].number = dto.drwtNo1
-            lottoNumberViewList[1].number = dto.drwtNo2
-            lottoNumberViewList[2].number = dto.drwtNo3
-            lottoNumberViewList[3].number = dto.drwtNo4
-            lottoNumberViewList[4].number = dto.drwtNo5
-            lottoNumberViewList[5].number = dto.drwtNo6
-            lottoNumberViewList[7].number = dto.bnusNo
-            dateLabel.text = "\(dto.drwNoDate) 추첨"
+            self?.updateLottoBalls(dto: dto)
         }
     }
 }

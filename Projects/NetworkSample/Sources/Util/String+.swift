@@ -9,7 +9,7 @@
 import Foundation
 
 
-private enum Resolver {
+enum Resolver {
     static let formatter = DateFormatter()
     static let isoFormatter = ISO8601DateFormatter()
 }

@@ -31,4 +31,30 @@ extension Date {
     var isLastDayOfMonth: Bool {
         return dayAfter.month != month
     }
+    
+    func dayOfTheWeek() -> String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier:"ko_KR")
+        dateFormatter.dateFormat = "EEEE"
+        return dateFormatter.string(from: self)
+    }
+
+    func getPreviousSaturday() -> Date? {
+        let calendar = Calendar.current
+        var components = DateComponents()
+        components.weekday = 7
+        return calendar.nextDate(
+            after: self,
+            matching: components,
+            matchingPolicy: .nextTime,
+            direction: .backward
+        )
+    }
+
+    func findNextSaturday() -> Date? {
+        let calendar = Calendar.current
+        let components = DateComponents(weekday: 7)
+        return calendar.nextDate(after: self, matching: components, matchingPolicy: .nextTime)
+    }
+
 }
