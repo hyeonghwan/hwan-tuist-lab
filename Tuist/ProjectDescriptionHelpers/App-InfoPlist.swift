@@ -26,6 +26,11 @@ public extension InfoPlist {
     static var codeDefault: InfoPlist {
         .extendingDefault(
             with: [
+                "OPEN_WEATHER_API_KEY": "$(OPEN_WEATHER_API_KEY)",
+                "MOVIE_API_KEY": "$(MOVIE_API_KEY)",
+                "NAVER_CLIENT_ID": "$(NAVER_CLIENT_ID)",
+                "NAVER_CLIENT_SECRET": "$(NAVER_CLIENT_SECRET)",
+                "KAKAO_NATIVE_APP_KEY": "$(KAKAO_NATIVE_APP_KEY)",
                 "UIApplicationSceneManifest": [
                     "UIApplicationSupportsMultipleScenes": false,
                     "UISceneConfigurations": [
