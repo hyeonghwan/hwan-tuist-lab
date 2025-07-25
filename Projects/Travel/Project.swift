@@ -9,22 +9,24 @@ let project = ProjectFactory.createApp(
             orgName: AppConfig.orgName,
             appBundleIDPrefix: AppConfig.orgName
         ),
-        pathProvider: PathProvider(configDirectory: "Config"),
+        pathProvider: PathProvider(
+            configDirectory: "Config"
+        ),
         deploymentTarget: .iOS("17.0"),
         defaultSettings: .init()
     ),
     dependencies: [
-//        .SPM.kingfisher,
-//        .SPM.hwanKit,
-//        .SPM.hwanMacros
-        .package(product: "Kingfisher", type: .runtime, condition: nil),
-        .package(product: "HawnKit", type: .runtime, condition: nil),
-        .package(product: "HwanMacros", type: .macro, condition: nil)
+        .SPM.kingfisher,
+        .SPM.hwanKit,
+        // .SPM.hwanMacros
+//        .package(product: "Kingfisher", type: .runtime, condition: nil),
+//        .package(product: "HawnKit", type: .runtime, condition: nil),
+//        .package(product: "HwanMacros", type: .macro, condition: nil)
     ],
     packages: [
-        R.kingfisher,
-        R.hwanKit,
-        R.hwanMacros
+//        R.kingfisher,
+//        R.hwanKit,
+//        R.hwanMacros
     ],
     infoPlist: .storyBoardDefault
 )

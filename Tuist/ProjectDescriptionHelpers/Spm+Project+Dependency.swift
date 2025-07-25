@@ -8,15 +8,15 @@ public extension TargetDependency {
 
 public extension TargetDependency.SPM {
     static let kingfisher: TargetDependency = .external(name: "Kingfisher")
-    static let hwanKit: TargetDependency = .external(name: "HwanKit")
-    static let hwanMacros: TargetDependency = .external(name: "HwanMacros")
-    static let alamofire: TargetDependency = .external(name: "Alamofire")
+    static let hwanKit: TargetDependency    = .external(name: "HwanKit")
+    static let hwanMacros: TargetDependency = .package(product: "HwanMacros", type: .macro)
+    static let alamofire: TargetDependency  = .external(name: "Alamofire")
 }
 
 public enum R {
     public static let kingfisher: Package = .package(url: "https://github.com/onevcat/Kingfisher.git", .upToNextMajor(from: Version(8, 4, 0)))
     public static let hwanKit: Package = .package(url: "https://github.com/hyeonghwan/hwan-kit.git", .revision("d89cc1648a007c5ae9077ae7e5cbbeccff0a8675"))
-    public static let hwanMacros: Package = .package(url: "https://github.com/hyeonghwan/hwan_macro.git", .revision("270ac9b6c28c552e9d02ccf9ec6bf204d77633f4"))
+    public static let hwanMacros: Package = .package(url: "https://github.com/hyeonghwan/hwan_macro.git", .revision("7d7524b8302cef6dd1d12a01199cdd42bcb29280"))
     public static let alamofire: Package = .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: Version(5, 10, 0)))
 }
 

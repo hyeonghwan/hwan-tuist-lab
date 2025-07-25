@@ -10,23 +10,20 @@ let project = ProjectFactory.createApp(
             appBundleIDPrefix: AppConfig.orgName
         ),
         pathProvider: PathProvider(
-            projectConfigDirectory: "Config",
-            configDirectory: "Projects/NetworkSample/Config"
+            projectConfigDirectory: "Projects/NetworkSample/Config",
+            configDirectory: "Config"
         ),
         deploymentTarget: .iOS("17.0"),
         defaultSettings: .init()
     ),
     dependencies: [
-        .package(product: "Kingfisher", type: .runtime, condition: nil),
-        .package(product: "HawnKit", type: .runtime, condition: nil),
-        // .package(product: "HwanMacros", type: .macro, condition: nil),
-        .package(product: "Alamofire", type: .macro, condition: nil)
+        .SPM.hwanMacros,
+        .SPM.kingfisher,
+        .SPM.hwanKit,
+        .SPM.alamofire
     ],
     packages: [
-        R.kingfisher,
-        R.hwanKit,
-        // R.hwanMacros,
-        R.alamofire
+        R.hwanMacros
     ],
     infoPlist: .codeDefault
 )
