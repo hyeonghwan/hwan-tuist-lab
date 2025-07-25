@@ -8,14 +8,19 @@
 
 import Foundation
 
+typealias LottoQuery = LottoApiResource.LottoQuery
 
 struct LottoApiResource: APIResource {
     typealias ResponseType = LottoDTO
     
-    var API_KEY: String { "" }
+    
+    struct LottoQuery: Query {
+        let method: String
+        let drwNo: String
+    }
     
     var method: HTTPMethod = .get
-    
+    var query: any Query
     var scheme: String {
         "https"
     }

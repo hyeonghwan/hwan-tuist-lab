@@ -24,32 +24,28 @@ protocol APIResource {
     var method: HTTPMethod { get }
     var headers: [String: String]? { get }
     var body: Data? { get }
+    var query: Query { get }
 }
 
 extension APIResource {
-    var scheme: String {
-        "https"
-    }
-    var host: String {
-        "api.example.com"
-    }
-    var headers: [String: String]? {
-        ["Content-Type": "application/json"]
-    }
-    var body: Data? {
-        nil
-    }
+    var scheme: String { "https" }
+    var host: String { "api.example.com" }
+    var headers: [String: String]? { ["Content-Type": "application/json"] }
+    var body: Data? { nil }
+    var API_KEY: String { "" }
     
-    func urlRequest(queries: [String: String?]) throws -> URLRequest {
+    func urlRequest() throws -> URLRequest {
         var components = URLComponents()
         components.scheme = scheme
         components.host = host
         components.path = path
         
-        var queries = queries
+        var queries = self.query.makeQuery()
+        
         if !self.API_KEY.isEmpty {
             queries["key"] = self.API_KEY
         }
+        
         components.queryItems = queries.reduce(into: [URLQueryItem]()) { origin, next in
             origin.append(URLQueryItem(name: next.key, value: next.value))
         }
