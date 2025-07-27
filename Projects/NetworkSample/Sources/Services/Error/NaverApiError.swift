@@ -25,6 +25,7 @@ enum NaverApiError: String, Error, Decodable {
     case MALFORMED_ENCODING = "SE06"
     case INVALID_SEARCH_API = "SE05"
     case SYSTEM_ERROR = "SE99"
+    case BAD_REQUEST = "400"
     
     var message: String {
         switch self {
@@ -42,6 +43,8 @@ enum NaverApiError: String, Error, Decodable {
             return "존재하지 않는 검색 api 입니다."
         case .SYSTEM_ERROR:
             return "시스템 에러"
+        case .BAD_REQUEST:
+            return "bad Request"
         }
     }
 }
