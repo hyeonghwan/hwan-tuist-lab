@@ -43,6 +43,7 @@ final class ShoppingResultViewController: BaseViewController {
         
         collectionView.delegate = self
         collectionView.dataSource = shoppingDataSource
+        scrollAnimator.delegate = view
     }
     
     override func addLayout() {
@@ -166,9 +167,59 @@ extension ShoppingResultViewController {
         }
     }
 }
+
+// MARK: ScrollAnimator
 extension ShoppingResultViewController {
     @Logging
     fileprivate class ScrollAnimator: NSObject {
+        weak var delegate: UIView?
         var headerViewTopAnchor: NSLayoutConstraint!
+        
+        private var beforeContentOffsetY: CGFloat = 0
+        private var accDeltaY: CGFloat = 0
+        private var isHeaderHidden: Bool = false
+    
+        private func hideHeader() {
+            isHeaderHidden = true
+            headerViewTopAnchor.constant = -80
+            UIView.animate(withDuration: 0.25) { [weak self] in
+                self?.delegate?.layoutIfNeeded()
+            }
+        }
+
+        private func showHeader() {
+            isHeaderHidden = false
+            headerViewTopAnchor.constant = 0
+            UIView.animate(withDuration: 0.25) { [weak self] in
+                self?.delegate?.layoutIfNeeded()
+            }
+        }
+        
+        func showOrHideHeaderAction(scrollView: UIScrollView) {
+            let contentOffsetY = scrollView.contentOffset.y
+            let isTop = contentOffsetY < 0
+            let isBottom = contentOffsetY + scrollView.bounds.height > scrollView.contentSize.height + 10
+            
+            if isTop || isBottom {
+                return
+            }
+            
+            let deltaY = contentOffsetY - beforeContentOffsetY
+            
+            // MARK: Delta Y Value
+            // logger.log(level: .info, "deltaY: \(deltaY), accDeltaY: \(self.accDeltaY)")
+            if (deltaY > 0 && accDeltaY < 0) || (deltaY < 0 && accDeltaY > 0) {
+                accDeltaY = 0
+            }
+            
+            accDeltaY += deltaY
+            beforeContentOffsetY = contentOffsetY
+
+            if accDeltaY > 50 && !isHeaderHidden {
+                hideHeader()
+            } else if accDeltaY < -50 && isHeaderHidden {
+                showHeader()
+            }
+        }
     }
 }
