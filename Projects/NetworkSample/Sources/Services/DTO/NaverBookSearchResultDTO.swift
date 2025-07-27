@@ -8,7 +8,31 @@
 
 import Foundation
 
-struct NaverBookSearchResultDTO<Item: Decodable>: Decodable {
+struct NaverAPIResponse<SuccessData: Decodable>: Decodable {
+    let data: SuccessData
+    
+    private enum CodingKeys: String, CodingKey {
+        case errorCode
+    }
+    
+    init(data: SuccessData) {
+        self.data = data
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        if container.contains(.errorCode) {
+            let errorData = try NaverSearchAPIError(from: decoder)
+            throw errorData.errorCode
+        } else {
+            self.data = try SuccessData(from: decoder)
+        }
+    }
+}
+
+
+struct NaverSearchResultDTO<Item: Decodable>: Decodable {
     let lastBuildDate: String
     let total: Int
     let start: Int
