@@ -36,12 +36,15 @@ struct NaverBookSearchApiResource: APIResource {
     var query: any Query
     let scheme = "https"
     let host: String = "openapi.naver.com"
-    let path: String
+    var path: String
     
     init(method: HTTPMethod = .get, query: any Query, path: String = "") {
         self.method = method
         self.query = query
-        self.path = "/" + Self.defaultPath + "/" + path
+        self.path = "/" + Self.defaultPath
+        if !path.isEmpty {
+            self.path = "\(self.path)/\(path)"
+        }
     }
     
     private var client_id: String { Bundle.main.infoDictionary?["NAVER_CLIENT_ID"] as? String ?? "" }
