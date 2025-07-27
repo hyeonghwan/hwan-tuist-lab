@@ -18,15 +18,10 @@ let project = ProjectFactory.createApp(
     dependencies: [
         .SPM.kingfisher,
         .SPM.hwanKit,
-        // .SPM.hwanMacros
-//        .package(product: "Kingfisher", type: .runtime, condition: nil),
-//        .package(product: "HawnKit", type: .runtime, condition: nil),
-//        .package(product: "HwanMacros", type: .macro, condition: nil)
+        .SPM.hwanMacros
     ],
     packages: [
-//        R.kingfisher,
-//        R.hwanKit,
-//        R.hwanMacros
+        R.hwanMacros
     ],
     infoPlist: .storyBoardDefault
 )

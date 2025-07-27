@@ -20,7 +20,8 @@ let project = ProjectFactory.createApp(
         .SPM.hwanMacros,
         .SPM.kingfisher,
         .SPM.hwanKit,
-        .SPM.alamofire
+        .SPM.alamofire,
+        .SPM.combineInterception
     ],
     packages: [
         R.hwanMacros
