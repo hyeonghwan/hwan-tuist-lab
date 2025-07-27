@@ -13,18 +13,31 @@ import Combine
 
 @Logging
 final class ShoppingResultViewController: BaseViewController {
+    
+    // MARK: View
     private let headerView = ShoppingHeaderView()
     private let collectionView = ShoppingCollectionView()
     private let refreshControl = UIRefreshControl()
     
+    // MARK: Presenter
     private let scrollAnimator = ScrollAnimator()
     private lazy var pagenationController = PagenationController(
         scrollView: collectionView,
         pagingSubject: shoppingPagingSubject
     )
+    
+    // MARK: ViewModel
     var shoppingViewModel: ShoppingViewModel!
+    
+    // MARK: Datasource
     private lazy var shoppingDataSource = ShoppingCollectionViewDataSource(viewModel: shoppingViewModel)
+    
+    // MARK: ViewModel Input
     private let shoppingPagingSubject = PassthroughSubject<Void, Never>()
+    private let refreshingSubject = PassthroughSubject<Void, Never>()
+    
+    // MARK: Subscriptions
+    private(set) var subscriptions = Set<AnyCancellable>()
     
     override func addChild() {
         self.view.addSubview(headerView)
@@ -68,6 +81,55 @@ final class ShoppingResultViewController: BaseViewController {
         collectionView.contentInset.top = headerHeight
         collectionView.verticalScrollIndicatorInsets.top = headerHeight
     }
+    
+    override func binding() {
+        let output = shoppingViewModel.transform(
+            ShoppingViewModel.Input(
+                viewDidLoadPublisher: self.viewDidLoadPublisher,
+                shoppingPagingPublisher: shoppingPagingSubject.eraseToAnyPublisher(),
+                selectedIndexPublisher: headerView.selectedIndexPublisher,
+                triggerRefreshPublisher: refreshControl.refreshPublisher
+            )
+        )
+        
+        self.pagenationController
+            .observe(output.isApiLoadingPublisher)
+        
+        output.endRefreshPublisher
+            .receive(on: RunLoop.main)
+            .sinkWeakStore(
+                on: self,
+                in: &subscriptions
+            ) { vc, void in
+                vc.refreshControl.endRefreshing()
+            }
+        
+        output
+            .shoppingListPublisher
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sinkWeakStore(
+                on: self,
+                in: &subscriptions
+            ) { vc, model in
+                let startIndex = model.priorCount
+                
+                let indexPaths = (startIndex..<model.list.count).map {
+                    IndexPath(row: $0, section: 0)
+                }
+                
+                self.logger.log(level: .info, "\(Self.self)-\(#function) - startIndex: \(String(describing: startIndex)), endIndex: \(String(describing: model.list.count))")
+                
+                vc.collectionView.performBatchUpdates {
+                    vc.collectionView.insertItems(at: indexPaths)
+                } completion: { _ in
+                    vc.shoppingViewModel.isApiLoadingSubject.send(false)
+                    vc.logger.log(level: .info, "\(#function)- reload Data 2")
+                }
+                vc.logger.log(level: .info, "\(#function)- reload Data 1")
+            }
+    }
+    
     private func navigationSetting() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
