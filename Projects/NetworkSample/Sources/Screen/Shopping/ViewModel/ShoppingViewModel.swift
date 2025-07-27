@@ -19,23 +19,23 @@ final class ShoppingViewModel {
     }
     
     struct Input {
-        let viewDidLoadPublisher: AnyPublisher<Void, Never>
-        let shoppingPagingPublisher: AnyPublisher<Void, Never>
-        let selectedIndexPublisher: AnyPublisher<Int, Never>
-        let triggerRefreshPublisher: AnyPublisher<Bool, Never>
+        let viewDidLoad: AnyPublisher<Void, Never>
+        let pagingRequest: AnyPublisher<Void, Never>
+        let sortTypeButtonTapped: AnyPublisher<Int, Never>
+        let refreshRequest: AnyPublisher<Bool, Never>
     }
     
     struct Output {
-        let isApiLoadingPublisher: AnyPublisher<Bool, Never>
-        let shoppingListPublisher: AnyPublisher<Model, Never>
-        let endRefreshPublisher: AnyPublisher<Void, Never>
+        let isLoadingNextpage: AnyPublisher<Bool, Never>
+        let pagingResult: AnyPublisher<Model, Never>
+        let endRefresh: AnyPublisher<Void, Never>
     }
     
     private var subscriptions = Set<AnyCancellable>()
     
     // MARK: Output Subject
     private(set) var shoppingListSubject = CurrentValueSubject<Model, Never>(Model(list: [], priorCount: 0))
-    private(set) var isApiLoadingSubject = CurrentValueSubject<Bool, Never>(false)
+    private(set) var isLoadingNextPage = CurrentValueSubject<Bool, Never>(false)
     private let endRefreshSubject = PassthroughSubject<Void, Never>()
     
     // MARK: Dependency
@@ -54,10 +54,10 @@ final class ShoppingViewModel {
     }
     
     func transform(_ input: Input) -> Output {
-        input.shoppingPagingPublisher
+        input.pagingRequest
             .handleEvents(receiveOutput: { [weak self] in
                 self?.logger.log(level: .info, "\(#function)- receiveCancel apiLoading Set True to start")
-                self?.isApiLoadingSubject.send(true)
+                self?.isLoadingNextPage.send(true)
             })
             .withUnretained(self)
             .flatMap { (viewModel, _) in
@@ -73,7 +73,7 @@ final class ShoppingViewModel {
             }
             .store(in: &subscriptions)
         
-        input.selectedIndexPublisher
+        input.sortTypeButtonTapped
             .sinkWeakStore(
                 on: self,
                 in: &subscriptions
@@ -81,7 +81,7 @@ final class ShoppingViewModel {
                 viewModel.triggerSelectedCategory(tag: tag)
             }
         
-        input.triggerRefreshPublisher
+        input.refreshRequest
             .sinkWeakStore(
                 on: self,
                 in: &subscriptions
@@ -90,9 +90,9 @@ final class ShoppingViewModel {
             }
         
         return Output(
-            isApiLoadingPublisher: isApiLoadingSubject.eraseToAnyPublisher(),
-            shoppingListPublisher: shoppingListSubject.eraseToAnyPublisher(),
-            endRefreshPublisher: endRefreshSubject.eraseToAnyPublisher()
+            isLoadingNextpage: isLoadingNextPage.eraseToAnyPublisher(),
+            pagingResult: shoppingListSubject.eraseToAnyPublisher(),
+            endRefresh: endRefreshSubject.eraseToAnyPublisher()
         )
     }
     

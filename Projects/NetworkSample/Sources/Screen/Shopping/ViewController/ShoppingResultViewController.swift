@@ -85,17 +85,17 @@ final class ShoppingResultViewController: BaseViewController {
     override func binding() {
         let output = shoppingViewModel.transform(
             ShoppingViewModel.Input(
-                viewDidLoadPublisher: self.viewDidLoadPublisher,
-                shoppingPagingPublisher: shoppingPagingSubject.eraseToAnyPublisher(),
-                selectedIndexPublisher: headerView.selectedIndexPublisher,
-                triggerRefreshPublisher: refreshControl.refreshPublisher
+                viewDidLoad: self.viewDidLoadPublisher,
+                pagingRequest: shoppingPagingSubject.eraseToAnyPublisher(),
+                sortTypeButtonTapped: headerView.selectedIndexPublisher,
+                refreshRequest: refreshControl.refreshPublisher
             )
         )
         
         self.pagenationController
-            .observe(output.isApiLoadingPublisher)
+            .observe(output.isLoadingNextpage)
         
-        output.endRefreshPublisher
+        output.endRefresh
             .receive(on: RunLoop.main)
             .sinkWeakStore(
                 on: self,
@@ -105,7 +105,7 @@ final class ShoppingResultViewController: BaseViewController {
             }
         
         output
-            .shoppingListPublisher
+            .pagingResult
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sinkWeakStore(
@@ -123,7 +123,7 @@ final class ShoppingResultViewController: BaseViewController {
                 vc.collectionView.performBatchUpdates {
                     vc.collectionView.insertItems(at: indexPaths)
                 } completion: { _ in
-                    vc.shoppingViewModel.isApiLoadingSubject.send(false)
+                    vc.shoppingViewModel.isLoadingNextPage.send(false)
                     vc.logger.log(level: .info, "\(#function)- reload Data 2")
                 }
                 vc.logger.log(level: .info, "\(#function)- reload Data 1")
