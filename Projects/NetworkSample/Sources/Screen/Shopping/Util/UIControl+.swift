@@ -6,7 +6,31 @@
 //  Copyright © 2025 com.hwan. All rights reserved.
 //
 
-import Foundation
+import UIKit
+import Combine
+
+extension ShoppingHeaderView {
+    var selectedIndexPublisher: AnyPublisher<Int, Never> {
+        let buttons = buttonList.values
+        return Publishers.MergeMany(
+            buttons.map { button in
+                button.controlPublisher(for: .touchUpInside)
+                    .map(\.tag)
+            }
+        ).eraseToAnyPublisher()
+    }
+}
+
+extension UIRefreshControl {
+    var refreshPublisher: AnyPublisher<Bool, Never> {
+        self.controlPublisher(for: .valueChanged)
+            .compactMap { $0 as? UIRefreshControl }
+            .map(\.isRefreshing)
+            .eraseToAnyPublisher()
+    }
+}
+
+
 extension UIControl {
     typealias _ControlPublisher = UIControl.ControlPublisher
     typealias _Event = UIControl.Event
@@ -52,3 +76,4 @@ extension UIControl {
         }
     }
 }
+
