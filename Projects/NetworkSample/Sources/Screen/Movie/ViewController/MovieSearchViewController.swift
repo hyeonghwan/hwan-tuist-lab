@@ -112,7 +112,7 @@ final class MovieSearchViewController: BaseViewController {
     private func request(day: String, _ completion: @escaping (BoxOfficeResultDTO) -> Void) {
         CoreNetwork.shared.GET(
             resource: KobisOpenApiResource(query: MovieQuery(targetDt: "\(day)")),
-            type: BoxOfficeResultDTO.self
+            decodeType: BoxOfficeResultDTO.self
         ) { result in
             switch result {
             case let .success(dto):
@@ -137,7 +137,7 @@ final class MovieSearchViewController: BaseViewController {
             showAlert(
                 title: "입력값",
                 message: "20201210 (년도월일) 형식으로 입력해주세요 ",
-                action: [AlertAction(text: "확인", color: .black) { self.dismiss(animated: true)}]
+                action: AlertAction(text: "확인", color: .black) { self.dismiss(animated: true)}
             )
         }
     }

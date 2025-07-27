@@ -213,7 +213,7 @@ final class LottoViewController: BaseViewController {
     private func request(_ drwNo: Int, _ completion: @escaping (LottoDTO) -> Void) {
         animationBalls(isAnimate: true)
         let resource = LottoApiResource(query: LottoQuery(method: "getLottoNumber", drwNo: "\(drwNo)"))
-        CoreNetwork.shared.GET(resource: resource, type: LottoDTO.self) { [weak self] result in
+        CoreNetwork.shared.GET(resource: resource, decodeType: LottoDTO.self) { [weak self] result in
                 switch result {
                 case let .success(dto):
                     completion(dto)
