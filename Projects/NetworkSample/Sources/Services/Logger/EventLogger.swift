@@ -10,7 +10,7 @@ import Alamofire
 import HwanMacros
 
 @Logging
-final class APIEventLogger: EventMonitor {
+final class APIEventLogger: EventMonitor, @unchecked Sendable {
     
     let queue = DispatchQueue(label: "myNetworkLogger")
     
@@ -33,9 +33,8 @@ final class APIEventLogger: EventMonitor {
         + "Result: " + "\(response.result)" + "\n"
         + "StatusCode: " + "\(response.response?.statusCode ?? 0)" + "\n"
         + "Data: \(response.data?.toPrettyPrintedString ?? "")"
-        
         logger.log(level: .debug, "🛰 NETWORK Response LOG")
-        logger.log(level: .fault, "\(responseLog)")
+        logger.log(level: .info, "\(responseLog)")
         
     }
 }

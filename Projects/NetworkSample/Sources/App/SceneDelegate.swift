@@ -8,8 +8,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        let start = StartViewController()
-        window.rootViewController = UINavigationController(rootViewController: start)
+        let vc = ShoppingMainViewController()
+        window.rootViewController = UINavigationController(rootViewController: vc)
         self.window = window
         window.makeKeyAndVisible()
     }
