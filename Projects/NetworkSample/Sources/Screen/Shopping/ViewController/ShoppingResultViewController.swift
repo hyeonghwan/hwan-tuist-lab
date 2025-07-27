@@ -22,6 +22,8 @@ final class ShoppingResultViewController: BaseViewController {
         scrollView: collectionView,
         pagingSubject: shoppingPagingSubject
     )
+    var shoppingViewModel: ShoppingViewModel!
+    private lazy var shoppingDataSource = ShoppingCollectionViewDataSource(viewModel: shoppingViewModel)
     private let shoppingPagingSubject = PassthroughSubject<Void, Never>()
     
     override func addChild() {
