@@ -33,10 +33,9 @@ extension Date {
     }
     
     func dayOfTheWeek() -> String? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier:"ko_KR")
-        dateFormatter.dateFormat = "EEEE"
-        return dateFormatter.string(from: self)
+        Resolver.formatter.locale = Locale(identifier:"ko_KR")
+        Resolver.formatter.dateFormat = "EEEE"
+        return Resolver.formatter.string(from: self)
     }
 
     func getPreviousSaturday() -> Date? {
