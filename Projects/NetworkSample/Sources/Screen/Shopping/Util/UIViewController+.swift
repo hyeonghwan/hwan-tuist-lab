@@ -6,4 +6,19 @@
 //  Copyright © 2025 com.hwan. All rights reserved.
 //
 
-import Foundation
+import UIKit
+import Combine
+
+#if canImport(CombineInterception)
+import CombineInterception
+
+extension UIViewController {
+    var viewDidLoadPublisher: AnyPublisher<Void, Never> {
+        let selector = #selector(UIViewController.viewDidLoad)
+        return publisher(for: selector)
+            .map { _ in () }
+            .eraseToAnyPublisher()
+    }
+}
+
+#endif
