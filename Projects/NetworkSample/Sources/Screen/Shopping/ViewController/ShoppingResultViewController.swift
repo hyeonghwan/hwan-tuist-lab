@@ -35,6 +35,8 @@ final class ShoppingResultViewController: BaseViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         headerView.translatesAutoresizingMaskIntoConstraints = false
         
+        collectionView.delegate = self
+        collectionView.dataSource = shoppingDataSource
     }
     
     override func addLayout() {
@@ -72,6 +74,23 @@ final class ShoppingResultViewController: BaseViewController {
 }
 
 
+// MARK: UICollectionViewDelegate
+extension ShoppingResultViewController: UICollectionViewDelegateFlowLayout {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        scrollAnimator.showOrHideHeaderAction(scrollView: scrollView)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        CGSize(
+            width: (windowWidth / 2) - 16,
+            height: 270
+        )
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        CGSize(width: windowWidth, height: 100)
+    }
+}
 extension ShoppingResultViewController {
     @Logging
     fileprivate class ScrollAnimator: NSObject {
