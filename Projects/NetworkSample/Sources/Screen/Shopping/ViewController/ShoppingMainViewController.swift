@@ -98,6 +98,15 @@ extension ShoppingMainViewController: UISearchBarDelegate {
         self.hideKeyboard()
         let vc = ShoppingResultViewController()
         vc.navigationItem.title = "\(searchQuery)"
+        vc.shoppingViewModel = ShoppingViewModel(
+            paginagState: ShoppingViewModel.PagingState(
+                query: searchQuery,
+                display: 100,
+                start: 1,
+                sort: ShoppingSortType.sim.string,
+                total: 0
+            )
+        )
         navigationItem.backButtonTitle = ""
         self.navigationController?.pushViewController(vc, animated: true)
     }
