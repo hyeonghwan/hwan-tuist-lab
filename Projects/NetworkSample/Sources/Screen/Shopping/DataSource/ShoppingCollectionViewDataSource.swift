@@ -27,7 +27,19 @@ final class ShoppingCollectionViewDataSource: NSObject, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionFooter && indexPath.section == 0 {
             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: RefreshFotterView.id, for: indexPath) as! RefreshFotterView
-            footer.refreshIndicator.startAnimating()
+            
+            if let viewModel {
+                viewModel.isLoadingNextPage
+                    .sinkWeakStore(on: footer, in: &footer.cancelAable) { footer, isLoading in
+                        debugPrint("Footer: \(isLoading)")
+                        if isLoading {
+                            footer.refreshIndicator.startAnimating()
+                        } else {
+                            footer.refreshIndicator.stopAnimating()
+                        }
+                    }
+            }
+            
             return footer
         }
         return UICollectionReusableView()
