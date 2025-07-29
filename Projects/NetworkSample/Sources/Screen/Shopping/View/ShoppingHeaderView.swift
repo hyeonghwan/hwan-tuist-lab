@@ -11,11 +11,11 @@ import Design
 
 final class ShoppingHeaderView: BaseView {
     
-    private let label: UILabel = {
+    private(set) var label: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14)
         label.textColor = .systemGreen
-        label.text = "13,235,449 개의 검색 결과"
+        label.text = "0 개의 검색 결과"
         label.textAlignment = .left
         return label
     }()
@@ -29,10 +29,10 @@ final class ShoppingHeaderView: BaseView {
         return stackView
     }()
     
-    private let sortByacurrate = BoxButton(title: ShoppingSortType.sim.rawValue).buildViewTag(0)
-    private let sortByDate = BoxButton(title: "날짜순").buildViewTag(1)
-    private let sortByHighCost = BoxButton(title: "가격높은순").buildViewTag(2)
-    private let sortByLowCost = BoxButton(title: "가격낮은순").buildViewTag(3)
+    private let sortByacurrate = BoxButton(title: ShoppingSortType.sim.filterString).buildViewTag(0)
+    private let sortByDate = BoxButton(title: ShoppingSortType.date.filterString).buildViewTag(1)
+    private let sortByHighCost = BoxButton(title: ShoppingSortType.dsc.filterString).buildViewTag(2)
+    private let sortByLowCost = BoxButton(title: ShoppingSortType.asc.filterString).buildViewTag(3)
     
      var buttonList: [Int: BoxButton] {
         [
