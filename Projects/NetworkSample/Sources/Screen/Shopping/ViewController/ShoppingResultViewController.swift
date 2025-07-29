@@ -23,7 +23,7 @@ final class ShoppingResultViewController: BaseViewController {
     private let scrollAnimator = ScrollAnimator()
     private lazy var pagenationController = PagenationController(
         scrollView: collectionView,
-        pagingSubject: shoppingPagingSubject
+        shoppingPagingSubject: shoppingPagingSubject
     )
     
     // MARK: ViewModel
@@ -164,14 +164,14 @@ extension ShoppingResultViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: PagenationController
 extension ShoppingResultViewController {
-    @Logging
+      
     fileprivate class PagenationController {
         private weak var scrollView: UIScrollView!
-        private var pagingSubject: PassthroughSubject<(Void), Never>
+        private weak var shoppingPagingSubject: PassthroughSubject<(Void), Never>?
         private var cancellable: AnyCancellable?
         
-        init(scrollView: UIScrollView, pagingSubject: PassthroughSubject<Void, Never>) {
-            self.pagingSubject = pagingSubject
+        init(scrollView: UIScrollView, shoppingPagingSubject: PassthroughSubject<Void, Never>) {
+            self.shoppingPagingSubject = shoppingPagingSubject
             self.scrollView = scrollView
         }
         
@@ -179,11 +179,11 @@ extension ShoppingResultViewController {
             guard let scrollView = self.scrollView else { return }
             cancellable = scrollView.publisher(for: \.contentOffset)
                 .removeDuplicates(by: { $0.y == $1.y })
-                .throttle(for: .milliseconds(600), scheduler: DispatchQueue.main, latest: true)
                 .combineLatest(isApiLoading)
                 .filter { (_, isLoading) in
                     return !isLoading
                 }
+                .throttle(for: .milliseconds(600), scheduler: DispatchQueue.main, latest: true)
                 .filter { [weak self] _ in
                     (self?.scrollView?.contentSize.height ?? 0) > 0
                 }
@@ -194,24 +194,12 @@ extension ShoppingResultViewController {
                     let boundsHeight = scrollView.bounds.height
                     let totalOffset = offsetY + boundsHeight
                     if totalOffset > (contentHeight * 3) / 4 {
-                        self.pagingSubject.send()
+                        controller.shoppingPagingSubject?.send()
                     }
                 }
         }
         
         private func logging(pointY: CGFloat) {
-            // let logString = """
-            //  \(#function) -
-            //  offsetY: \(offsetY)
-            //  request to viewmodel totalOFfset: \(totalOffset)
-            //  contentHeight: \(contentHeight - 200)
-            //  isRequest: \(totalOffset > (contentHeight * 3) / 4),
-            //  viewModel.isApiLoadingSubject: \(String(describing: self.viewModel.isApiLoadingSubject.value))
-            //  """
-            // self.logger.log(
-            //     level: .info,
-            //     "\(logString)"
-            // )
             let contentSize = self.scrollView?.contentSize ?? CGSize(width: 0, height: 0)
             let boundsHeight = self.scrollView?.bounds.height ?? 0
             let log = """
@@ -222,17 +210,13 @@ extension ShoppingResultViewController {
             contentSize:    \(String(describing: contentSize))
             ------------------------------------------------------------------
             """
-            self.logger.log(
-                level: .info,
-                "\(log)"
-            )
         }
     }
 }
 
 // MARK: ScrollAnimator
 extension ShoppingResultViewController {
-    @Logging
+      
     fileprivate class ScrollAnimator: NSObject {
         weak var delegate: UIView?
         var headerViewTopAnchor: NSLayoutConstraint!
