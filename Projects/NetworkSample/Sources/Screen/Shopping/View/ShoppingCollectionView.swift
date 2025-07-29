@@ -7,18 +7,9 @@
 //
 
 import UIKit
+import Design
 
-
-final class ShoppingCollectionView: UICollectionView {
-    
-    private override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
-        super.init(frame: frame, collectionViewLayout: layout)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-    
+final class ShoppingCollectionView: BaseCollectiionView {
     convenience init() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -36,6 +27,11 @@ final class ShoppingCollectionView: UICollectionView {
             RefreshFotterView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
             withReuseIdentifier: RefreshFotterView.id
+        )
+        
+        self.register(
+            EmptyCell.self,
+            forCellWithReuseIdentifier: EmptyCell.id
         )
     }
 }
