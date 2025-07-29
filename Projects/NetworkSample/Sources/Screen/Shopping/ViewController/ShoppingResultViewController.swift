@@ -8,16 +8,17 @@
 
 import UIKit
 import Design
-import HwanMacros
+ 
 import Combine
+import Kingfisher
 
-@Logging
+  
 final class ShoppingResultViewController: BaseViewController {
     
     // MARK: View
     private let headerView = ShoppingHeaderView()
     private let collectionView = ShoppingCollectionView()
-    private let refreshControl = UIRefreshControl()
+    private let indicatorContainerView = IndicatorContainerView()
     
     // MARK: Presenter
     private let scrollAnimator = ScrollAnimator()
@@ -30,7 +31,9 @@ final class ShoppingResultViewController: BaseViewController {
     var shoppingViewModel: ShoppingViewModel!
     
     // MARK: Datasource
-    private lazy var shoppingDataSource = ShoppingCollectionViewDataSource(viewModel: shoppingViewModel)
+    private lazy var shoppingDataSource = ShoppingCollectionViewDataSource(
+        viewModel: shoppingViewModel
+    )
     
     // MARK: ViewModel Input
     private let shoppingPagingSubject = PassthroughSubject<Void, Never>()
@@ -39,24 +42,38 @@ final class ShoppingResultViewController: BaseViewController {
     // MARK: Subscriptions
     private(set) var subscriptions = Set<AnyCancellable>()
     
+    deinit {
+        KingfisherManager.shared.cache.clearCache()
+    }
+    
     override func addChild() {
         self.view.addSubview(headerView)
         self.view.addSubview(collectionView)
+        self.view.addSubview(indicatorContainerView)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        KingfisherManager.shared.cache.clearMemoryCache()
     }
     
     override func addAttributes() {
         self.view.backgroundColor = .systemBackground
-        self.refreshControl.tintColor = .orange
+        let refreshControl = UIRefreshControl()
+        refreshControl.tintColor = .green
+        collectionView.refreshControl = refreshControl
         
         navigationSetting()
         
-        collectionView.refreshControl = refreshControl
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         headerView.translatesAutoresizingMaskIntoConstraints = false
         
         collectionView.delegate = self
         collectionView.dataSource = shoppingDataSource
         scrollAnimator.delegate = view
+        
+        indicatorContainerView.translatesAutoresizingMaskIntoConstraints = false
+        indicatorContainerView.isHidden = true
     }
     
     override func addLayout() {
@@ -67,67 +84,133 @@ final class ShoppingResultViewController: BaseViewController {
             headerView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             headerView.heightAnchor.constraint(equalToConstant: 80),
+            
             collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            indicatorContainerView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 80),
+            indicatorContainerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            indicatorContainerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            indicatorContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
         
         headerView.setNeedsLayout()
         headerView.layoutIfNeeded()
+        
         view.bringSubviewToFront(headerView)
+        view.bringSubviewToFront(indicatorContainerView)
         
         let headerHeight = headerView.bounds.height
         collectionView.contentInset.top = headerHeight
         collectionView.verticalScrollIndicatorInsets.top = headerHeight
     }
     
+    private var retryLoadSubject = PassthroughSubject<ShoppingSortType, Never>()
+    
     override func binding() {
+        let refreshInput = collectionView
+            .refreshControl!
+            .refreshPublisher
+            .compactMap { [weak self] value -> ShoppingSortType? in
+                guard let self else { return nil }
+                return ShoppingSortType.matchTag(self.headerView.selectedIndex)
+            }
+        
         let output = shoppingViewModel.transform(
             ShoppingViewModel.Input(
-                viewDidLoad: self.viewDidLoadPublisher,
+                viewDidLoad: self.viewDidLoadPublisher.map { _ in ShoppingSortType.sim }.eraseToAnyPublisher(),
                 pagingRequest: shoppingPagingSubject.eraseToAnyPublisher(),
                 sortTypeButtonTapped: headerView.selectedIndexPublisher,
-                refreshRequest: refreshControl.refreshPublisher
+                refreshRequest: refreshInput.eraseToAnyPublisher(),
+                retryLoadSubject: retryLoadSubject.eraseToAnyPublisher()
             )
         )
         
-        self.pagenationController
-            .observe(output.isLoadingNextpage)
+        self.pagenationController.observe(output.guardPaging)
         
-        output.endRefresh
-            .receive(on: RunLoop.main)
-            .sinkWeakStore(
-                on: self,
-                in: &subscriptions
-            ) { vc, void in
-                vc.refreshControl.endRefreshing()
+        output.isLoadingCell
+            .sinkWeak(on: self) { vc, value in
+                vc.indicatorContainerView.isHidden = !value
+                if value {
+                    vc.indicatorContainerView.indicator.startAnimating()
+                } else {
+                    vc.indicatorContainerView.indicator.stopAnimating()
+                }
             }
+            .store(in: &subscriptions)
         
-        output
-            .pagingResult
-            .dropFirst()
+        output.refreshSignal
+            .sinkWeak(on: self) { vc, _ in
+                vc.collectionView.reloadData()
+                DispatchQueue.main.async {
+                    vc.shoppingViewModel.guardPaging.send(false)
+                    vc.shoppingViewModel.isLoadingCell.send(false)
+                    if vc.collectionView.refreshControl!.isRefreshing == true {
+                        vc.collectionView.refreshControl!.endRefreshing()
+                        let x = vc.collectionView.contentOffset.x
+                        let y = -vc.headerView.bounds.height
+                        vc.collectionView.setContentOffset(CGPoint(x: x, y: y), animated: true)
+                    }
+                }
+            }
+            .store(in: &subscriptions)
+        
+        output.loadModelSignal
+            .sinkWeak(on: self) { vc, _ in
+                vc.collectionView.reloadData()
+                DispatchQueue.main.async {
+                    vc.shoppingViewModel.guardPaging.send(false)
+                    vc.shoppingViewModel.isLoadingCell.send(false)
+                }
+            }
+            .store(in: &subscriptions)
+        
+        output.pagingSignal
             .receive(on: DispatchQueue.main)
-            .sinkWeakStore(
-                on: self,
-                in: &subscriptions
-            ) { vc, model in
-                let startIndex = model.priorCount
-                
-                let indexPaths = (startIndex..<model.list.count).map {
-                    IndexPath(row: $0, section: 0)
+            .sinkWeak(on: self) { vc, _ in
+                vc.collectionView.reloadData()
+                DispatchQueue.main.async {
+                    vc.shoppingViewModel.guardPaging.send(false)
+                    vc.shoppingViewModel.isLoadingPagingIndicator.send(false)
                 }
-                
-                self.logger.log(level: .info, "\(Self.self)-\(#function) - startIndex: \(String(describing: startIndex)), endIndex: \(String(describing: model.list.count))")
-                
-                vc.collectionView.performBatchUpdates {
-                    vc.collectionView.insertItems(at: indexPaths)
-                } completion: { _ in
-                    vc.shoppingViewModel.isLoadingNextPage.send(false)
-                    vc.logger.log(level: .info, "\(#function)- reload Data 2")
-                }
-                vc.logger.log(level: .info, "\(#function)- reload Data 1")
             }
+            .store(in: &subscriptions)
+        
+        output.totalCount
+            .map { "\(String(describing: $0.formattedNumber() ?? "")) 개" }
+            .sinkWeak(on: self) { vc, string in
+                vc.headerView.label.text = string
+            }
+            .store(in: &subscriptions)
+        
+        output.dataLoadFailed
+            .sinkWeak(on: self) { vc, error in
+                vc.showFallBackAlert(error)
+                DispatchQueue.main.async {
+                    vc.shoppingViewModel.guardPaging.send(false)
+                }
+            }
+            .store(in: &subscriptions)
+    }
+    
+    private func showFallBackAlert(_ error: NaverApiError) {
+        let retry = AlertAction(text: "재시도", color: .red) { [weak self] in
+            guard let self else { return }
+            let sortType = ShoppingSortType.matchTag(self.headerView.selectedIndex)
+            self.dismiss(animated: true, completion: {
+                self.retryLoadSubject.send(sortType)
+            })
+        }
+        let ok = AlertAction(text: "확인", color: .black) { [weak self] in
+            self?.dismiss(animated: true, completion: { })
+        }
+        self.showAlert(
+            title: "에러",
+            message: "\(error.message)",
+            action: retry, ok
+        )
     }
     
     private func navigationSetting() {
@@ -142,7 +225,6 @@ final class ShoppingResultViewController: BaseViewController {
     }
 }
 
-
 // MARK: UICollectionViewDelegate
 extension ShoppingResultViewController: UICollectionViewDelegateFlowLayout {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -150,10 +232,17 @@ extension ShoppingResultViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(
-            width: (windowWidth / 2) - 16,
-            height: 270
-        )
+        if shoppingViewModel.shoppingListSubject.value.list.count >= 1 {
+            return CGSize(
+                width: (windowWidth / 2) - 16,
+                height: 270
+            )
+        } else {
+            return CGSize(
+                width: windowWidth,
+                height: 50
+            )
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
