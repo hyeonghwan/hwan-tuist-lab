@@ -9,7 +9,9 @@
 import UIKit
 import Design
 import Kingfisher
+ 
 
+  
 final class ShoppingItemCell: BaseCollectionViewCell, CellIdentifialble {
     
     private let imageContainerView = UIView()
@@ -103,8 +105,8 @@ final class ShoppingItemCell: BaseCollectionViewCell, CellIdentifialble {
     
     func configureCell(with shoppingItem: ShoppingItemDTO) {
         if let url = URL(string: shoppingItem.image) {
-            let width = UIScreen.main.bounds.width / 2 - 16
-            shoppingImageView.kf.downSizingImage(
+            let width: CGFloat = 200
+            shoppingImageView.kf.downSampling(
                 url: url,
                 size: CGSize(
                     width: width,
@@ -112,9 +114,34 @@ final class ShoppingItemCell: BaseCollectionViewCell, CellIdentifialble {
                 )
             )
         }
+        
+        shoppingItem.title.htmlToAttributedString(
+            font: titleLabel.font,
+            color: titleLabel.textColor
+        ) { [weak self] value in
+            self?.titleLabel.attributedText = value ?? NSAttributedString(string: "N/A")
+        }
         imageLabel.text = shoppingItem.mallName
-        let attributed = shoppingItem.title.htmlStringToAttributedString()
-        titleLabel.attributedText = attributed ?? NSAttributedString(string: "N/A")
-        priceLabel.text = shoppingItem.lprice.isEmpty ? "N/A" : Int(shoppingItem.lprice)!.formattedNumber()
+        
+        priceLabel.text = shoppingItem.lprice.isEmpty ? "N/A" : "\(String(describing: Int(shoppingItem.lprice)?.formattedNumber() ?? "N/A")) 원"
+    }
+}
+
+@MainActor
+public extension KingfisherWrapper where Base == KFCrossPlatformImageView {
+    mutating func downSampling(url: URL, size: CGSize) {
+        let processor = DownsamplingImageProcessor(
+            size: size
+        )
+        self.indicatorType = .activity
+        self.setImage(
+            with: url,
+            placeholder: nil,
+            options: [
+                .transition(.fade(0.3)),
+                .processor(processor),
+                .scaleFactor(UIScreen.main.scale)
+            ]
+        )
     }
 }
