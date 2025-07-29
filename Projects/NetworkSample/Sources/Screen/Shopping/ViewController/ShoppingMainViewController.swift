@@ -8,9 +8,9 @@
 
 import UIKit
 import Design
-import HwanMacros
+ 
 
-@Logging
+  
 final class ShoppingMainViewController: BaseViewController {
 
     private let imageView = UIImageView()
@@ -115,7 +115,6 @@ extension ShoppingMainViewController: UISearchBarDelegate {
 
 extension ShoppingMainViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        logger.log(level: .info, "\(#function) \(String(describing: searchController.searchBar.text!))")
     }
 }
 

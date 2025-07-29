@@ -8,10 +8,12 @@
 
 import UIKit
 import Design
+import Combine
 
 final class RefreshFotterView: UICollectionReusableView, CellIdentifialble {
     
     private(set) var refreshIndicator = UIActivityIndicatorView()
+    var cancelAable = Set<AnyCancellable>()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,9 +27,14 @@ final class RefreshFotterView: UICollectionReusableView, CellIdentifialble {
     }
     
     private func addAttributes() {
-        refreshIndicator.color = .orange
+        refreshIndicator.color = .green
         refreshIndicator.style = .large
         refreshIndicator.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        cancelAable.removeAll()
     }
     
     private func addChild() {
