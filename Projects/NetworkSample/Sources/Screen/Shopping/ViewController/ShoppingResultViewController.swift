@@ -38,6 +38,7 @@ final class ShoppingResultViewController: BaseViewController {
     // MARK: ViewModel Input
     private let shoppingPagingSubject = PassthroughSubject<Void, Never>()
     private let refreshingSubject = PassthroughSubject<Void, Never>()
+    private var retryLoadSubject = PassthroughSubject<ShoppingSortType, Never>()
     
     // MARK: Subscriptions
     private(set) var subscriptions = Set<AnyCancellable>()
@@ -106,8 +107,6 @@ final class ShoppingResultViewController: BaseViewController {
         collectionView.contentInset.top = headerHeight
         collectionView.verticalScrollIndicatorInsets.top = headerHeight
     }
-    
-    private var retryLoadSubject = PassthroughSubject<ShoppingSortType, Never>()
     
     override func binding() {
         let refreshInput = collectionView
@@ -287,19 +286,6 @@ extension ShoppingResultViewController {
                     }
                 }
         }
-        
-        private func logging(pointY: CGFloat) {
-            let contentSize = self.scrollView?.contentSize ?? CGSize(width: 0, height: 0)
-            let boundsHeight = self.scrollView?.bounds.height ?? 0
-            let log = """
-            \(Self.self) ----------------------------------------------------- 
-            contentOffsetY: \(String(describing: pointY))
-            bounds.height:  \(String(describing: boundsHeight))
-            offsetY + bound.height \(pointY + boundsHeight)
-            contentSize:    \(String(describing: contentSize))
-            ------------------------------------------------------------------
-            """
-        }
     }
 }
 
@@ -340,9 +326,6 @@ extension ShoppingResultViewController {
             }
             
             let deltaY = contentOffsetY - beforeContentOffsetY
-            
-            // MARK: Delta Y Value
-            // logger.log(level: .info, "deltaY: \(deltaY), accDeltaY: \(self.accDeltaY)")
             if (deltaY > 0 && accDeltaY < 0) || (deltaY < 0 && accDeltaY > 0) {
                 accDeltaY = 0
             }
