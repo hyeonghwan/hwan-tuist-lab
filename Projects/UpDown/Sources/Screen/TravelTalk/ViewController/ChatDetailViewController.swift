@@ -7,9 +7,9 @@
 //
 
 import UIKit
-import HwanMacros
+ 
 
-@Logging
+  
 final class ChatDetailViewController: UIViewController, CellIdentifialble {
     
     @IBOutlet weak var contentTextView: UITextView!
@@ -21,6 +21,6 @@ final class ChatDetailViewController: UIViewController, CellIdentifialble {
         let spacing: CGFloat = 16
         contentTextView.textContainerInset = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
         self.contentTextView.text = text
-        logger.log(level: .debug, "\(#function)")
+        // logger.log(level: .debug, "\(#function)")
     }
 }

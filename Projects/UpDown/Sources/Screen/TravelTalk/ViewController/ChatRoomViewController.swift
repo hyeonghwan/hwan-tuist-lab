@@ -7,10 +7,10 @@
 //
 
 import UIKit
-import HwanMacros
+ 
 import HwanKit
 
-@Logging
+  
 final class ChatRoomViewController: UIViewController, CellIdentifialble {
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -62,7 +62,7 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
         self.sectionModels = ChatSection.divideSectionUsingDate(self.chatRoom)
         for model in sectionModels {
             for item in model.items {
-                logger.log(level: .debug, "\(item)")
+                // logger.log(level: .debug, "\(item)")
             }
         }
     }
@@ -394,7 +394,7 @@ extension ChatRoomViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionDateHeaderView.id, for: indexPath) as? SectionDateHeaderView else {
-                logger.log(level: .fault, "\(Self.self)- \(indexPath.section) Section - SectionDateHeader casting Failed")
+                // logger.log(level: .fault, "\(Self.self)- \(indexPath.section) Section - SectionDateHeader casting Failed")
                 fatalError()
             }
             let sectionModel = sectionModels[indexPath.section]

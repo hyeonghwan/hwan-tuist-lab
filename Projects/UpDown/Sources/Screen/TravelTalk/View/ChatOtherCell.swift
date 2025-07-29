@@ -8,9 +8,9 @@
 
 import UIKit
 import Design
-import HwanMacros
+ 
 
-@Logging
+  
 final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
     
     @IBOutlet weak var profileImageView: UIImageView!
