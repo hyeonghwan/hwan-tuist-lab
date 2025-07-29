@@ -194,24 +194,6 @@ final class ShoppingResultViewController: BaseViewController {
             .store(in: &subscriptions)
     }
     
-    private func showFallBackAlert(_ error: NaverApiError) {
-        let retry = AlertAction(text: "재시도", color: .red) { [weak self] in
-            guard let self else { return }
-            let sortType = ShoppingSortType.matchTag(self.headerView.selectedIndex)
-            self.dismiss(animated: true, completion: {
-                self.retryLoadSubject.send(sortType)
-            })
-        }
-        let ok = AlertAction(text: "확인", color: .black) { [weak self] in
-            self?.dismiss(animated: true, completion: { })
-        }
-        self.showAlert(
-            title: "에러",
-            message: "\(error.message)",
-            action: retry, ok
-        )
-    }
-    
     private func navigationSetting() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
