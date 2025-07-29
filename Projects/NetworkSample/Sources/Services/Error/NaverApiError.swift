@@ -17,6 +17,7 @@ struct NaverSearchAPIError: Decodable {
     let errorCode: NaverApiError
 }
 
+
 enum NaverApiError: String, Error, Decodable, CaseIterable {
     case INCORRECT_QUERY = "SE01"
     case INVALID_DISPLAY_VALUE = "SE02"
@@ -27,6 +28,13 @@ enum NaverApiError: String, Error, Decodable, CaseIterable {
     case SYSTEM_ERROR = "SE99"
     case BAD_REQUEST = "400"
     case unknown
+    
+    var alertMessage: String {
+        """
+        서버에서 에러가 발생했습니다. 
+        관리자에게 문의해주세요
+        """
+    }
     
     var message: String {
         switch self {
@@ -51,3 +59,6 @@ enum NaverApiError: String, Error, Decodable, CaseIterable {
         }
     }
 }
+
+
+
