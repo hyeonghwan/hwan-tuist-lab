@@ -17,15 +17,18 @@ final class RecomendedCell: BaseCollectionViewCell, CellIdentifialble {
     }
     
     override func addAttributes() {
-        recommededImageView.contentMode = .scaleAspectFit
+        recommededImageView.contentMode = .scaleAspectFill
+        recommededImageView.translatesAutoresizingMaskIntoConstraints = false
+        recommededImageView.layer.cornerRadius = 12
+        recommededImageView.clipsToBounds = true
     }
     
     override func addLayout() {
         NSLayoutConstraint.activate([
-            recommededImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            recommededImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            recommededImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            recommededImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            recommededImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            recommededImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            recommededImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            recommededImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
     }
     
@@ -33,7 +36,7 @@ final class RecomendedCell: BaseCollectionViewCell, CellIdentifialble {
         if let url = URL(string: image) {
             recommededImageView.kf.downSampling(
                 url: url,
-                size: CGSize(width: 150, height: 150)
+                size: CGSize(width: 120, height: 120)
             )
         }
     }

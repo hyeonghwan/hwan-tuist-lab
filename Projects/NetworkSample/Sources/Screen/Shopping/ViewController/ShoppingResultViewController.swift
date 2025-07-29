@@ -18,17 +18,21 @@ final class ShoppingResultViewController: BaseViewController {
     // MARK: View
     private let headerView = ShoppingHeaderView()
     private let collectionView = ShoppingCollectionView()
+    
+    private let recommededDelegate = RecommendedDelegate()
+    private let recommededDataSource = RecommendedDataSource()
+    private lazy var recommendedCollectionView = ShoppingRecommendedCollectionView(delegate: recommededDelegate,
+                                                                                   dataSource: recommededDataSource)
     private let indicatorContainerView = IndicatorContainerView()
     
     // MARK: Presenter
     private let scrollAnimator = ScrollAnimator()
-    private lazy var pagenationController = PagenationController(
-        scrollView: collectionView,
-        shoppingPagingSubject: shoppingPagingSubject
-    )
+    private lazy var pagenationController = PagenationController(scrollView: collectionView,
+                                                                 shoppingPagingSubject: shoppingPagingSubject)
     
     // MARK: ViewModel
     var shoppingViewModel: ShoppingViewModel!
+    private let nwTracker = NWTracker()
     
     // MARK: Datasource
     private lazy var shoppingDataSource = ShoppingCollectionViewDataSource(
@@ -51,6 +55,10 @@ final class ShoppingResultViewController: BaseViewController {
         self.view.addSubview(headerView)
         self.view.addSubview(collectionView)
         self.view.addSubview(indicatorContainerView)
+        self.view.addSubview(recommendedCollectionView)
+        
+        let button = UIBarButtonItem(image: UIImage(systemName: "wifi")?.withTintColor(.label), style: .plain, target: nil, action: nil)
+        self.navigationItem.rightBarButtonItem = button
     }
     
     override func didReceiveMemoryWarning() {
@@ -68,13 +76,15 @@ final class ShoppingResultViewController: BaseViewController {
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         headerView.translatesAutoresizingMaskIntoConstraints = false
+        indicatorContainerView.translatesAutoresizingMaskIntoConstraints = false
+        recommendedCollectionView.translatesAutoresizingMaskIntoConstraints = false
         
         collectionView.delegate = self
         collectionView.dataSource = shoppingDataSource
         scrollAnimator.delegate = view
-        
-        indicatorContainerView.translatesAutoresizingMaskIntoConstraints = false
         indicatorContainerView.isHidden = true
+        
+        collectionView.contentInset.bottom = recommededDelegate.cellHeight
     }
     
     override func addLayout() {
@@ -94,13 +104,19 @@ final class ShoppingResultViewController: BaseViewController {
             indicatorContainerView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 80),
             indicatorContainerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             indicatorContainerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            indicatorContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            indicatorContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            recommendedCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            recommendedCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            recommendedCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            recommendedCollectionView.heightAnchor.constraint(equalToConstant: recommededDelegate.cellHeight)
         ])
         
         headerView.setNeedsLayout()
         headerView.layoutIfNeeded()
         
         view.bringSubviewToFront(headerView)
+        view.bringSubviewToFront(recommendedCollectionView)
         view.bringSubviewToFront(indicatorContainerView)
         
         let headerHeight = headerView.bounds.height
@@ -109,6 +125,17 @@ final class ShoppingResultViewController: BaseViewController {
     }
     
     override func binding() {
+        nwTracker.state
+            .receive(on: DispatchQueue.main)
+            .sinkWeak(on: self) { vc, state in
+                debugPrint("state.imageString: \(state.imageString)")
+                let newImage = UIImage(systemName: state.imageString)?
+                    .withRenderingMode(.alwaysOriginal)
+                    .withTintColor(.label)
+                vc.navigationItem.rightBarButtonItem?.image = newImage
+            }
+            .store(in: &subscriptions)
+        
         let refreshInput = collectionView
             .refreshControl!
             .refreshPublisher
@@ -153,6 +180,14 @@ final class ShoppingResultViewController: BaseViewController {
                         vc.collectionView.setContentOffset(CGPoint(x: x, y: y), animated: true)
                     }
                 }
+            }
+            .store(in: &subscriptions)
+        
+        output.loadModelSignal
+            .sinkWeak(on: self) { vc, _ in
+                let imageList = vc.shoppingViewModel.shoppingListSubject.value.list.map(\.image)
+                vc.recommededDataSource.recommendedViewModel.send(imageList)
+                vc.recommendedCollectionView.reloadData()
             }
             .store(in: &subscriptions)
         
@@ -229,7 +264,7 @@ extension ShoppingResultViewController: UICollectionViewDelegateFlowLayout {
         } else {
             return CGSize(
                 width: windowWidth,
-                height: 50
+                height: 100
             )
         }
     }
@@ -242,7 +277,6 @@ extension ShoppingResultViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: PagenationController
 extension ShoppingResultViewController {
-      
     fileprivate class PagenationController {
         private weak var scrollView: UIScrollView!
         private weak var shoppingPagingSubject: PassthroughSubject<(Void), Never>?
@@ -281,7 +315,6 @@ extension ShoppingResultViewController {
 
 // MARK: ScrollAnimator
 extension ShoppingResultViewController {
-      
     fileprivate class ScrollAnimator: NSObject {
         weak var delegate: UIView?
         var headerViewTopAnchor: NSLayoutConstraint!
