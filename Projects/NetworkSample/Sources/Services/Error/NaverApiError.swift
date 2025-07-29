@@ -17,7 +17,7 @@ struct NaverSearchAPIError: Decodable {
     let errorCode: NaverApiError
 }
 
-enum NaverApiError: String, Error, Decodable {
+enum NaverApiError: String, Error, Decodable, CaseIterable {
     case INCORRECT_QUERY = "SE01"
     case INVALID_DISPLAY_VALUE = "SE02"
     case INVALID_START_VALUE = "SE03"
@@ -26,6 +26,7 @@ enum NaverApiError: String, Error, Decodable {
     case INVALID_SEARCH_API = "SE05"
     case SYSTEM_ERROR = "SE99"
     case BAD_REQUEST = "400"
+    case unknown
     
     var message: String {
         switch self {
@@ -45,6 +46,8 @@ enum NaverApiError: String, Error, Decodable {
             return "시스템 에러"
         case .BAD_REQUEST:
             return "bad Request"
+        case .unknown:
+            return "알수 없는 에러 발생"
         }
     }
 }

@@ -17,13 +17,17 @@ let project = ProjectFactory.createApp(
         defaultSettings: .init()
     ),
     dependencies: [
-        .SPM.hwanMacros,
-        .SPM.kingfisher,
-        .SPM.hwanKit,
-        .SPM.alamofire,
-        .SPM.combineInterception
+        .package(product: "Kingfisher", type: .runtime, condition: nil),
+        .package(product: "HawnKit", type: .runtime, condition: nil),
+        .package(product: "CombineInterception", type: .runtime, condition: nil),
+        .package(product: "Alamofitre", type: .runtime, condition: nil),
+        .package(product: "HwanMacros", type: .macro)
     ],
     packages: [
+        R.alamofire,
+        R.kingfisher,
+        R.combineInterception,
+        R.hwanKit,
         R.hwanMacros
     ],
     infoPlist: .codeDefault
