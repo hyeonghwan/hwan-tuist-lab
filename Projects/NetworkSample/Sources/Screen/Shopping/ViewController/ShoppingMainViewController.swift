@@ -99,11 +99,12 @@ extension ShoppingMainViewController: UISearchBarDelegate {
         let vc = ShoppingResultViewController()
         vc.navigationItem.title = "\(searchQuery)"
         vc.shoppingViewModel = ShoppingViewModel(
-            paginagState: ShoppingViewModel.PagingState(
+            initialState: ShoppingViewModel.PagingState(
                 query: searchQuery,
                 display: 100,
                 start: 1,
-                sort: ShoppingSortType.sim.string,
+                sort: ShoppingSortType.sim,
+                currentPage: 0,
                 total: 0
             )
         )

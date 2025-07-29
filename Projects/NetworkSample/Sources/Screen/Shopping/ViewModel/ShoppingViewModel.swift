@@ -41,10 +41,11 @@ final class ShoppingViewModel {
     // MARK: Dependency
     private let provider: ShoppingProvider
     private var paginagState: PagingState
+    private var isPagingEnabled: Bool = false
     
-    init(dependency: ShoppingProvider = .liveValue, paginagState: PagingState) {
+    init(dependency: ShoppingProvider = .liveValue, initialState: PagingState) {
         self.provider = dependency
-        self.paginagState = paginagState
+        self.paginagState = initialState
     }
     
     private var dummyPublisher: AnyPublisher<[ShoppingItemDTO], NaverApiError> {
@@ -128,5 +129,68 @@ extension ShoppingViewModel {
         var sort: ShoppingSortType
         var currentPage: Int
         var total: Int
+        
+        var initialLoadDisplay: Int { 100 }
+        var pagingDisplay: Int { 30 }
+        
+        var isPagingEnabled: Bool {
+            currentPage < total
+        }
+        
+        func loadInitialState(sortType: ShoppingSortType) -> Self {
+            PagingState(
+                query: self.query,
+                display: initialLoadDisplay,
+                start: 1,
+                sort: sortType,
+                currentPage: -1,
+                total: self.total
+            )
+        }
+        
+        mutating func nextState() -> Self? {
+            let nextStart = currentPage + 1
+            if nextStart > total {
+                return nil
+            }
+            
+            let nextPage = self.currentPage + self.pagingDisplay
+            let isNextPagingPossible = nextPage <= self.total
+            if isNextPagingPossible {
+                return PagingState(
+                    query: self.query,
+                    display: self.pagingDisplay,
+                    start: nextStart,
+                    sort: self.sort,
+                    currentPage: nextPage,
+                    total: self.total
+                )
+            }
+            
+            let remainCount = self.total - currentPage
+            let isLastPage = remainCount > 0
+            if isLastPage {
+                return PagingState(
+                    query: self.query,
+                    display: self.pagingDisplay,
+                    start: nextStart,
+                    sort: self.sort,
+                    currentPage: self.currentPage + remainCount,
+                    total: self.total
+                )
+            }
+            return nil
+        }
+        
+        func asQuery() -> ShoppingSearchQuery {
+            ShoppingSearchQuery(
+                query: self.query,
+                display: self.display,
+                start: self.start,
+                sort: self.sort.string
+            )
+        }
+    }
+}
     }
 }
