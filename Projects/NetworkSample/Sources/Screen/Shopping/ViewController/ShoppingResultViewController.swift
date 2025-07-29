@@ -186,7 +186,15 @@ final class ShoppingResultViewController: BaseViewController {
         
         output.dataLoadFailed
             .sinkWeak(on: self) { vc, error in
-                vc.showFallBackAlert(error)
+                vc.showFallBackAlert(error) { [weak self] in
+                    guard let self else { return }
+                    let sortType = ShoppingSortType.matchTag(self.headerView.selectedIndex)
+                    self.dismiss(animated: true, completion: {
+                        self.retryLoadSubject.send(sortType)
+                    })
+                } confirm: { [weak self] in
+                    self?.dismiss(animated: true)
+                }
                 DispatchQueue.main.async {
                     vc.shoppingViewModel.guardPaging.send(false)
                 }
