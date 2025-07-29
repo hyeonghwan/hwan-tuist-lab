@@ -29,7 +29,7 @@ final class ShoppingViewModel {
         let pagingSignal: AnyPublisher<Void, Never>
         let pagingResult: AnyPublisher<Model, Never>
         let totalCount: AnyPublisher<Int, Never>
-        let dataLoadFailed: AnyPublisher<NaverApiError, Never>
+        let dataLoadFailed: AnyPublisher<Error, Never>
         let isLoadingCell: AnyPublisher<Bool, Never>
         let isLoadingPagingIndicator: AnyPublisher<Bool, Never>
         let guardPaging: AnyPublisher<Bool, Never>
@@ -48,7 +48,7 @@ final class ShoppingViewModel {
     
     private(set) var shoppingListSubject = CurrentValueSubject<Model, Never>(Model(list: []))
     private(set) var totalCount = PassthroughSubject<Int, Never>()
-    private let dataLoadFailed = PassthroughSubject<NaverApiError, Never>()
+    private let dataLoadFailed = PassthroughSubject<Error, Never>()
     
     // MARK: Dependency
     private let provider: ShoppingProvider
@@ -139,11 +139,7 @@ final class ShoppingViewModel {
                 (apiResponse, intialPagingState)
             }
             .catch { error -> AnyPublisher<(ShoppingItemResultDTO, PagingState), Never> in
-                if let apiError = error as? NaverApiError {
-                    self.dataLoadFailed.send(apiError)
-                } else {
-                    self.dataLoadFailed.send(NaverApiError.unknown)
-                }
+                self.dataLoadFailed.send(error)
                 
                 let emptyResponse = ShoppingItemResultDTO(data: NaverSearchResultDTO(lastBuildDate: "", total: 0, start: 0, display: 0, items: []))
                 
