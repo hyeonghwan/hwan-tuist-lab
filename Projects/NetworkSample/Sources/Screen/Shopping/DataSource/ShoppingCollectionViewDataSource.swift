@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import HwanMacros
 
 final class ShoppingCollectionViewDataSource: NSObject, UICollectionViewDataSource {
     weak var viewModel: ShoppingViewModel?
@@ -21,17 +21,20 @@ final class ShoppingCollectionViewDataSource: NSObject, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel?.shoppingListSubject.value.list.count ?? 0
+        let count = viewModel?.shoppingListSubject.value.list.count ?? 0
+        if count == 0 {
+            return 1
+        } else {
+            return count
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionFooter && indexPath.section == 0 {
             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: RefreshFotterView.id, for: indexPath) as! RefreshFotterView
-            
             if let viewModel {
-                viewModel.isLoadingNextPage
+                viewModel.isLoadingPagingIndicator
                     .sinkWeakStore(on: footer, in: &footer.cancelAable) { footer, isLoading in
-                        debugPrint("Footer: \(isLoading)")
                         if isLoading {
                             footer.refreshIndicator.startAnimating()
                         } else {
@@ -39,21 +42,27 @@ final class ShoppingCollectionViewDataSource: NSObject, UICollectionViewDataSour
                         }
                     }
             }
-            
             return footer
         }
         return UICollectionReusableView()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingItemCell.id, for: indexPath) as? ShoppingItemCell else {
-            fatalError()
+        if let list = viewModel?.shoppingListSubject.value.list, list.count >= 1 {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingItemCell.id, for: indexPath) as? ShoppingItemCell else {
+                fatalError()
+            }
+            
+            if let list = viewModel?.shoppingListSubject.value.list {
+                cell.configureCell(with: list[indexPath.row])
+            }
+            
+            return cell
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmptyCell.id, for: indexPath) as? EmptyCell else {
+                fatalError()
+            }
+            return cell
         }
-        
-        if let list = viewModel?.shoppingListSubject.value.list {
-            cell.configureCell(with: list[indexPath.row])
-        }
-        
-        return cell
     }
 }
