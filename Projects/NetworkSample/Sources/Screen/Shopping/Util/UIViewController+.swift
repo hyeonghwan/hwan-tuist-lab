@@ -14,7 +14,7 @@ import CombineInterception
 
 extension UIViewController {
     var viewDidLoadPublisher: AnyPublisher<Void, Never> {
-        let selector = #selector(UIViewController.viewDidLoad)
+        let selector = #selector(UIViewController.viewIsAppearing(_:))
         return publisher(for: selector)
             .map { _ in () }
             .eraseToAnyPublisher()

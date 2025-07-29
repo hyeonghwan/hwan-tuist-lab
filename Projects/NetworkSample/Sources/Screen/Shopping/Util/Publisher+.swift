@@ -10,6 +10,17 @@ import UIKit
 import Combine
 
 extension Publisher where Failure == Never {
+    
+    func filter<T: AnyObject>(to keyPath: ReferenceWritableKeyPath<T, Bool>, on object: T) -> Publishers.Filter<Self> {
+        self.filter { [weak object] _ in
+            return if let value = object?[keyPath: keyPath] as? Bool {
+                value
+            } else {
+                false
+            }
+        }
+    }
+    
     func weakAssign<T: AnyObject>(to keyPath: ReferenceWritableKeyPath<T, Output>,
                                   on object: T) -> AnyCancellable
     {

@@ -10,22 +10,24 @@ import UIKit
 import Combine
 
 extension ShoppingHeaderView {
-    var selectedIndexPublisher: AnyPublisher<Int, Never> {
+    var selectedIndexPublisher: AnyPublisher<ShoppingSortType, Never> {
         let buttons = buttonList.values
         return Publishers.MergeMany(
             buttons.map { button in
                 button.controlPublisher(for: .touchUpInside)
                     .map(\.tag)
+                    .map { ShoppingSortType.matchTag($0) }
             }
-        ).eraseToAnyPublisher()
+        )
+        .eraseToAnyPublisher()
     }
 }
 
 extension UIRefreshControl {
-    var refreshPublisher: AnyPublisher<Bool, Never> {
+    var refreshPublisher: AnyPublisher<Void, Never> {
         self.controlPublisher(for: .valueChanged)
             .compactMap { $0 as? UIRefreshControl }
-            .map(\.isRefreshing)
+            .map { _ in () }
             .eraseToAnyPublisher()
     }
 }
