@@ -9,14 +9,14 @@
 import UIKit
 import Design
 import Kingfisher
- 
-
+import Combine
   
 final class ShoppingItemCell: BaseCollectionViewCell, CellIdentifialble {
     
     private let imageContainerView = UIView()
     private let shoppingImageView = UIImageView()
-    private let likeButton = UIButton()
+    var subscriptions = Set<AnyCancellable>()
+    let likeButton = UIButton()
     private let imageLabel = UILabel()
     private let titleLabel = UILabel()
     private let priceLabel = UILabel()
@@ -44,7 +44,8 @@ final class ShoppingItemCell: BaseCollectionViewCell, CellIdentifialble {
         shoppingImageView.contentMode = .scaleAspectFill
         
         likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
-        likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
+        likeButton.tintColor = .black
         likeButton.backgroundColor = .white
         likeButton.layer.cornerRadius = 18
         likeButton.clipsToBounds = true
@@ -101,6 +102,8 @@ final class ShoppingItemCell: BaseCollectionViewCell, CellIdentifialble {
     override func prepareForReuse() {
         super.prepareForReuse()
         shoppingImageView.kf.cancelDownloadTask()
+        subscriptions.removeAll()
+        likeButton.isSelected = false
     }
     
     func configureCell(with shoppingItem: ShoppingItemDTO) {
@@ -114,7 +117,6 @@ final class ShoppingItemCell: BaseCollectionViewCell, CellIdentifialble {
                 )
             )
         }
-        
         shoppingItem.title.htmlToAttributedString(
             font: titleLabel.font,
             color: titleLabel.textColor

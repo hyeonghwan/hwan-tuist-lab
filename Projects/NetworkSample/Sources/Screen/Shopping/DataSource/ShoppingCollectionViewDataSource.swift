@@ -53,7 +53,14 @@ final class ShoppingCollectionViewDataSource: NSObject, UICollectionViewDataSour
                 fatalError()
             }
             
-            if let list = viewModel?.shoppingListSubject.value.list {
+            cell.likeButton.controlPublisher(for: .touchUpInside)
+                .sinkWeak(on: cell) { cell, button in
+                    let origin = button.isSelected
+                    button.isSelected = !origin
+                }
+                .store(in: &cell.subscriptions)
+            
+            if let list = viewModel?.shoppintList {
                 cell.configureCell(with: list[indexPath.row])
             }
             
