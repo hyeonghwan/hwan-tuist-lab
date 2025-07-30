@@ -128,7 +128,6 @@ final class ShoppingResultViewController: BaseViewController {
         nwTracker.state
             .receive(on: DispatchQueue.main)
             .sinkWeak(on: self) { vc, state in
-                debugPrint("state.imageString: \(state.imageString)")
                 let newImage = UIImage(systemName: state.imageString)?
                     .withRenderingMode(.alwaysOriginal)
                     .withTintColor(.label)
@@ -139,9 +138,9 @@ final class ShoppingResultViewController: BaseViewController {
         let refreshInput = collectionView
             .refreshControl!
             .refreshPublisher
-            .compactMap { [weak self] value -> ShoppingSortType? in
-                guard let self else { return nil }
-                return ShoppingSortType.matchTag(self.headerView.selectedIndex)
+            .withUnretained(self)
+            .compactMap { vc, _ -> ShoppingSortType? in
+                ShoppingSortType.matchTag(vc.headerView.selectedIndex)
             }
         
         let output = shoppingViewModel.transform(
@@ -185,7 +184,7 @@ final class ShoppingResultViewController: BaseViewController {
         
         output.loadModelSignal
             .sinkWeak(on: self) { vc, _ in
-                let imageList = vc.shoppingViewModel.shoppingListSubject.value.list.map(\.image)
+                let imageList = vc.shoppingViewModel.shoppintList.map(\.image)
                 vc.recommededDataSource.recommendedViewModel.send(imageList)
                 vc.recommendedCollectionView.reloadData()
             }
@@ -256,7 +255,7 @@ extension ShoppingResultViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if shoppingViewModel.shoppingListSubject.value.list.count >= 1 {
+        if shoppingViewModel.shoppintList.count >= 1 {
             return CGSize(
                 width: (windowWidth / 2) - 16,
                 height: 270
@@ -287,13 +286,13 @@ extension ShoppingResultViewController {
             self.scrollView = scrollView
         }
         
-        func observe(_ isApiLoading: AnyPublisher<Bool, Never>) {
+        func observe(_ guardPaging: AnyPublisher<Bool, Never>) {
             guard let scrollView = self.scrollView else { return }
             cancellable = scrollView.publisher(for: \.contentOffset)
                 .removeDuplicates(by: { $0.y == $1.y })
-                .combineLatest(isApiLoading)
+                .combineLatest(guardPaging)
                 .filter { (_, isLoading) in
-                    return !isLoading
+                    !isLoading
                 }
                 .throttle(for: .milliseconds(600), scheduler: DispatchQueue.main, latest: true)
                 .filter { [weak self] _ in
