@@ -17,10 +17,14 @@ let project = ProjectFactory.createApp(
         defaultSettings: .init()
     ),
     dependencies: [
-        .package(product: "Kingfisher", type: .runtime, condition: nil),
-        .package(product: "HawnKit", type: .runtime, condition: nil),
-        .package(product: "CombineInterception", type: .runtime, condition: nil),
-        .package(product: "Alamofitre", type: .runtime, condition: nil),
+        // .package(product: "Kingfisher", type: .runtime, condition: nil),
+        // .package(product: "HawnKit", type: .runtime, condition: nil),
+        // .package(product: "CombineInterception", type: .runtime, condition: nil),
+        // .package(product: "Alamofitre", type: .runtime, condition: nil),
+        .SPM.kingfisher,
+        .SPM.hwanKit,
+        .SPM.combineInterception,
+        .SPM.alamofire,
         .package(product: "HwanMacros", type: .macro)
     ],
     packages: [
