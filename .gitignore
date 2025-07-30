@@ -67,6 +67,7 @@ graph.dot
 Derived/
 Config/*.xcconfig
 Projects/**/Config/*.xcconfig
+Projects/Module/hwan_macro_module/XCFramework/
 
 ### Tuist managed dependencies ###
 Package.resolved

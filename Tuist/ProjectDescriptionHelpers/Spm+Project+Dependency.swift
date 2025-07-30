@@ -17,9 +17,12 @@ public extension TargetDependency.SPM {
 public enum R {
     public static let kingfisher: Package = .package(url: "https://github.com/onevcat/Kingfisher.git", .upToNextMajor(from: Version(8, 4, 0)))
     public static let hwanKit: Package = .package(url: "https://github.com/hyeonghwan/hwan-kit.git", .revision("c6d72ec4ed5fafda3a914503737e520ee213b873"))
-    public static let hwanMacros: Package = .package(url: "https://github.com/hyeonghwan/hwan_macro.git", .revision("7d7524b8302cef6dd1d12a01199cdd42bcb29280"))
+    public static let hwanMacros: Package = .local(path: .relativeToRoot("Projects/Module/hwan_macro_module"))
     public static let alamofire: Package = .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: Version(5, 10, 0)))
     public static let combineInterception: Package = .package(url: "https://github.com/chorim/CombineInterception.git", .upToNextMajor(from: Version(0, 1, 0)))
+    
+    // MARK: Remote -> Local
+    // public static let hwanMacros: Package = .package(url: "https://github.com/hyeonghwan/hwan_macro.git", .revision("4b756f3f90f71adb4e0f65f1466f0854c250d7d4"))
 }
 
 public enum P {
