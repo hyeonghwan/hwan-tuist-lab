@@ -26,8 +26,7 @@ extension ShoppingHeaderView {
 extension UIRefreshControl {
     var refreshPublisher: AnyPublisher<Void, Never> {
         self.controlPublisher(for: .valueChanged)
-            .compactMap { $0 as? UIRefreshControl }
-            .map { _ in () }
+            .compactMap { ($0 as? UIRefreshControl) == nil ? nil : () }
             .eraseToAnyPublisher()
     }
 }
