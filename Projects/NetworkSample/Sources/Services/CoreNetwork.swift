@@ -57,6 +57,7 @@ final class CoreNetwork: NetworkManager {
     private class API {
         static let session: Session = {
             let configuration = URLSessionConfiguration.af.default
+            configuration.timeoutIntervalForRequest = 5
             let apiLogger = APIEventLogger()
             return Session(configuration: configuration, eventMonitors: [apiLogger])
         }()
@@ -72,6 +73,7 @@ final class CoreNetwork: NetworkManager {
         do {
             let urlRequest = try resource.urlRequest()
             API.session.request(urlRequest, interceptor: .retryPolicy)
+                .validate(statusCode: 200..<300)
                 .responseDecodable(of: DTO.self, decoder: decoder == nil ? defaultDecorder : decoder!) { result in
                     switch result.result {
                     case let .success(dto):
