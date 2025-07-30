@@ -46,9 +46,12 @@ final class ShoppingViewModel {
     private(set) var isLoadingPagingIndicator = CurrentValueSubject<Bool, Never>(false)
     private(set) var guardPaging = CurrentValueSubject<Bool, Never>(true)
     
-    private(set) var shoppingListSubject = CurrentValueSubject<Model, Never>(Model(list: []))
-    private(set) var totalCount = PassthroughSubject<Int, Never>()
+    private let shoppingListSubject = CurrentValueSubject<Model, Never>(Model(list: []))
+    private let totalCount = PassthroughSubject<Int, Never>()
     private let dataLoadFailed = PassthroughSubject<Error, Never>()
+    
+    var shoppintList: [ShoppingItemDTO] { self.shoppingListSubject.value.list }
+    var lodingPaging: Bool { isLoadingPagingIndicator.value }
     
     // MARK: Dependency
     private let provider: ShoppingProvider
@@ -58,12 +61,6 @@ final class ShoppingViewModel {
     init(dependency: ShoppingProvider = .liveValue, initialState: PagingState) {
         self.provider = dependency
         self.paginagState = initialState
-    }
-    
-    private var dummyPublisher: AnyPublisher<[ShoppingItemDTO], NaverApiError> {
-        Just<[ShoppingItemDTO]>((0...29).map { _ in .dummy })
-            .setFailureType(to: NaverApiError.self)
-            .eraseToAnyPublisher()
     }
 
     func transform(_ input: Input) -> Output {
@@ -170,7 +167,6 @@ final class ShoppingViewModel {
     
     private func refresh(tuple: (ShoppingItemResultDTO, PagingState)) {
         let (resultDTO, intialPagingState) = tuple
-        
         self.paginagState = PagingState(
             query: intialPagingState.query,
             display: intialPagingState.pagingDisplay,
@@ -179,11 +175,9 @@ final class ShoppingViewModel {
             currentPage: resultDTO.data.items.count,
             total: resultDTO.data.total
         )
-        
         self.isPagingEnabled = self.paginagState.isPagingEnabled
         self.shoppingListSubject.send(Model(list: resultDTO.data.items))
         self.totalCount.send(resultDTO.data.total)
-        
         self.refreshSignal.send()
     }
     
@@ -193,11 +187,9 @@ final class ShoppingViewModel {
             self.isPagingEnabled = false
             return Empty<ShoppingItemResultDTO, Never>().eraseToAnyPublisher()
         }
-        return self.provider.fetchWithPublisher(
-            state.asQuery()
-        )
-        .replaceError(with: ShoppingItemResultDTO(data: NaverSearchResultDTO(lastBuildDate: "", total: 0, start: 0, display: 0, items: [])))
-        .eraseToAnyPublisher()
+        return self.provider.fetchWithPublisher(state.asQuery())
+            .replaceError(with: ShoppingItemResultDTO(data: NaverSearchResultDTO(lastBuildDate: "", total: 0, start: 0, display: 0, items: [])))
+            .eraseToAnyPublisher()
     }
 }
 

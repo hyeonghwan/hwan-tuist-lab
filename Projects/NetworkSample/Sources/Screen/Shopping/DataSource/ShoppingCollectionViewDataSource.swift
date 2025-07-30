@@ -21,7 +21,7 @@ final class ShoppingCollectionViewDataSource: NSObject, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let count = viewModel?.shoppingListSubject.value.list.count ?? 0
+        let count = viewModel?.shoppintList.count ?? 0
         if count == 0 {
             return 1
         } else {
@@ -48,7 +48,7 @@ final class ShoppingCollectionViewDataSource: NSObject, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let list = viewModel?.shoppingListSubject.value.list, list.count >= 1 {
+        if let list = viewModel?.shoppintList, list.count >= 1 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingItemCell.id, for: indexPath) as? ShoppingItemCell else {
                 fatalError()
             }
