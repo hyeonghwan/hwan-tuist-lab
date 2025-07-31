@@ -11,7 +11,7 @@ import Design
  
 import Combine
 import Kingfisher
-
+import HwanMacros
   
 final class ShoppingResultViewController: BaseViewController {
     
@@ -276,6 +276,7 @@ extension ShoppingResultViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: PagenationController
 extension ShoppingResultViewController {
+    @Logging
     fileprivate class PagenationController {
         private weak var scrollView: UIScrollView!
         private weak var shoppingPagingSubject: PassthroughSubject<(Void), Never>?
@@ -291,7 +292,7 @@ extension ShoppingResultViewController {
             cancellable = scrollView.publisher(for: \.contentOffset)
                 .removeDuplicates(by: { $0.y == $1.y })
                 .combineLatest(guardPaging)
-                .filter { (_, isLoading) in
+                .filter { (value, isLoading) in
                     !isLoading
                 }
                 .throttle(for: .milliseconds(600), scheduler: DispatchQueue.main, latest: true)

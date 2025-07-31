@@ -8,7 +8,9 @@
 
 import Foundation
 import Combine
+import HwanMacros
 
+@Logging
 final class ShoppingViewModel {
     
     struct Model {
@@ -110,6 +112,7 @@ final class ShoppingViewModel {
             .sinkWeak(on: self) { viewModel, list in
                 let originDTO = viewModel.shoppingListSubject.value
                 let total = originDTO.list + list
+                viewModel.logger.log(level: .fault, "Pagination Called: \(String(describing: originDTO.list.count))")
                 viewModel.shoppingListSubject.send(Model(list: total))
                 viewModel.pagingSignal.send()
             }

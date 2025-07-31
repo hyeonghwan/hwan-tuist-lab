@@ -21,7 +21,7 @@ let project = ProjectFactory.createApp(
         .SPM.hwanMacros
     ],
     packages: [
-        R.hwanMacros
+         R.hwanMacros
     ],
     infoPlist: .storyBoardDefault
 )

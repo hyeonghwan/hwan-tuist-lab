@@ -31,6 +31,10 @@ public extension InfoPlist {
                 "NAVER_CLIENT_ID": "$(NAVER_CLIENT_ID)",
                 "NAVER_CLIENT_SECRET": "$(NAVER_CLIENT_SECRET)",
                 "KAKAO_NATIVE_APP_KEY": "$(KAKAO_NATIVE_APP_KEY)",
+                
+                "UISupportedInterfaceOrientations": ["Portrait (bottom home button)tuis"],
+                "TARGETED_DEVICE_FAMILY": "1",
+                
                 "UIApplicationSceneManifest": [
                     "UIApplicationSupportsMultipleScenes": false,
                     "UISceneConfigurations": [

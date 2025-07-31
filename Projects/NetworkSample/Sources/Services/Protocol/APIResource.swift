@@ -29,7 +29,6 @@ protocol APIResource {
 
 extension APIResource {
     var scheme: String { "https" }
-    var host: String { "api.example.com" }
     var headers: [String: String]? { ["Content-Type": "application/json"] }
     var body: Data? { nil }
     var API_KEY: String { "" }

@@ -13,6 +13,8 @@ struct ShoppingProvider {
     var fetchWithClosure: (_ query: ShoppingSearchQuery,
                            _ completion: @escaping (Result<ShoppingItemResultDTO, any Error>) -> Void) -> Void
     
+    // var fetchGroup: ()
+    
     var fetchWithTask: (_ query: ShoppingSearchQuery) async -> Result<ShoppingItemResultDTO, any Error>
     
     var fetchWithPublisher: (_ query: ShoppingSearchQuery) -> AnyPublisher<ShoppingItemResultDTO, any Error>

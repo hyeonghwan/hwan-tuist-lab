@@ -29,7 +29,7 @@ let package = Package(
         .package(url: "https://github.com/hyeonghwan/hwan-kit.git", branch: "main"),
         .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.10.0"),
         .package(url: "https://github.com/chorim/CombineInterception.git", from: "0.1.0"),
-        .package(path: "Projects/Module/hwan_macro_module")
+        .package(path: "Module/hwan_macro")
     ],
     swiftLanguageVersions: [.v5]
 )

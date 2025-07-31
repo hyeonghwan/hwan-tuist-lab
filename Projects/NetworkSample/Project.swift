@@ -21,12 +21,12 @@ let project = ProjectFactory.createApp(
         // .package(product: "HawnKit", type: .runtime, condition: nil),
         // .package(product: "CombineInterception", type: .runtime, condition: nil),
         // .package(product: "Alamofitre", type: .runtime, condition: nil),
-        
         .SPM.kingfisher,
         .SPM.hwanKit,
         .SPM.combineInterception,
         .SPM.alamofire,
         .SPM.hwanMacros
+
     ],
     packages: [
 //        R.alamofire,
