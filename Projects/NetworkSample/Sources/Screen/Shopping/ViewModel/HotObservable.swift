@@ -9,71 +9,25 @@
 import Foundation
 
 
-final class HotObservable<Element>: BaseObservable<Element>,
-                                 Disposables {
-    var source: Element {
-        didSet { self.on() }
-    }
+final class HotObservable<Element>: BaseObservable<Element> {
     
-    var isDisposed: Bool = false
-
-    private var observers = [AnyObserver<Element>]()
+    var source: Element {
+        didSet {
+            self.on(self.source)
+        }
+    }
     
     init(source: Element) {
         self.source = source
     }
     
-    func on() {
-        for observer in observers {
-            observer.receive(.next(self.source))
-        }
-    }
-    
     override func subscribe(_ observer: AnyObserver<Element>) -> Disposables {
         self.observers.append(observer)
-        self.on()
-        return self
-    }
-    
-    func subscribeOn(
-        onNext: @escaping (Element) -> Void,
-        onError: @escaping (Error) -> Void = { _ in },
-        completed: @escaping () -> Void = { }
-    ) -> Disposables
-    {
-        let observer = AnyObserver<Element>.init(handler: { [weak self] event in
-            switch event {
-            case .completed:
-                completed()
-                
-                guard let disposed = self?.isDisposed else { return }
-                if !disposed { self?.dispose() }
-                
-            case let .error(error):
-                onError(error)
-                
-                guard let disposed = self?.isDisposed else { return }
-                if !disposed { self?.dispose() }
-                
-            case let .next(element):
-                onNext(element)
-            }
-        })
-        return subscribe(observer)
-    }
-    
-    func disposed(in bag: Bag) {
-        bag.subscriptions.insert(
-            DefaultDisposables(
-                id: self.id,
-                disposables: self
-            )
+        self.on(self.source)
+        return DefaultDisposables(
+            id: observer.id,
+            disposables: self
         )
-    }
-    
-    func dispose() {
-        self.observers.removeAll()
-        self.isDisposed = true
     }
 }
 

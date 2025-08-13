@@ -96,10 +96,10 @@ extension ShoppingMainViewController: UISearchBarDelegate {
         }
         searchBar.text = ""
         self.hideKeyboard()
-        let vc = ShoppingResultViewController()
+        let vc = ShoppingResultObservableViewController()
         vc.navigationItem.title = "\(searchQuery)"
-        vc.shoppingViewModel = ShoppingViewModel(
-            initialState: ShoppingViewModel.PagingState(
+        vc.shoppingViewModel = ShoppingObservableViewModel(
+            initialState: ShoppingObservableViewModel.PagingState(
                 query: searchQuery,
                 display: 100,
                 start: 1,

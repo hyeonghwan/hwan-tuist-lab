@@ -7,12 +7,11 @@
 //
 
 import UIKit
-import HwanMacros
 
 final class ShoppingCollectionViewDataSource: NSObject, UICollectionViewDataSource {
-    weak var viewModel: ShoppingViewModel?
+    weak var viewModel: ShoppingObservableViewModel?
     
-    init(viewModel: ShoppingViewModel) {
+    init(viewModel: ShoppingObservableViewModel? = nil) {
         self.viewModel = viewModel
     }
     
@@ -34,13 +33,14 @@ final class ShoppingCollectionViewDataSource: NSObject, UICollectionViewDataSour
             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: RefreshFotterView.id, for: indexPath) as! RefreshFotterView
             if let viewModel {
                 viewModel.isLoadingPagingIndicator
-                    .sinkWeakStore(on: footer, in: &footer.cancelAable) { footer, isLoading in
+                    .subscribeAsync { [weak footer] isLoading in
                         if isLoading {
-                            footer.refreshIndicator.startAnimating()
+                            footer?.refreshIndicator.startAnimating()
                         } else {
-                            footer.refreshIndicator.stopAnimating()
+                            footer?.refreshIndicator.stopAnimating()
                         }
                     }
+                    .disposed(in: footer.bag)
             }
             return footer
         }

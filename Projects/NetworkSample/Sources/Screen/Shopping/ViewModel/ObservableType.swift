@@ -7,3 +7,19 @@
 //
 
 import Foundation
+
+protocol ObservableType: AnyObject, Hashable {
+    associatedtype Element
+    var id: UUID { get set }
+    func subscribe(_ observer: AnyObserver<Element>) -> Disposables
+}
+
+extension ObservableType {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    static func ==(_ lhs: Self, _ rhs: Self) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+

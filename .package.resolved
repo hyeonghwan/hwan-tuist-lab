@@ -1,12 +1,30 @@
 {
-  "originHash" : "2aaa13b05a9a2c294e16c6dd4a2567970d9a244ef3462c4b1861ffdc52ddf215",
+  "originHash" : "23d5f9c9573cb03bb922642993a972bdec7175f67f7238e858212121d94f0cab",
   "pins" : [
     {
-      "identity" : "hwan_macro",
+      "identity" : "alamofire",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hyeonghwan/hwan_macro.git",
+      "location" : "https://github.com/Alamofire/Alamofire.git",
       "state" : {
-        "revision" : "4b756f3f90f71adb4e0f65f1466f0854c250d7d4"
+        "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
+        "version" : "5.10.2"
+      }
+    },
+    {
+      "identity" : "hwan-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hyeonghwan/hwan-kit.git",
+      "state" : {
+        "revision" : "c6d72ec4ed5fafda3a914503737e520ee213b873"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher.git",
+      "state" : {
+        "revision" : "2015fda791daa72c8058619545a593bf8c1dd59f",
+        "version" : "8.5.0"
       }
     }
   ],

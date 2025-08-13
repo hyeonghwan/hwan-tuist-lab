@@ -24,10 +24,6 @@ let project = ProjectFactory.createApp(
         .SPM.hwanMacros
     ],
     packages: [
-//        R.alamofire,
-//        R.kingfisher,
-//        R.combineInterception,
-//        R.hwanKit,
         R.hwanMacros
     ],
     infoPlist: .storyBoardDefault

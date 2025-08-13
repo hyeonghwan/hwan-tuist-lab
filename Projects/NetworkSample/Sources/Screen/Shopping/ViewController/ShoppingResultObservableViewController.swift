@@ -11,7 +11,6 @@ import Design
  
 import Combine
 import Kingfisher
-import HwanMacros
   
 final class ShoppingResultObservableViewController: BaseViewController {
     
@@ -119,7 +118,7 @@ final class ShoppingResultObservableViewController: BaseViewController {
     }
     
     @objc
-    func handleRefreshControl(_ sender: UIRefreshControl) {
+    private func handleRefreshControl(_ sender: UIRefreshControl) {
         shoppingViewModel.refreshTrigger.source(ShoppingSortType.matchTag(self.headerView.selectedIndex))
     }
     
@@ -279,7 +278,6 @@ extension ShoppingResultObservableViewController: UICollectionViewDelegateFlowLa
 
 // MARK: PagenationController
 extension ShoppingResultObservableViewController {
-    @Logging
     fileprivate class PagenationController {
         private weak var scrollView: UIScrollView!
         private weak var viewModel: ShoppingObservableViewModel?

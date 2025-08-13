@@ -7,3 +7,17 @@
 //
 
 import Foundation
+
+
+final class ColdObservable<Element>: BaseObservable<Element> {
+    
+    lazy var source: (_ element: Element) -> Void = { [weak self] element in
+        self?.on(element)
+    }
+}
+
+extension ColdObservable where Element == Void {
+    static var void: ColdObservable<Void> {
+        ColdObservable<Void>()
+    }
+}

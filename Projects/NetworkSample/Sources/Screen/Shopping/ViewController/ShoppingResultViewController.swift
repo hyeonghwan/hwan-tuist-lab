@@ -8,10 +8,8 @@
 
 import UIKit
 import Design
- 
 import Combine
 import Kingfisher
-import HwanMacros
   
 final class ShoppingResultViewController: BaseViewController {
     
@@ -36,7 +34,7 @@ final class ShoppingResultViewController: BaseViewController {
     
     // MARK: Datasource
     private lazy var shoppingDataSource = ShoppingCollectionViewDataSource(
-        viewModel: shoppingViewModel
+        // viewModel: shoppingViewModel
     )
     
     // MARK: ViewModel Input
@@ -145,7 +143,7 @@ final class ShoppingResultViewController: BaseViewController {
         
         let output = shoppingViewModel.transform(
             ShoppingViewModel.Input(
-                viewDidLoad: self.viewDidLoadPublisher.map { _ in ShoppingSortType.sim }.eraseToAnyPublisher(),
+                viewDidLoad: Just<ShoppingSortType>(.sim).eraseToAnyPublisher(),
                 pagingRequest: shoppingPagingSubject.eraseToAnyPublisher(),
                 sortTypeButtonTapped: headerView.selectedIndexPublisher,
                 refreshRequest: refreshInput.eraseToAnyPublisher(),
@@ -276,7 +274,6 @@ extension ShoppingResultViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: PagenationController
 extension ShoppingResultViewController {
-    @Logging
     fileprivate class PagenationController {
         private weak var scrollView: UIScrollView!
         private weak var shoppingPagingSubject: PassthroughSubject<(Void), Never>?

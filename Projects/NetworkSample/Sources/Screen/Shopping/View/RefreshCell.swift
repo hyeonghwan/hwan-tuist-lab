@@ -13,7 +13,7 @@ import Combine
 final class RefreshFotterView: UICollectionReusableView, CellIdentifialble {
     
     private(set) var refreshIndicator = UIActivityIndicatorView()
-    var cancelAable = Set<AnyCancellable>()
+    private(set) var bag = Bag()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,7 +34,7 @@ final class RefreshFotterView: UICollectionReusableView, CellIdentifialble {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        cancelAable.removeAll()
+        bag = Bag()
     }
     
     private func addChild() {

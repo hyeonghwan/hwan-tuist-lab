@@ -1,6 +1,5 @@
 import UIKit
 
-
 enum ImageGen {
     static let checkFill = UIImage(systemName: "checkmark.square.fill")
     static let check =     UIImage(systemName: "checkmark.square")

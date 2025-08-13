@@ -37,6 +37,7 @@ final class NWTracker {
     }
     
     var state = CurrentValueSubject<State, Never>(.none)
+    var custom_observable_state = NetworkSample.HotObservable<State>(source: .none)
     
     deinit {
         stopMonitoring()
@@ -57,13 +58,13 @@ final class NWTracker {
     
     private func setState(path: NWPath) {
         if path.usesInterfaceType(.wifi) {
-            self.state.value = .wifi(path.status == .satisfied)
+            self.custom_observable_state.source = .wifi(path.status == .satisfied)
         } else if path.usesInterfaceType(.cellular) {
-            self.state.value = .cellular(path.status == .satisfied)
+            self.custom_observable_state.source = .cellular(path.status == .satisfied)
         } else if path.usesInterfaceType(.other) {
-            self.state.value = .other(path.status == .satisfied)
+            self.custom_observable_state.source = .other(path.status == .satisfied)
         }
-        self.state.value = .cellular(path.status == .satisfied)
+        self.custom_observable_state.source = .cellular(path.status == .satisfied)
     }
     
     func stopMonitoring() { monitor.cancel() }

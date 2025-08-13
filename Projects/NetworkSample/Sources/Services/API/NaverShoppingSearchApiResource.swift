@@ -19,6 +19,7 @@ struct NaverShoppingSearchApiResource: APIResource {
         case date
         case asc
         case dsc
+        case none
         
         var string: String {
             self.rawValue
@@ -34,6 +35,8 @@ struct NaverShoppingSearchApiResource: APIResource {
                 "가격높은순"
             case .dsc:
                 "가격낮은순"
+            case .none:
+                ""
             }
         }
         

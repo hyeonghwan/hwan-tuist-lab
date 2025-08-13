@@ -7,3 +7,16 @@
 //
 
 import Foundation
+
+class AnyObserver<Element>: ObserverType {
+    var id: UUID = UUID()
+    var handler: ((Event<Element>) -> Void)?
+    
+    init(handler: (@escaping (Event<Element>) -> Void)) {
+        self.handler = handler
+    }
+    
+    func receive(_ element: Event<Element>) {
+        self.handler?(element)
+    }
+}
