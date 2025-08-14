@@ -10,8 +10,8 @@ let project = ProjectFactory.createApp(
             appBundleIDPrefix: AppConfig.orgName
         ),
         pathProvider: PathProvider(
-            projectConfigDirectory: "Config",
-            configDirectory: "Projects/MBTI/Config"
+            projectConfigDirectory: "Projects/MBTI/Config",
+            configDirectory: "Config"
         ),
         deploymentTarget: .iOS("17.0"),
         defaultSettings: .init()
@@ -19,6 +19,9 @@ let project = ProjectFactory.createApp(
     dependencies: [
     ],
     packages: [
+        R.kingfisher,
+        R.hwanKit,
+        R.hwanMacros
     ],
     infoPlist: .storyBoardDefault
 )
