@@ -17,14 +17,22 @@ let project = ProjectFactory.createApp(
         defaultSettings: .init()
     ),
     dependencies: [
-        .package(product: "Kingfisher", type: .runtime, condition: nil),
-        .package(product: "HawnKit", type: .runtime, condition: nil),
-        .package(product: "Alamofitre", type: .runtime, condition: nil),
+        .SPM.kingfisherPackage,
+        .SPM.hwanKitPackage,
+        .SPM.alamofirePackage,
+        .SPM.hwanMacrosPackage
     ],
     packages: [
         R.kingfisher,
         R.hwanKit,
-        R.alamofire
+        R.alamofire,
+        R.hwanMacros
     ],
-    infoPlist: .codeDefault
+    infoPlist: .codeDefaultWith(extra: [
+        "OPEN_WEATHER_API_KEY": "$(OPEN_WEATHER_API_KEY)",
+        "MOVIE_API_KEY": "$(MOVIE_API_KEY)",
+        "NAVER_CLIENT_ID": "$(NAVER_CLIENT_ID)",
+        "NAVER_CLIENT_SECRET": "$(NAVER_CLIENT_SECRET)",
+        "KAKAO_NATIVE_APP_KEY": "$(KAKAO_NATIVE_APP_KEY)",
+    ])
 )

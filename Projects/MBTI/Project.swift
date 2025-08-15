@@ -17,11 +17,15 @@ let project = ProjectFactory.createApp(
         defaultSettings: .init()
     ),
     dependencies: [
+        .SPM.kingfisherPackage,
+        .SPM.hwanKitPackage,
+        .SPM.alamofirePackage,
+        .SPM.hwanMacrosPackage
     ],
     packages: [
         R.kingfisher,
         R.hwanKit,
         R.hwanMacros
     ],
-    infoPlist: .storyBoardDefault
+    infoPlist: .codeDefaultWith(extra: [:])
 )
