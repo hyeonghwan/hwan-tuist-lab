@@ -9,7 +9,7 @@
 import Foundation
 
 
-protocol Query {
+public protocol Query: Encodable {
     func makeQuery() -> [String: String]
 }
 
