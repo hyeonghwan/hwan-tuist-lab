@@ -33,9 +33,7 @@ final class APIEventLogger: EventMonitor, @unchecked Sendable {
     
     func request<Value>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>) {
         let responseLog = "URL: " + (request.request?.url?.absoluteString ?? "") + "\n"
-        + "Result: " + "\(response.result)" + "\n"
         + "StatusCode: " + "\(response.response?.statusCode ?? 0)" + "\n"
-        + "Data: \(response.data?.toPrettyPrintedString ?? "")"
         logger.log(level: .debug, "🛰 NETWORK Response LOG")
         logger.log(level: .info, "\(responseLog)")
     }

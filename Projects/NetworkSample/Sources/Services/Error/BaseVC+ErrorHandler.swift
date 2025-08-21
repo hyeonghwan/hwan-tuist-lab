@@ -8,6 +8,7 @@
 
 import UIKit
 import Design
+import Alamofire
 
 extension BaseViewController {
     func showFallBackAlert(_ error: Error, retry: @escaping () -> Void, confirm: @escaping () -> Void) {
