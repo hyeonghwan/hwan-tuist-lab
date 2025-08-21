@@ -6,4 +6,24 @@
 //  Copyright © 2025 com.hwan. All rights reserved.
 //
 
-import Foundation
+import UIKit
+import Design
+
+final class PhotoViewController: BaseViewController {
+    
+    override func addAttributes() {
+        self.view.backgroundColor = .systemGreen
+    }
+    
+    override func addChild() {
+        
+    }
+    
+    override func addLayout() {
+        
+    }
+    
+    override func binding() {
+        
+    }
+}
