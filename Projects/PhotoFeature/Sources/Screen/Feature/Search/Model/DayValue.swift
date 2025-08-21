@@ -7,3 +7,9 @@
 //
 
 import Foundation
+
+struct DayValue: Identifiable, Hashable {
+    let id = UUID()
+    let date: Date
+    let value: Double
+}

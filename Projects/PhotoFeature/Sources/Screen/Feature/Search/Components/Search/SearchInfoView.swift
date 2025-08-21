@@ -9,7 +9,7 @@
 import UIKit
 import Design
 
-final class SearchInfoCell: BaseCollectionViewCell, CellIdentifialble {
+final class SearchInfoView: BaseView, CellIdentifialble {
     private let label = UILabel()
     
     enum Mode {
@@ -33,16 +33,15 @@ final class SearchInfoCell: BaseCollectionViewCell, CellIdentifialble {
     }
     
     override func addChild() {
-        self.contentView.addSubview(label)
+        self.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
+        addLayout()
     }
     
-    override func addLayout() {
+    private func addLayout() {
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            label.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            label.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            label.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
+            label.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: self.centerYAnchor)
         ])
     }
     

@@ -6,11 +6,10 @@
 //  Copyright © 2025 com.hwan. All rights reserved.
 //
 
-
+import Foundation
 import CustomObservable
 
 final class SearchViewModel {
-    
     struct Input {
         var selectedTagTrigger: LazyObservable<TagModel?>
         var selectedFilterTrigger: LazyObservable<String>
@@ -18,16 +17,18 @@ final class SearchViewModel {
         var pagingTrigger: LazyObservable<Void>
         var reloadFinishTrigger: LazyObservable<Void>
         var filterButtonTrigger: EagerObservable<String>
+        var favoriteButtonTrigger: LazyObservable<(path: IndexPath, isFavorite: Bool)>
     }
     
     struct Output {
         var viewState: EagerObservable<ViewState>
-        var photoResultState: EagerObservable<[PhotoModel]>
+        var photoResultState: EagerObservable<(model: [PhotoModel], isUpdate: Bool)>
+        var errorHandle: LazyObservable<APIError>
     }
     
     struct ViewState: Equatable {
         var totalPage: Int = 1
-        var page: Int = 0
+        var page: Int = 1
         let per_page: Int = 20
         var selectedTag: TagModel?
         var loading: Bool = true
@@ -39,22 +40,51 @@ final class SearchViewModel {
         }
     }
     
+    private let favoriteStore: FavoriteStore
     private let provider: SearchProvider
+    private(set) var viewState = EagerObservable<ViewState>(source: .next(.init(selectedTag: nil)))
+    private(set) var photoResultState = EagerObservable<(model: [PhotoModel], isUpdate: Bool)>(source: .next(([], true)))
+    private(set) var isLoadingPagingIndicator = EagerObservable<Bool>(source: .next(false))
+    private var errorHandle = LazyObservable<APIError>()
     
-    init(provider: SearchProvider) {
+    private var bag = Bag()
+    
+    init(favoriteStore: FavoriteStore, provider: SearchProvider) {
+        self.favoriteStore = favoriteStore
         self.provider = provider
     }
     
-    private(set) var viewState = EagerObservable<ViewState>(source: .next(.init(selectedTag: nil)))
-    private(set) var photoResultState = EagerObservable<[PhotoModel]>(source: .next([]))
-    private var bag = Bag()
-    
     func transform(input: Input) -> Output {
+        favoriteStore.changes
+            .subscribeOn { [weak self] changes in
+                guard let self else { return }
+                self.favoriteBinding(changes: changes)
+            }
+            .disposed(in: bag)
+        
+        input.favoriteButtonTrigger
+            .subscribeOn { [weak self] tuple in
+                let (indexPath, isFavorite) = tuple
+                guard let self else { return }
+                
+                let (models, _) = self.photoResultState.value
+                
+                let model = models[indexPath.row]
+                
+                if isFavorite {
+                    self.favoriteStore.set(model)
+                } else {
+                    self.favoriteStore.remove(id: model.id)
+                }
+            }
+            .disposed(in: bag)
+        
         input.reloadFinishTrigger
             .subscribeOn { [weak self] _ in
                 if var state = self?.viewState.value {
                     state.loading = false
                     self?.viewState.source = .next(state)
+                    self?.isLoadingPagingIndicator.source = .next(false)
                 }
             }
             .disposed(in: bag)
@@ -90,24 +120,25 @@ final class SearchViewModel {
                 let result = await self.provider.search(searchQuery)
                 
                 switch result {
-                case .success(let success):
+                case let .success(success):
                     var viewState = self.viewState.value
                     let photoModel = success.results.map {
                         $0.toModel()
                     }
                     
-                    self.photoResultState.source = .next(photoModel)
+                    self.photoResultState.source = .next((photoModel, true))
                     
                     viewState.mutate { state in
                         state.totalPage = success.totalPages
-                        state.page = 1
+                        state.page = 2
                         state.query = query
                     }
                     
                     self.viewState.source = .next(viewState)
                     
-                case .failure(let failure):
-                    print(failure)
+                case let .failure(error):
+                    let apiError = APIError.map(error)
+                    self.errorHandle.source(.next(apiError))
                 }
             }
             .disposed(in: bag)
@@ -122,7 +153,9 @@ final class SearchViewModel {
                 }
                 
                 state.loading = true
+                
                 self.viewState.source = .next(state)
+                self.isLoadingPagingIndicator.source = .next(true)
                 
                 Task {
                     await self.pagingUpdate()
@@ -133,8 +166,30 @@ final class SearchViewModel {
         
         return Output(
             viewState: viewState,
-            photoResultState: photoResultState
+            photoResultState: photoResultState,
+            errorHandle: errorHandle
         )
+    }
+    
+    private func favoriteBinding(changes: FavoriteStore.Change) {
+        switch changes {
+        case let .added(id: id):
+            var (photos, _) = self.photoResultState.value
+            
+            if let idx = photos.firstIndex(where: { $0.id == id }) {
+                photos[idx].userLike = true
+                self.photoResultState.source = .next((photos, true))
+            }
+            
+        case let .removed(id):
+            var (photos, _) = self.photoResultState.value
+            if let idx = photos.firstIndex(where: { $0.id == id }) {
+                photos[idx].userLike = false
+                self.photoResultState.source = .next((photos, true))
+            }
+        case .none:
+            break
+        }
     }
     
     private func pagingUpdate() async {
@@ -149,11 +204,11 @@ final class SearchViewModel {
         if let searchQuery = self.pagingQuery(query: query) {
             let result = await self.provider.search(searchQuery)
             switch result {
-            case .success(let success):
+            case let .success(success):
                 let photoModel = success.results.map { $0.toModel() }
-                let origin = self.photoResultState.value
+                let (origin, _) = self.photoResultState.value
                 
-                self.photoResultState.source = .next(origin + photoModel)
+                self.photoResultState.source = .next((origin + photoModel, true))
                 
                 state.mutate { state in
                     state.page += 1
@@ -161,8 +216,9 @@ final class SearchViewModel {
                 
                 self.viewState.source = .next(state)
                 
-            case .failure(let failure):
-                print(failure)
+            case let .failure(error):
+                let apiError = APIError.map(error)
+                self.errorHandle.source(.next(apiError))
             }
         }
     }
@@ -171,7 +227,7 @@ final class SearchViewModel {
         var state = viewState.value
         
         state.mutate { state in
-            state.page = 0
+            state.page = 1
             state.totalPage = 1
         }
         
@@ -189,7 +245,7 @@ final class SearchViewModel {
     private func pagingQuery(query: String) -> SearchQuery? {
         let state = viewState.value
         
-        if state.page + 1 <= state.totalPage {
+        if state.page <= state.totalPage {
             let query = SearchQuery(
                 page: state.page,
                 query: query,

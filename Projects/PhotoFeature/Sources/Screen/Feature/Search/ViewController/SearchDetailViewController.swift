@@ -12,25 +12,6 @@ import CustomObservable
 
 final class SearchDetailViewController: BaseViewController {
     
-    enum Section: Int, CaseIterable {
-        case header
-        case photo
-        case infoTitle
-        case infoRow
-        case chartTitle
-        case chartSegment
-        case chart
-    }
-    
-    enum Item: Hashable {
-        case header(name: String, date: String, liked: Bool)
-        case photo(String)
-        case infoKeyValue(key: String, value: String)
-        case title(text: String)
-        case segment
-        case chart([DayValue])
-    }
-    
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
         collectionView.backgroundColor = .systemBackground
@@ -44,7 +25,7 @@ final class SearchDetailViewController: BaseViewController {
         return collectionView
     }()
     
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private var dataSource: UICollectionViewDiffableDataSource<SearchDetailViewModel.Section, SearchDetailViewModel.Item>!
     
     static func create(with dependency: SearchDetailViewModel) -> SearchDetailViewController {
         let vc = SearchDetailViewController()
@@ -74,84 +55,112 @@ final class SearchDetailViewController: BaseViewController {
         ])
     }
     
+    private let viewDidLoad = LazyObservable<Void>()
+    private let changeGraphTrigger = LazyObservable<String>()
+    private let heartButtonTapped = LazyObservable<Bool>()
+    private let chartSegmentInfoTrigger = LazyObservable<SegmentItem>()
+    
+    
     override func binding() {
-        dataInit()
+        var snapShot = self.dataSource.snapshot()
+        snapShot.appendSections(SearchDetailViewModel.Section.allCases)
+        self.dataSource.apply(snapShot)
         
-        viewModel.transform()
+        let output = viewModel.transform(
+            input: SearchDetailViewModel.Input(
+                viewDidLoad: viewDidLoad,
+                changeGraphTrigger: changeGraphTrigger,
+                heartButtonTapped: heartButtonTapped,
+                chartSegmentInfoTrigger: chartSegmentInfoTrigger
+            )
+        )
         
-        viewModel.stats
-            .subscribeOn { [weak self] stats in
+        output.errorHandle
+            .subscribeOn { [weak self] apiError in
                 DispatchQueue.main.async {
-                    guard let self else { return }
-                    var snapShot = self.dataSource.snapshot()
-
-                    let oldInfoItems = snapShot.itemIdentifiers(inSection: .infoRow)
-                    
-                    snapShot.deleteItems(oldInfoItems)
-                    
-                    let newInfoItems: [Item] = [
-                        .infoKeyValue(key: "크기", value: "\(self.viewModel.model.width) x \(self.viewModel.model.height)"),
-                        .infoKeyValue(key: "조회수", value: "\(stats.views?.total?.formatted() ?? "0")"),
-                        .infoKeyValue(key: "다운로드", value: "\(stats.downloads?.total?.formatted() ?? "0")")
-                    ]
-                    
-                    snapShot.appendItems(newInfoItems, toSection: .infoRow)
-
-                    let oldChartHistory = snapShot.itemIdentifiers(inSection: .chart)
-                    
-                    snapShot.deleteItems(oldChartHistory)
-                    
-                    let dayValues = stats.views?.historical?.values?.map {
-                        DayValue(date: $0.date?.toDate("yyyy-MM-dd") ?? Date.now, value: Double($0.value ?? 0))
-                    }
-                    print("dayValues: \(dayValues)")
-                    if let dayValues {
-                        print("dayValues: \(dayValues)")
-                        snapShot.appendItems([.chart(dayValues)], toSection: .chart)
-                    }
-                    
-                    self.dataSource.apply(snapShot, animatingDifferences: true)
+                    self?.showToastMessage(offsetY: UIScreen.main.bounds.height - 150, message: apiError.message)
                 }
             }
             .disposed(in: bag)
         
-        viewModel.viewDidLoad.source(.next(()))
+        output.status
+            .subscribeOn { [weak self] viewState in
+                DispatchQueue.main.async {
+                    guard let self else { return }
+                    var currentSnapShot = self.dataSource.snapshot()
+                    for state in viewState.state {
+                        currentSnapShot.appendItems(
+                            state.item,
+                            toSection: state.section
+                        )
+                    }
+                    self.dataSource.apply(currentSnapShot)
+                }
+            }
+            .disposed(in: bag)
+        
+        output.reloadSection
+            .subscribeOn { [weak self] sectionAndItems in
+                DispatchQueue.main.async {
+                    guard let self else { return }
+                    self.reloadSection(sectionAndItems: sectionAndItems)
+                }
+            }
+            .disposed(in: bag)
+        
+        viewDidLoad.source(.next(()))
     }
     
-    private func dataInit() {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections(Section.allCases)
-        
-        snapshot.appendItems([.header(name: "\(viewModel.model.userDTO?.username ?? "hwan")",
-                                      date: "\(viewModel.model.createdAt ?? "ㅜ")일 게시됨",
-                                      liked: false)], toSection: .header)
-        
-        snapshot.appendItems([.photo(viewModel.model.regularURL)], toSection: .photo)
-        snapshot.appendItems([.title(text: "정보")], toSection: .infoTitle)
-        
-        snapshot.appendItems([
-            .infoKeyValue(key: "크기", value: "\(viewModel.model.width) x \(viewModel.model.height)"),
-            .infoKeyValue(key: "조회수", value: "1,548,623"),
-            .infoKeyValue(key: "다운로드", value: "388,996")
-        ], toSection: .infoRow)
-        
-        snapshot.appendItems([.title(text: "차트")], toSection: .chartTitle)
-        snapshot.appendItems([.segment], toSection: .chartSegment)
-        snapshot.appendItems([.chart([])], toSection: .chart)
-        
-        dataSource.apply(snapshot, animatingDifferences: false)
+    private func reloadSection(sectionAndItems: [SearchDetailViewModel.SectionAndItem]) {
+        var snapShot = self.dataSource.snapshot()
+        for sectionAndItem in sectionAndItems {
+            let section = sectionAndItem.section
+            let items = sectionAndItem.item
+            let oldItems = snapShot.itemIdentifiers(inSection: section)
+            snapShot.deleteItems(oldItems)
+            snapShot.appendItems(items, toSection: section)
+        }
+        self.dataSource.apply(snapShot)
     }
 }
 
 
-// MARK: - Diffable DataSource
 private extension SearchDetailViewController {
+    
+    @objc
+    func chartSegmentInfoTapped(_ sender: UISegmentedControl) {
+        let index = sender.selectedSegmentIndex
+        self.chartSegmentInfoTrigger.source(.next(index == 0 ? .viewer : .download))
+    }
+    
+    @objc
+    func likeButtonTapped(_ sender: UIButton) {
+        let origin = sender.isSelected
+        sender.isSelected = !origin
+        
+        var snapshot = dataSource.snapshot()
+        
+        if let oldHeader = snapshot.itemIdentifiers(inSection: .header).first,
+           case let .header(profileURL: url, name: name, date: date, liked: _) = oldHeader {
+            let newHeader: SearchDetailViewModel.Item = .header(profileURL: url, name: name, date: date, liked: !origin)
+            snapshot.deleteItems([oldHeader])
+            snapshot.appendItems([newHeader], toSection: .header)
+            dataSource.apply(snapshot, animatingDifferences: false)
+        }
+        
+        heartButtonTapped.source(.next(!origin))
+    }
+    
     func configureDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
+        dataSource = UICollectionViewDiffableDataSource<SearchDetailViewModel.Section, SearchDetailViewModel.Item>(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
+            
             switch item {
-            case let .header(name, date, liked):
+            case let .header(profileURL, name, date, liked):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HeaderCell.id, for: indexPath) as! HeaderCell
-                cell.set(name: name, date: date, liked: liked)
+                cell.set(profileURL: profileURL, name: name, date: date, liked: liked)
+                if let self {
+                    cell.likeButton.addTarget(self, action: #selector(likeButtonTapped(_:)), for: .touchUpInside)
+                }
                 return cell
                 
             case let .photo(item):
@@ -171,83 +180,29 @@ private extension SearchDetailViewController {
                 
             case .segment:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SegmentCell.id, for: indexPath) as! SegmentCell
-                cell.set(items: ["조회", "다운로드"], selectedIndex: 0)
+                if let self {
+                    cell.segment.addTarget(self, action: #selector(chartSegmentInfoTapped(_:)), for: .valueChanged)
+                }
                 return cell
                 
-            case let .chart(dayValues):
+            case let .chart(views, downloads, mode):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ChartCell.id, for: indexPath) as! ChartCell
-                cell.set(with: dayValues)
+                if mode == .viewer {
+                    cell.set(with: views)
+                } else if mode == .download {
+                    cell.set(with: downloads)
+                }
                 return cell
             }
         }
     }
 }
 
-private final class HeaderCell: BaseCollectionViewCell, CellIdentifialble {
-    private let avatarView = UIImageView()
-    private let nameLabel = UILabel()
-    private let dateLabel = UILabel()
-    private let likeButton = UIButton()
-    
-    override func addAttributes() {
-        avatarView.backgroundColor = .secondarySystemBackground
-        avatarView.layer.cornerRadius = 16
-        avatarView.clipsToBounds = true
-        avatarView.translatesAutoresizingMaskIntoConstraints = false
-        
-        nameLabel.font = .preferredFont(forTextStyle: .subheadline)
-        nameLabel.textColor = .label
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        dateLabel.font = .preferredFont(forTextStyle: .caption2)
-        dateLabel.textColor = .secondaryLabel
-        dateLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
-        likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
-        likeButton.tintColor = .systemBlue
-        likeButton.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    override func addChild() {
-        contentView.addSubview(avatarView)
-        contentView.addSubview(nameLabel)
-        contentView.addSubview(dateLabel)
-        contentView.addSubview(likeButton)
-    }
-    
-    override func addLayout() {
-        NSLayoutConstraint.activate([
-            avatarView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            avatarView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            avatarView.widthAnchor.constraint(equalToConstant: 32),
-            avatarView.heightAnchor.constraint(equalToConstant: 32),
-            
-            nameLabel.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: 8),
-            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 2),
-            
-            dateLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            dateLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2),
-            dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -2),
-            
-            likeButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            likeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            likeButton.leadingAnchor.constraint(greaterThanOrEqualTo: nameLabel.trailingAnchor, constant: 8)
-        ])
-    }
-    
-    func set(name: String, date: String, liked: Bool) {
-        nameLabel.text = name
-        dateLabel.text = date
-        likeButton.isSelected = liked
-    }
-}
-
-// MARK: - Compositional Layout
+// MARK: Compositional Layout
 extension SearchDetailViewController {
     func makeLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, env in
-            guard let section = Section(rawValue: sectionIndex) else { return nil }
+            guard let section = SearchDetailViewModel.Section(rawValue: sectionIndex) else { return nil }
             switch section {
             case .header:
                 let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(52)))
@@ -263,7 +218,6 @@ extension SearchDetailViewController {
                         heightDimension: .fractionalHeight(1)
                     )
                 )
-                
                 let group = NSCollectionLayoutGroup
                     .vertical(
                         layoutSize: .init(
@@ -276,11 +230,8 @@ extension SearchDetailViewController {
                 
                 return section
                 
-            case .infoTitle:
-                fallthrough
-                
-            case .chartTitle:
-                let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(28)))
+            case .infoTitle, .chartTitle:
+                let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(32)))
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(28)), subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = .init(top: 16, leading: 16, bottom: 8, trailing: 16)

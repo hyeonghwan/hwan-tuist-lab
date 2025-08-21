@@ -37,11 +37,6 @@ struct PhotoDTO: Codable {
     let urls: UrlsDTO?
     let links: LinksDTO?
     let likes: Int?
-    let likedByUser: Bool?
-    let currentUserCollections: [String]?
-    let sponsorship: String?
-    let topicSubmissions: [String: TopicSubmissionDTO]?
-    let assetType: String?
     let user: UserDTO?
 
     enum CodingKeys: String, CodingKey {
@@ -54,12 +49,10 @@ struct PhotoDTO: Codable {
         case blurHash = "blur_hash"
         case description
         case altDescription = "alt_description"
-        case breadcrumbs, urls, links, likes
-        case likedByUser = "liked_by_user"
-        case currentUserCollections = "current_user_collections"
-        case sponsorship
-        case topicSubmissions = "topic_submissions"
-        case assetType = "asset_type"
+        case breadcrumbs
+        case urls
+        case links
+        case likes
         case user
     }
 }
@@ -76,7 +69,8 @@ extension PhotoDTO {
             height: self.height ?? 300,
             ratio: ratio,
             userDTO: self.user,
-            createdAt: self.createdAt
+            userLike: UserFavoriteCache.shared.isFavorite(id: self.id),
+            createdAt: self.createdAt?.isoStringToFormattedString()
         )
     }
 }
@@ -135,16 +129,6 @@ struct UserDTO: Hashable, Codable {
     let location: String?
     let links: UserLinksDTO?
     let profileImage: ProfileImageDTO?
-    let instagramUsername: String?
-    let totalCollections: Int?
-    let totalLikes: Int?
-    let totalPhotos: Int?
-    let totalPromotedPhotos: Int?
-    let totalIllustrations: Int?
-    let totalPromotedIllustrations: Int?
-    let acceptedTos: Bool?
-    let forHire: Bool?
-    let social: SocialDTO?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -156,16 +140,6 @@ struct UserDTO: Hashable, Codable {
         case portfolioURL = "portfolio_url"
         case bio, location, links
         case profileImage = "profile_image"
-        case instagramUsername = "instagram_username"
-        case totalCollections = "total_collections"
-        case totalLikes = "total_likes"
-        case totalPhotos = "total_photos"
-        case totalPromotedPhotos = "total_promoted_photos"
-        case totalIllustrations = "total_illustrations"
-        case totalPromotedIllustrations = "total_promoted_illustrations"
-        case acceptedTos = "accepted_tos"
-        case forHire = "for_hire"
-        case social
     }
 }
 

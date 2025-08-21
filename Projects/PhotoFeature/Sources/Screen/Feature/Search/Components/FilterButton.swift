@@ -40,6 +40,7 @@ final class FilterButton: BaseButton {
         self.configuration = .plain()
         self.backgroundColor = .lightGray.withAlphaComponent(0.3)
         self.layer.cornerRadius = 12
+        self.tintColor = .black
         updateType()
     }
     
@@ -59,8 +60,8 @@ final class FilterButton: BaseButton {
                 ]),
             for: .normal
         )
-        self.setImage(currentType.image, for: .normal)
         
+        self.setImage(currentType.image, for: .normal)
         self.configuration?.imagePadding = 6
         
         imageView?.contentMode = .scaleAspectFit

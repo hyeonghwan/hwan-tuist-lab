@@ -8,28 +8,9 @@
 
 import UIKit
 import Design
-
-
 import SwiftUI
 import Charts
 
-struct DayValue: Identifiable, Hashable {
-    let id = UUID()
-    let date: Date
-    let value: Double
-}
-
-extension Array where Element == Double {
-    func asLast30Days(endDate: Date = .now) -> [DayValue] {
-        let vals = Array(self.suffix(30))
-        guard !vals.isEmpty else { return [] }
-        let start = Calendar.current.date(byAdding: .day, value: -(vals.count - 1), to: endDate) ?? endDate
-        return vals.enumerated().compactMap { i, v in
-            guard let d = Calendar.current.date(byAdding: .day, value: i, to: start) else { return nil }
-            return DayValue(date: d, value: v)
-        }
-    }
-}
 
 struct DownloadsChartView: View {
     var data: [DayValue]

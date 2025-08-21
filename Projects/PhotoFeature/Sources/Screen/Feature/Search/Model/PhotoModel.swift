@@ -16,5 +16,6 @@ struct PhotoModel: Hashable {
     let height: Int
     let ratio: CGFloat
     let userDTO: UserDTO?
+    var userLike: Bool
     let createdAt: String?
 }

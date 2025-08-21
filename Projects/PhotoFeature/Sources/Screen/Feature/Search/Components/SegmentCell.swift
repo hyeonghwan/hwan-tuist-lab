@@ -8,9 +8,10 @@
 
 import UIKit
 import Design
+import CustomObservable
 
 final class SegmentCell: BaseCollectionViewCell, CellIdentifialble {
-    private let segment = UISegmentedControl(items: ["조회", "다운로드"])
+    private(set) var segment = UISegmentedControl(items: [SegmentItem.viewer.rawValue, SegmentItem.download.rawValue])
     
     override func addAttributes() {
         segment.selectedSegmentIndex = 0
@@ -28,10 +29,5 @@ final class SegmentCell: BaseCollectionViewCell, CellIdentifialble {
             segment.topAnchor.constraint(equalTo: contentView.topAnchor),
             segment.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
-    }
-    
-    
-    func set(items: [String], selectedIndex: Int) {
-        
     }
 }

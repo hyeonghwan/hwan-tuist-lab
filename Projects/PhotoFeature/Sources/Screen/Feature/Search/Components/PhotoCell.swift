@@ -13,28 +13,47 @@ import Kingfisher
 final class PhotoCell: BaseCollectionViewCell, CellIdentifialble {
     private let photoImageView = UIImageView()
     private let capsuleView = CapsuleView()
+    private(set) var likeButton = UIButton()
+    var action: ((Bool) -> Void)?
     
     override func prepareForReuse() {
         super.prepareForReuse()
         photoImageView.image = nil
+        likeButton.isSelected = false
+        action = nil
         photoImageView.kf.cancelDownloadTask()
     }
     
     override func addAttributes() {
         photoImageView.contentMode = .scaleAspectFill
         photoImageView.clipsToBounds = true
+        self.photoImageView.kf.indicatorType = .activity
+        
         self.contentView.layer.cornerRadius = 12
         self.contentView.clipsToBounds = true
-        self.photoImageView.kf.indicatorType = .activity
+        
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .regular)
+        likeButton.setPreferredSymbolConfiguration(config, forImageIn: .normal)
+        likeButton.setPreferredSymbolConfiguration(config, forImageIn: .selected)
+        
+        likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
+        
+        likeButton.translatesAutoresizingMaskIntoConstraints = false
+        likeButton.layer.cornerRadius = 15
+        likeButton.backgroundColor = .white.withAlphaComponent(0.3)
+        
+        self.likeButton.addTarget(self, action: #selector(likeButtonTapped(_:)), for: .touchUpInside)
     }
     
     override func addChild() {
         self.contentView.addSubview(photoImageView)
         self.contentView.addSubview(capsuleView)
+        self.contentView.addSubview(likeButton)
         
         photoImageView.translatesAutoresizingMaskIntoConstraints = false
         capsuleView.translatesAutoresizingMaskIntoConstraints = false
-        
+        likeButton.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.bringSubviewToFront(capsuleView)
     }
     
@@ -51,13 +70,29 @@ final class PhotoCell: BaseCollectionViewCell, CellIdentifialble {
             
             capsuleView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -12),
             capsuleView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 12),
+            
+            likeButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -12),
+            likeButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -12),
+            likeButton.widthAnchor.constraint(equalToConstant: 30),
+            likeButton.heightAnchor.constraint(equalToConstant: 30)
         ])
+    }
+    
+    @objc
+    private func likeButtonTapped(_ sender: UIButton) {
+        let origin = sender.isSelected
+        sender.isSelected = !origin
+        self.likeButton.tintColor = sender.isSelected ? .systemBlue : .white.withAlphaComponent(0.5)
+        self.action?(!origin)
     }
     
     func configure(photoModel: PhotoModel) {
         if let url = URL(string: photoModel.regularURL) {
             setImage(url: url, key: photoModel.id)
         }
+        self.likeButton.tintColor = photoModel.userLike ? .systemBlue : .white.withAlphaComponent(0.5)
+        self.likeButton.isSelected = photoModel.userLike
+        
         self.capsuleView.likeCountLabel.text = "\(photoModel.likes.formatted())"
     }
     
@@ -70,50 +105,5 @@ final class PhotoCell: BaseCollectionViewCell, CellIdentifialble {
                 .cacheOriginalImage
             ]
         )
-    }
-}
-
-final class CapsuleView: BaseView {
-    private let startView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "star.fill")
-        imageView.tintColor = .yellow
-        return imageView
-    }()
-    
-    private(set) var likeCountLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 11, weight: .thin)
-        label.textColor = .white
-        return label
-    }()
-    
-    override func addAttributes() {
-        self.backgroundColor = .black.withAlphaComponent(0.3)
-        self.layer.cornerRadius = 12
-    }
-    
-    override func addChild() {
-        self.addSubview(startView)
-        self.addSubview(likeCountLabel)
-        
-        startView.translatesAutoresizingMaskIntoConstraints = false
-        likeCountLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        addLayout()
-    }
-    
-    private func addLayout() {
-        startView.setContentHuggingPriority(.required, for: .vertical)
-        NSLayoutConstraint.activate([
-            startView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            startView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 6),
-            startView.topAnchor.constraint(equalTo: self.topAnchor, constant: 4),
-            startView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4),
-            
-            likeCountLabel.leadingAnchor.constraint(equalTo: startView.trailingAnchor, constant: 4),
-            likeCountLabel.centerYAnchor.constraint(equalTo: startView.centerYAnchor),
-            likeCountLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -6)
-        ])
     }
 }

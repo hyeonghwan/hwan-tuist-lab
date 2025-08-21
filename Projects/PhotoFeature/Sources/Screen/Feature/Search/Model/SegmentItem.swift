@@ -7,3 +7,8 @@
 //
 
 import Foundation
+
+enum SegmentItem: String {
+    case viewer  = "조회"
+    case download = "다운로드"
+}

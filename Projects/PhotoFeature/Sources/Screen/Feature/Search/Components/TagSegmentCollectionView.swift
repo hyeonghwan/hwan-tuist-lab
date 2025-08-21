@@ -18,7 +18,7 @@ final class TagSegmentCollectionView: BaseCollectiionView {
         let flowlayout = UICollectionViewFlowLayout()
         flowlayout.minimumInteritemSpacing = 2
         flowlayout.scrollDirection = .horizontal
-        flowlayout.estimatedItemSize = CGSize(width: 100, height: 28)
+        flowlayout.estimatedItemSize = CGSize(width: 150, height: 28)
         self.init(frame: .zero, collectionViewLayout: flowlayout)
         self.dataSource = dataSource
         self.delegate = delegate
@@ -33,11 +33,24 @@ final class TagSegmentCollectionView: BaseCollectiionView {
         )
     }
     
-    final class TagDelegate: NSObject, UICollectionViewDelegate {
+    final class TagDelegate: NSObject, UICollectionViewDelegateFlowLayout {
         weak var selectedTrigger: LazyObservable<TagModel?>?
         
         init(selectedTrigger: LazyObservable<TagModel?>) {
             self.selectedTrigger = selectedTrigger
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            if let tagDataSource = (collectionView as? TagSegmentCollectionView)?.dataSource,
+               let tagDataSource = tagDataSource as? TagSegmentCollectionView.DataSource {
+                let model = tagDataSource.models[indexPath.row]
+                return CGSize(
+                    width: model.color.title.width(withConstrainedHeight: 30, font: TagCell.font) + 36,
+                    height: 28
+                )
+            } else {
+                return CGSize.zero
+            }
         }
         
         func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -85,6 +98,7 @@ final class TagSegmentCollectionView: BaseCollectiionView {
     final class TagCell: BaseCollectionViewCell, CellIdentifialble {
         private let colorView = UIView()
         private let titleLabel = UILabel()
+        static let font = UIFont.systemFont(ofSize: 12, weight: .light)
         
         override func addAttributes() {
             self.contentView.backgroundColor = .lightGray.withAlphaComponent(0.3)
@@ -92,7 +106,7 @@ final class TagSegmentCollectionView: BaseCollectiionView {
             colorView.layer.cornerRadius = 10
             colorView.clipsToBounds = true
             titleLabel.textColor = .label
-            titleLabel.font = .systemFont(ofSize: 12, weight: .light)
+            titleLabel.font = Self.font
         }
         
         override func addChild() {

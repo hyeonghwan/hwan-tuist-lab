@@ -17,9 +17,12 @@ final class PinterestLayout: UICollectionViewFlowLayout {
     private let numberOfColumns: Int = 2
     private let cellPadding: CGFloat = 5
     
+    private var footerAttributes: UICollectionViewLayoutAttributes?
+    
     func invalidateCache() {
         cache.removeAll()
         contentHeight = 0
+        footerAttributes = nil
     }
     
     private var contentWidth: CGFloat {
@@ -38,12 +41,7 @@ final class PinterestLayout: UICollectionViewFlowLayout {
     
     override func prepare() {
         guard let collectionView else { return }
-
-        let itemCount = collectionView.numberOfItems(inSection: 0)
-
-        let cellWidth: CGFloat = contentWidth / CGFloat(numberOfColumns)
-        let xOffSet: [CGFloat] = (0..<numberOfColumns).map { CGFloat($0) * cellWidth }
-
+        
         func build(from start: Int, to end: Int) {
             var column = (yOffSet.enumerated().min(by: { $0.element < $1.element })?.offset) ?? 0
             for item in start..<end {
@@ -51,7 +49,7 @@ final class PinterestLayout: UICollectionViewFlowLayout {
                 let imageHeight = delegate?.collectionView(collectionView, heightForPhotoAtIndexPath: indexPath) ?? 180
                 let height = cellPadding * 2 + imageHeight
 
-                let frame = CGRect(x: xOffSet[column],
+                let frame = CGRect(x: xOffsets[column],
                                    y: yOffSet[column],
                                    width: cellWidth,
                                    height: height)
@@ -68,24 +66,54 @@ final class PinterestLayout: UICollectionViewFlowLayout {
             }
         }
 
+        let itemCount = collectionView.numberOfItems(inSection: 0)
+
+        let cellWidth: CGFloat = contentWidth / CGFloat(numberOfColumns)
+        let xOffsets: [CGFloat] = (0..<numberOfColumns).map { CGFloat($0) * cellWidth }
+
         if itemCount <= cache.count {
             cache.removeAll()
             contentHeight = 0
             yOffSet = Array(repeating: 0, count: numberOfColumns)
             build(from: 0, to: itemCount)
+            buildFooterIfNeeded()
             return
         }
 
         if yOffSet.count != numberOfColumns || yOffSet.reduce(0, +) == 0 {
             yOffSet = .init(repeating: 0, count: numberOfColumns)
-            for attrs in cache {
-                let col = xOffSet.enumerated().min(by: { abs($0.element - attrs.frame.minX) < abs($1.element - attrs.frame.minX) })?.offset ?? 0
-                yOffSet[col] = max(yOffSet[col], attrs.frame.maxY)
-                contentHeight = max(contentHeight, attrs.frame.maxY)
+            for attribute in cache {
+                let col = xOffsets.enumerated().min(by: { abs($0.element - attribute.frame.minX) < abs($1.element - attribute.frame.minX) })?.offset ?? 0
+                yOffSet[col] = max(yOffSet[col], attribute.frame.maxY)
+                contentHeight = max(contentHeight, attribute.frame.maxY)
             }
         }
         
         build(from: cache.count, to: itemCount)
+        buildFooterIfNeeded()
+    }
+    
+    private func buildFooterIfNeeded() {
+        guard let collectionView else { return }
+        guard 0 < collectionView.numberOfSections else { return }
+        let indexPath = IndexPath(item: 0, section: 0)
+
+        let attributes = UICollectionViewLayoutAttributes(
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            with: indexPath
+        )
+        attributes.frame = CGRect(x: 0, y: contentHeight, width: contentWidth, height: 44)
+        attributes.zIndex = 0
+        footerAttributes = attributes
+        contentHeight = max(contentHeight, attributes.frame.maxY)
+    }
+    
+    override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        print("layoutAttributesForSupplementaryView: \(indexPath)")
+        if elementKind == UICollectionView.elementKindSectionFooter && indexPath.section == 0 {
+            return footerAttributes
+        }
+        return nil
     }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
@@ -95,7 +123,12 @@ final class PinterestLayout: UICollectionViewFlowLayout {
                 visibleLayoutAttributes.append(attributes)
             }
         }
-        return visibleLayoutAttributes
+        
+        if let footerAttributes {
+            return visibleLayoutAttributes + [footerAttributes]
+        } else {
+            return visibleLayoutAttributes
+        }
     }
     
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {

@@ -13,10 +13,9 @@ struct SearchQuery: Query {
     var page: Int
     var query: String
     var per_page: Int
-    var order_by: String? // latest, relevant
-    var color: String? // Filter results by color. Optional. Valid values are:
+    var order_by: String?
+    var color: String?
 }
-
 
 struct SearchAPIResource: APIResource {
     typealias ResponseType = SearchResponseDTO

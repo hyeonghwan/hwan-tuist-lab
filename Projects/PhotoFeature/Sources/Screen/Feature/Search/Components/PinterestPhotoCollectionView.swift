@@ -16,5 +16,10 @@ final class PinterestPhotoCollectionView: BaseCollectiionView {
             PhotoCell.self,
             forCellWithReuseIdentifier: PhotoCell.id
         )
+        self.register(
+            RefreshFotterView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier: RefreshFotterView.id
+        )
     }
 }
