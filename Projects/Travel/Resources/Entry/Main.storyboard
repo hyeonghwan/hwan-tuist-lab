@@ -12,7 +12,7 @@
         <!--도시 상세 정보-->
         <scene sceneID="J6s-wU-lRh">
             <objects>
-                <viewController id="0F6-7o-hHG" customClass="TravelViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="0F6-7o-hHG" customClass="TravelViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VjF-BO-TLt">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -44,7 +44,7 @@
         <!--Tourist Attraction View Controller-->
         <scene sceneID="s5N-6x-9pj">
             <objects>
-                <viewController storyboardIdentifier="TouristAttractionViewController" id="Q7K-nD-RCe" customClass="TouristAttractionViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TouristAttractionViewController" id="Q7K-nD-RCe" customClass="TouristAttractionViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nj3-el-6eP">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -113,7 +113,7 @@
         <!--Ad View Controller-->
         <scene sceneID="SRg-Nh-VWV">
             <objects>
-                <viewController storyboardIdentifier="AdViewController" id="2rS-mE-ffz" customClass="AdViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AdViewController" id="2rS-mE-ffz" customClass="AdViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ogx-Ml-edv">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -219,7 +219,7 @@
         <!--인기 도시-->
         <scene sceneID="fD4-aV-foO">
             <objects>
-                <viewController storyboardIdentifier="TravelCitySearchViewController" id="MMF-ch-cIr" customClass="TravelCitySearchViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TravelCitySearchViewController" id="MMF-ch-cIr" customClass="TravelCitySearchViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BD1-zP-vaz">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -256,6 +256,14 @@
             </objects>
             <point key="canvasLocation" x="-616" y="2312"/>
         </scene>
+        <!--CityDetailViewController-->
+        <scene sceneID="LXa-zQ-ucO">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="CityDetailViewController" storyboardName="CityDetail" referencedIdentifier="CityDetailViewController" id="XAn-Nv-Qch" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="N4u-wu-nni" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="142" y="2149"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="oTx-GI-0z1">
             <objects>
@@ -267,11 +275,12 @@
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="UdM-NU-Vuf" kind="relationship" relationship="viewControllers" id="2ab-m2-ajK"/>
-                        <segue destination="gsT-Zu-PNo" kind="relationship" relationship="viewControllers" id="rKP-6L-gdf"/>
-                        <segue destination="rAi-Lv-t2g" kind="relationship" relationship="viewControllers" id="OXB-kp-kvU"/>
-                        <segue destination="zVO-RM-XFj" kind="relationship" relationship="viewControllers" id="e20-Tq-V72"/>
-                        <segue destination="9VY-2R-mze" kind="relationship" relationship="viewControllers" id="lkN-J7-ZBB"/>
+                        <segue destination="d6H-FW-7tm" kind="relationship" relationship="viewControllers" id="eLi-bf-lC2"/>
+                        <segue destination="9VY-2R-mze" kind="relationship" relationship="viewControllers" id="D37-q8-cpQ"/>
+                        <segue destination="UdM-NU-Vuf" kind="relationship" relationship="viewControllers" id="SDo-fL-Nob"/>
+                        <segue destination="gsT-Zu-PNo" kind="relationship" relationship="viewControllers" id="uJc-QQ-Urm"/>
+                        <segue destination="rAi-Lv-t2g" kind="relationship" relationship="viewControllers" id="Zpf-di-Fcd"/>
+                        <segue destination="zVO-RM-XFj" kind="relationship" relationship="viewControllers" id="iDw-A7-J6K"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8mW-74-M2R" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -298,7 +307,7 @@
         <!--SeSAC TREVEL-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="MagazineViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MagazineViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -331,7 +340,7 @@
         <!--game-->
         <scene sceneID="foQ-ae-jTU">
             <objects>
-                <viewController id="rAi-Lv-t2g" customClass="ThreeSixNineViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="rAi-Lv-t2g" customClass="ThreeSixNineViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JNQ-Z0-Q5v">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -414,7 +423,7 @@
         <!--쇼핑-->
         <scene sceneID="nvB-FQ-Ytg">
             <objects>
-                <viewController id="OOL-01-D9X" customClass="ShoppingViewController" customModule="TravelProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="OOL-01-D9X" customClass="ShoppingViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="AS8-8Z-nQF">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -451,6 +460,16 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qlW-bD-fPO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="143" y="-642"/>
+        </scene>
+        <!--CityCollectionSearchViewController-->
+        <scene sceneID="ESv-Sb-4Mg">
+            <objects>
+                <viewControllerPlaceholder storyboardName="CityCollectionSearchViewController" id="d6H-FW-7tm" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="P8x-T7-GZl"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="llX-Ag-hp8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1690" y="-449"/>
         </scene>
     </scenes>
     <resources>

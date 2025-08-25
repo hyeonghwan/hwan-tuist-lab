@@ -43,13 +43,8 @@ final class TravelCell: UITableViewCell, CellIdentifialble {
         let like = info.like ?? false
         likeButton.isSelected = like
         if let url = URL(string: info.travel_image ?? "") {
-            cityImageView.kf.indicatorType = .activity
-            cityImageView.kf.setImage(
-              with: url,
-              placeholder: nil,
-              options: [.transition(.fade(1.2))],
-              completionHandler: nil
-            )
+            let size = CGSize(width: UIScreen.main.bounds.width, height: 200)
+            cityImageView.kf.downSizingImage(url: url, size: size)
         } else {
             cityImageView.image =  ImageGen.clockwise?
                 .withTintColor(

@@ -1,24 +1,13 @@
-//
-//  AppDelegate.swift
-//  TravelProject
-//
-//  Created by hwan on 7/13/25.
-//
-
 import UIKit
-import Kingfisher
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+final class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-         // KingfisherManager.shared.cache.clearMemoryCache()
-         // KingfisherManager.shared.cache.clearDiskCache()
         return true
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
-        KingfisherManager.shared.cache.clearMemoryCache()
     }
 
     // MARK: UISceneSession Lifecycle
@@ -34,4 +23,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 }
-

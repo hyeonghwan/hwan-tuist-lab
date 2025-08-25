@@ -1,66 +1,33 @@
 //
-//  CityCell.swift
-//  TravelProject
+//  CityCollectionCell.swift
+//  City
 //
-//  Created by hwan on 7/15/25.
+//  Created by hwan on 7/17/25.
+//  Copyright © 2025 com.hwan. All rights reserved.
 //
+
 import UIKit
 import Kingfisher
 
-final class CityCell: UITableViewCell, CellIdentifialble {
-    @IBOutlet weak var containerView: UIView!
+final class CityCollectionCell: UICollectionViewCell, CellIdentifialble {
+
     @IBOutlet weak var cityImageView: UIImageView!
     @IBOutlet weak var cityNameLabel: UILabel!
     @IBOutlet weak var cityListlabel: UILabel!
-    @IBOutlet weak var shadowView: UIView!
-    
-    private var roundedLayer: CAShapeLayer! = nil
-    private var shadowLayer: CAShapeLayer! = nil
-    private var setLayer: Bool = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        containerView.clipsToBounds = true
-        containerView.layer.masksToBounds = false
-        containerView.backgroundColor = .systemBackground
-        self.cityImageView.clipsToBounds = true
-        shadowView.backgroundColor = .clear
-        self.sendSubviewToBack(shadowView)
-    }
-    
-    override func draw(_ rect: CGRect) {
-        if shadowLayer == nil {
-            shadowLayer = CAShapeLayer()
-            makeShadowLayer(layer: shadowLayer)
-            shadowView.layer.insertSublayer(shadowLayer, at: 0)
-        }
-        
-        if roundedLayer == nil {
-            roundedLayer = CAShapeLayer()
-            let path = UIBezierPath(
-                roundedRect: containerView.bounds,
-                byRoundingCorners: [.topLeft, .bottomRight],
-                cornerRadii: CGSize(width: 25, height: 25)
-            )
-            roundedLayer.path = path.cgPath
-            containerView.layer.mask = roundedLayer
-        }
-    }
-    
-    private func makeShadowLayer(layer: CAShapeLayer) {
-        layer.name = "Shadow"
-        layer.path = UIBezierPath(roundedRect: shadowView.bounds, cornerRadius: 25).cgPath
-        layer.fillColor = UIColor.clear.cgColor
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowPath = layer.path
-        layer.shadowOffset = CGSize(width: 5, height: 5)
-        layer.shadowOpacity = 0.2
-        layer.shadowRadius = 3
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         cityImageView.kf.cancelDownloadTask()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        contentView.layoutIfNeeded()
+        cityImageView.layer.cornerRadius = cityImageView.bounds.width / 2
     }
     
     func set(info: City, contains: String?) {
@@ -70,7 +37,7 @@ final class CityCell: UITableViewCell, CellIdentifialble {
     
     private func load(image: String) {
         if let url = URL(string: image) {
-            let size = CGSize(width: UIScreen.main.bounds.width, height: 200)
+            let size = CGSize(width: 200, height: 200)
             cityImageView.kf.downSizingImage(url: url, size: size)
         } else {
             cityImageView.image =  ImageGen.clockwise?

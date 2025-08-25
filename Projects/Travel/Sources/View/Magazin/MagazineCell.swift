@@ -25,13 +25,8 @@ final class MagazineCell: UITableViewCell, CellIdentifialble {
     
     func set(info: Magazine) {
         if let url = URL(string: info.photoImage) {
-            titleImageVIew.kf.indicatorType = .activity
-            titleImageVIew.kf.setImage(
-              with: url,
-              placeholder: nil,
-              options: [.transition(.fade(1.0))],
-              completionHandler: nil
-            )
+            let size = CGSize(width: UIScreen.main.bounds.width, height: 200)
+            titleImageVIew.kf.downSizingImage(url: url, size: size)
         } else {
             titleImageVIew.image = ImageGen.clockwise?
                 .withTintColor(

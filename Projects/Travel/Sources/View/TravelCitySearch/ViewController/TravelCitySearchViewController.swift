@@ -85,8 +85,12 @@ final class TravelCitySearchViewController: UIViewController {
         )
     }
     
-    @IBAction func keyboardDismiss(_ sender: Any) {
+    @IBAction func keyboardDismiss(_ sender: UITapGestureRecognizer) {
         view.endEditing(true)
+        let touch = sender.location(in: tableView)
+        if let indexPath = tableView.indexPathForRow(at: touch) {
+            moveToDetailVC(indexPath: indexPath)
+        }
     }
     
     @objc private func segmentedValueChanged(_ sender: UISegmentedControl) {
@@ -127,12 +131,23 @@ extension TravelCitySearchViewController: UITextFieldDelegate {
 
 extension TravelCitySearchViewController: UITableViewDelegate, UITableViewDataSource {
     
+    func moveToDetailVC(indexPath: IndexPath) {
+        let model = self.filteredCityList[indexPath.row]
+        guard let detailView = storyboard?.instantiateViewController(withIdentifier: CityDetailViewController.id) as? CityDetailViewController else {
+            return
+        }
+        detailView.information = model.city
+        self.navigationController?.pushViewController(detailView, animated: true)
+    }
+    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         view.endEditing(true)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: false)
+        view.endEditing(true)
+        moveToDetailVC(indexPath: indexPath)
+        self.tableView.deselectRow(at: indexPath, animated: false)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -164,7 +179,6 @@ extension TravelCitySearchViewController: UITableViewDelegate, UITableViewDataSo
             return UITableViewCell()
         }
         cell.set(info: viewModel.city, contains: viewModel.contains)
-        cell.selectionStyle = .none
         return cell
     }
 }

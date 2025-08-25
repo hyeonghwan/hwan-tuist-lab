@@ -8,9 +8,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CitySearchHeaderView" customModule="TravelProject" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CitySearchHeaderView" customModule="Travel" customModuleProvider="target">
             <connections>
-                <outlet property="searchField" destination="7BJ-xQ-nLG" id="wkm-7Y-yMm"/>
+                <outlet property="searchField" destination="7BJ-xQ-nLG" id="rJR-aQ-FfN"/>
                 <outlet property="segmentedControl" destination="0um-wE-23D" id="2Qj-dx-4SI"/>
             </connections>
         </placeholder>

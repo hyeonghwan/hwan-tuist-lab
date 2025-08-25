@@ -1,23 +1,24 @@
 @preconcurrency import ProjectDescription
-@preconcurrency import ProjectDescriptionHelpers
-@preconcurrency import TuistPlugin
+import TuistPlugin
+import ProjectDescriptionHelpers
 
 let project = ProjectFactory.createApp(
-    name: "Travel",
+    name: "UpDown",
     context: ProjectContext(
         metadata: ProjectMetadata(
             orgName: AppConfig.orgName,
             appBundleIDPrefix: AppConfig.orgName
         ),
-        pathProvider: PathProvider(configDirectory: "Config"),
+        pathProvider: PathProvider(
+            projectConfigDirectory: "Config",
+            configDirectory: "Projects/UpDown/Config"
+        ),
         deploymentTarget: .iOS("17.0"),
         defaultSettings: .init()
     ),
     dependencies: [
-        .package(product: "Kingfisher", type: .runtime, condition: nil)
     ],
     packages: [
-        R.kingfisher
     ],
     infoPlist: .storyBoardDefault
 )

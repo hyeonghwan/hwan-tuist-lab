@@ -66,7 +66,7 @@ DerivedData/
 graph.dot
 Derived/
 Config/*.xcconfig
-
+Projects/**/Config/*.xcconfig
 
 ### Tuist managed dependencies ###
 Package.resolved
