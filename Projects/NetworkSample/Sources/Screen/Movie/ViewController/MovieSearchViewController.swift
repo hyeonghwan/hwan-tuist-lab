@@ -110,8 +110,9 @@ final class MovieSearchViewController: BaseViewController {
     }
     
     private func request(day: String, _ completion: @escaping (BoxOfficeResultDTO) -> Void) {
+        let key = KobisOpenApiResource.API_KEY
         CoreNetwork.shared.GET(
-            resource: KobisOpenApiResource(query: MovieQuery(targetDt: "\(day)")),
+            resource: KobisOpenApiResource(query: MovieQuery(targetDt: "\(day)", API_KEY: key)),
             decodeType: BoxOfficeResultDTO.self
         ) { result in
             switch result {

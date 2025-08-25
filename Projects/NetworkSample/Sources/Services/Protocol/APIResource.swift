@@ -8,30 +8,28 @@
 
 import Foundation
 
-enum HTTPMethod: String {
+public enum HTTPMethod: String {
     case get = "GET"
     case post = "POST"
     case put = "PUT"
     case delete = "DELETE"
 }
 
-protocol APIResource {
+public protocol APIResource {
     associatedtype ResponseType: Decodable
     var scheme: String { get }
     var host: String { get }
     var path: String { get }
-    var API_KEY: String { get }
     var method: HTTPMethod { get }
     var headers: [String: String]? { get }
     var body: Data? { get }
     var query: Query { get }
 }
 
-extension APIResource {
+public extension APIResource {
     var scheme: String { "https" }
     var headers: [String: String]? { ["Content-Type": "application/json"] }
     var body: Data? { nil }
-    var API_KEY: String { "" }
     
     func urlRequest() throws -> URLRequest {
         var components = URLComponents()
@@ -40,10 +38,6 @@ extension APIResource {
         components.path = path
         
         var queries = self.query.makeQuery()
-        
-        if !self.API_KEY.isEmpty {
-            queries["key"] = self.API_KEY
-        }
         
         components.queryItems = queries.reduce(into: [URLQueryItem]()) { origin, next in
             origin.append(URLQueryItem(name: next.key, value: next.value))

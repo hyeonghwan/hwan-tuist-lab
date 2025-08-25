@@ -15,6 +15,7 @@ struct KobisOpenApiResource: APIResource {
     
     struct MovieQuery: Query {
         let targetDt: String
+        let API_KEY: String
     }
     
     static var defaultPath: String {
@@ -33,7 +34,7 @@ struct KobisOpenApiResource: APIResource {
         self.path = "/" + Self.defaultPath + "/" + path
     }
     
-    var API_KEY: String {
+    static var API_KEY: String {
         Bundle.main.infoDictionary?["MOVIE_API_KEY"] as? String ?? ""
     }
 }

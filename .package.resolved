@@ -1,5 +1,5 @@
 {
-  "originHash" : "23d5f9c9573cb03bb922642993a972bdec7175f67f7238e858212121d94f0cab",
+  "originHash" : "9d715eaf38d1bcdca1522e1f438eea42d7788dde73916b8aa2967f344ecb455a",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -15,7 +15,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hyeonghwan/hwan-kit.git",
       "state" : {
-        "revision" : "c6d72ec4ed5fafda3a914503737e520ee213b873"
+        "revision" : "0502d8d7693aeae9a1d5b91a91d6ef7ffc17c511"
       }
     },
     {
