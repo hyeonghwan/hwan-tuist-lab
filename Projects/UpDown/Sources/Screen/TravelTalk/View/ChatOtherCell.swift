@@ -7,7 +7,10 @@
 //
 
 import UIKit
+import Design
+import HwanMacros
 
+@Logging
 final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
     
     @IBOutlet weak var profileImageView: UIImageView!
@@ -19,8 +22,7 @@ final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
     @IBOutlet weak var viewAllLabel: UILabel!
     @IBOutlet weak var viewAllButton: UIButton!
     
-    @IBOutlet weak var topSpacingConstraint: NSLayoutConstraint!
-    
+    @IBOutlet weak var contentTopSpacing: NSLayoutConstraint!
     @IBOutlet weak var spacingToContent: NSLayoutConstraint!
     @IBOutlet weak var labelTopSpacing: NSLayoutConstraint!
     @IBOutlet weak var labelLeadingSpacing: NSLayoutConstraint!
@@ -31,8 +33,9 @@ final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
     @IBOutlet weak var imageSpacingToNickname: NSLayoutConstraint!
     @IBOutlet weak var dateToMessageSpacing: NSLayoutConstraint!
     @IBOutlet weak var dateToTrailingSpacing: NSLayoutConstraint!
-    
     @IBOutlet weak var bottomLabelButtonSpacing: NSLayoutConstraint!
+    
+    private var containerViewTopAnchor: NSLayoutConstraint?
     
     // MARK: labelTopSpacing 은 labelLeading Trailing Spacing과 똑같음
     private var cellWithoutMessageWidth: CGFloat {
@@ -70,6 +73,15 @@ final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
         
         viewAllLabel.isHidden = true
         viewAllButton.isHidden = true
+        contentTopSpacing.constant = 2
+        contentBottomSpacing.constant = 2
+        
+        containerViewTopAnchor = contentContainerView.topAnchor.constraint(
+            equalTo: contentView.topAnchor,
+            constant: 0
+        )
+        containerViewTopAnchor?.priority = .defaultLow
+        containerViewTopAnchor?.isActive = true
     }
     
     func configure(info model: ChatViewModel) {
@@ -81,6 +93,15 @@ final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
             .toFormat("hh:mm a")
         contentLabel.text = "\(chat.message)"
         
+        dateLabel.isHidden = model.isDateHidden
+        profileImageView.isHidden = model.isProfileHidden
+        nickNameLabel.isHidden = model.isProfileHidden
+        
+        let isHidden = model.isProfileHidden
+        containerViewTopAnchor?.priority = isHidden ? .defaultHigh : .defaultLow
+        contentTopSpacing.priority = isHidden ? .defaultLow : .required
+        contentBottomSpacing.priority = isHidden ? .defaultLow : .required
+        
         let isTruncated = model.isTruncated
         
         if let isTruncated {
@@ -90,7 +111,7 @@ final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
             bottomLabelButtonSpacing.constant = 120
             bottomLabelButtonSpacing.priority = .defaultHigh
         } else {
-            labelBottomSpacing.constant = 12
+            labelBottomSpacing.constant = labelTopSpacing.constant
             viewAllLabel.isHidden = true
             viewAllButton.isHidden = true
             bottomLabelButtonSpacing.constant = 0
@@ -98,7 +119,7 @@ final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
         }
     }
     
-    func layoutHeightFitting() -> (height: CGFloat, isTruncated: CGFloat?) {
+    func layoutHeightFitting(_ viewModel: ChatViewModel) -> (height: CGFloat, isTruncated: CGFloat?) {
         let nicknameLabelHeight = nickNameLabel.systemLayoutSizeFitting(
             CGSize(width: 100, height: 25)
         ).height
@@ -112,15 +133,34 @@ final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
             verticalFittingPriority: .fittingSizeLevel
         ).height
         
-        let totalHeight = topSpacingConstraint.constant +
-        spacingToContent.constant +
-        labelTopSpacing.constant +
-        labelBottomSpacing.constant +
-        contentBottomSpacing.constant +
-        nicknameLabelHeight +
-        contentLabelHeight
+        let totalHeight = if viewModel.isProfileHidden {
+            (containerViewTopAnchor?.constant ?? 0) +
+            labelTopSpacing.constant +
+            labelBottomSpacing.constant +
+            contentBottomSpacing.constant +
+            contentLabelHeight
+        } else {
+            contentTopSpacing.constant +
+            nicknameLabelHeight +
+            spacingToContent.constant +
+            labelTopSpacing.constant +
+            labelBottomSpacing.constant +
+            contentBottomSpacing.constant +
+            contentLabelHeight
+        }
         
-        let isTruncated = contentLabel.isTruncated(with: contentLabelHeight)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineBreakStrategy = .hangulWordPriority
+        let attributes: [NSAttributedString.Key : Any] = [
+            .paragraphStyle : paragraphStyle
+        ]
+        
+        let isTruncated = contentLabel.isTruncated(
+            width: estimatedWidth,
+            height: contentLabelHeight,
+            attributes: attributes
+        )
+        
         let bottom: CGFloat = 8
         let height = viewAllLabel.sizeThatFits(CGSize(width: 60, height: 20)).height
         let bottomViewHeight = bottom + height + 8
@@ -130,23 +170,5 @@ final class ChatOtherCell: UICollectionViewCell, CellIdentifialble, ChatCell {
         } else {
             return (totalHeight, nil)
         }
-    }
-}
-
-extension UILabel {
-    func isTruncated(with constrainedHeight: CGFloat) -> Bool {
-        guard let labelText = self.text else { return false }
-        let requiredSize = CGSize(
-            width: self.frame.width,
-            height: CGFloat.greatestFiniteMagnitude
-        )
-        let attributes: [NSAttributedString.Key: Any] = [.font: self.font!]
-        let requiredRect = labelText.boundingRect(
-            with: requiredSize,
-            options: .usesLineFragmentOrigin,
-            attributes: attributes,
-            context: nil
-        )
-        return requiredRect.height > constrainedHeight
     }
 }

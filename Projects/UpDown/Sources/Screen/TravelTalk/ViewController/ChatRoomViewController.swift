@@ -7,36 +7,11 @@
 //
 
 import UIKit
+import HwanMacros
+import HwanKit
 
-// - 채팅 버블 날짜를 11:11 오전 형태로 구성합니다.                   O
-// - 고정된 형태로 채팅버블을 구성하되, Dynamic Height 대응하기        O
-// - 채팅 목록이 긴 경우, 테이블뷰의 스크롤을 가장 하단으로 내려보기        O
-// - 오토레이아웃 수정을 통해 글자에 따라 채팅버블 유동적으로 조절하기       O
-// - 날짜가 달라졌을 때, 날짜 구분선 넣어보기                         O
-// - ‘메시지를 입력하세요’ 라인 텍스트뷰를, 세줄까지 늘려보기 (카카오톡처럼)  O
-// - 실제로 전송 버튼 클릭 시 채팅 데이터 추가하기                      O
-
-typealias ChatViewModel = ChatRoomViewController.ChatViewModel
-
+@Logging
 final class ChatRoomViewController: UIViewController, CellIdentifialble {
-    
-    struct ChatSection: Hashable {
-        let date: Date // 섹션을 구분할 날짜 (시간은 제거된 yyyy-MM-dd)
-        var items: [ChatViewModel]
-    }
-
-    struct ChatViewModel: Hashable {
-        let chat: Chat
-        var isTruncated: CGFloat?
-        
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(chat.id)
-        }
-        
-        static func == (lhs: ChatViewModel, rhs: ChatViewModel) -> Bool {
-            lhs.chat.id == rhs.chat.id
-        }
-    }
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var messageInputView: MessageInputView!
@@ -66,6 +41,7 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
         sendButtonSetting()
         gestureSetting()
         keyboardSetting()
+        binding()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -80,6 +56,15 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
                 name: UIResponder.keyboardWillShowNotification,
                 object: nil
             )
+    }
+    
+    private func binding() {
+        self.sectionModels = ChatSection.divideSectionUsingDate(self.chatRoom)
+        for model in sectionModels {
+            for item in model.items {
+                logger.log(level: .debug, "\(item)")
+            }
+        }
     }
     
     private func chatRoomSetting() {
@@ -134,7 +119,6 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: SectionDateHeaderView.id
         )
-        
         collectionView.allowsSelection = false
         collectionView.keyboardDismissMode = .interactive
         collectionView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
@@ -183,19 +167,30 @@ final class ChatRoomViewController: UIViewController, CellIdentifialble {
     }
     
     private func insertChatIteminCollectionView() {
-        let newChat = Chat(
-            user: ChatList.me,
-            date: Date().toFormat("yyyy-MM-dd HH:mm"),
-            message: messageInputView.text!
+        let newViewModel = ChatViewModel(
+            chat: Chat(
+                user: ChatList.me,
+                date: Date().toFormat("yyyy-MM-dd HH:mm"),
+                message: messageInputView.text!
+            ),
+            isTruncated: nil
         )
-        let newViewModel = ChatViewModel(chat: newChat, isTruncated: nil)
+        
         let today = Calendar.current.startOfDay(for: Date.now)
         if let lastSection = sectionModels.last, Calendar.current.isDate(lastSection.date, inSameDayAs: today) {
             let sectionIndex = sectionModels.count - 1
+            let lastIndex = sectionModels[sectionIndex].items.count - 1
+            if var recentViewModel = sectionModels[sectionIndex].items.last {
+                let isSameUserAndMinute = recentViewModel.chat.isEqualDateAndUser(newViewModel.chat)
+                recentViewModel.isDateHidden = isSameUserAndMinute
+                sectionModels[sectionIndex].items[lastIndex] = recentViewModel
+            }
             sectionModels[sectionIndex].items.append(newViewModel)
             let itemIndex = sectionModels[sectionIndex].items.count - 1
+            let willReload = IndexPath(item: lastIndex, section: sectionIndex)
             let indexPath = IndexPath(item: itemIndex, section: sectionIndex)
             collectionView.insertItems(at: [indexPath])
+            collectionView.reloadItems(at: [indexPath, willReload])
         } else {
             let newSection = ChatSection(date: today, items: [newViewModel])
             sectionModels.append(newSection)
@@ -280,7 +275,7 @@ extension ChatRoomViewController: UITextViewDelegate {
     }
     
     private func messageSendButtonUpdateIfNeeded() {
-        let inputText = messageInputView.text.removeAllWhitespace()
+        let inputText = messageInputView.text.removeAllWhiteSpace
         let focus = messageInputView.focusState
         if focus == .placeHolder {
             sendButton.isEnabled = false
@@ -337,7 +332,7 @@ extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
         if model.chat.user == ChatList.me {
             chatMeCell.configure(info: model)
             chatMeCell.layoutIfNeeded()
-            let (height, isTruncated) = chatMeCell.layoutHeightFitting()
+            let (height, isTruncated) = chatMeCell.layoutHeightFitting(model)
             
             let size = CGSize(
                 width: windowWidth,
@@ -348,7 +343,7 @@ extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
         } else {
             chatOtherCell.configure(info: model)
             chatOtherCell.layoutIfNeeded()
-            let (height, isTruncated) = chatOtherCell.layoutHeightFitting()
+            let (height, isTruncated) = chatOtherCell.layoutHeightFitting(model)
             let size = CGSize(
                 width: windowWidth,
                 height: height
@@ -359,11 +354,30 @@ extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
+        UIEdgeInsets(top: 12, left: 0, bottom: 20, right: 0)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: windowWidth, height: 30)
+    fileprivate var headerFont: UIFont {
+        .systemFont(ofSize: 14, weight: .light)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        referenceSizeForHeaderInSection section: Int
+    ) -> CGSize
+    {
+        let width = windowWidth
+        let height = self.sectionModels[section].date
+            .toFormat("yyyy년 MM월 dd일")
+            .height(
+                withConstrainedWidth: width,
+                font: headerFont
+            )
+        return CGSize(
+            width: width,
+            height: height + 16
+        )
     }
 }
 
@@ -380,10 +394,12 @@ extension ChatRoomViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionDateHeaderView.id, for: indexPath) as? SectionDateHeaderView else {
-                fatalError("헤더 뷰를 가져올 수 없습니다.")
+                logger.log(level: .fault, "\(Self.self)- \(indexPath.section) Section - SectionDateHeader casting Failed")
+                fatalError()
             }
             let sectionModel = sectionModels[indexPath.section]
             header.configure(with: sectionModel.date)
+            header.setFont(headerFont)
             return header
         }
         return UICollectionReusableView()
@@ -391,6 +407,7 @@ extension ChatRoomViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let model = sectionModels[indexPath.section].items[indexPath.row]
+        
         if model.chat.user == ChatList.me {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ChatMeCell.id, for: indexPath) as? ChatMeCell else {
                 return UICollectionViewCell()
@@ -406,4 +423,3 @@ extension ChatRoomViewController: UICollectionViewDataSource {
         }
     }
 }
-

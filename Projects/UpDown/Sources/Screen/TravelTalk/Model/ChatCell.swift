@@ -8,6 +8,8 @@
 
 import UIKit
 
-protocol ChatCell {
+protocol ChatCell: AnyObject {
     var contentContainerView: UIView! { get }
+    func configure(info model: ChatViewModel)
+    func layoutHeightFitting(_ viewModel: ChatViewModel) -> (height: CGFloat, isTruncated: CGFloat?)
 }

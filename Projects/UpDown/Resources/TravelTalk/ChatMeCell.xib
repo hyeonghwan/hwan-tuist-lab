@@ -18,13 +18,14 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k0O-An-X02">
-                        <rect key="frame" x="99.333333333333343" y="4" width="288.66666666666663" height="92"/>
+                        <rect key="frame" x="83.333333333333343" y="4" width="304.66666666666663" height="92"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="253" verticalHuggingPriority="253" horizontalCompressionResistancePriority="753" verticalCompressionResistancePriority="753" text="잔디는 생물인거 아시죵? :) 매일 물을 주셔야 살 수 있습니다.!" lineBreakMode="tailTruncation" numberOfLines="25" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P5P-DP-GKg">
-                                <rect key="frame" x="12" y="12" width="264.66666666666669" height="68"/>
+                                <rect key="frame" x="12" y="8" width="280.66666666666669" height="76"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
+                                <lineBreakStrategy key="lineBreakStrategy" hangulWordPriority="YES"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="253" text="전체보기" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F7Y-98-XwS">
                                 <rect key="frame" x="12" y="64.333333333333329" width="45" height="15.666666666666671"/>
@@ -33,7 +34,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IsV-NE-q96">
-                                <rect key="frame" x="256.66666666666669" y="62.333333333333329" width="20" height="20"/>
+                                <rect key="frame" x="272.66666666666669" y="62.333333333333329" width="20" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="47N-zv-gG3"/>
                                     <constraint firstAttribute="width" constant="20" id="sRD-7J-9Di"/>
@@ -47,10 +48,10 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                         <constraints>
-                            <constraint firstItem="P5P-DP-GKg" firstAttribute="top" secondItem="k0O-An-X02" secondAttribute="top" constant="12" id="6Px-v6-VVZ"/>
+                            <constraint firstItem="P5P-DP-GKg" firstAttribute="top" secondItem="k0O-An-X02" secondAttribute="top" constant="8" id="6Px-v6-VVZ"/>
                             <constraint firstAttribute="bottom" secondItem="F7Y-98-XwS" secondAttribute="bottom" constant="12" id="Bej-bj-wph"/>
                             <constraint firstAttribute="trailing" secondItem="IsV-NE-q96" secondAttribute="trailing" constant="12" id="Bow-9C-FOe"/>
-                            <constraint firstAttribute="bottom" secondItem="P5P-DP-GKg" secondAttribute="bottom" constant="12" id="Lkn-Ji-Fne"/>
+                            <constraint firstAttribute="bottom" secondItem="P5P-DP-GKg" secondAttribute="bottom" constant="8" id="Lkn-Ji-Fne"/>
                             <constraint firstAttribute="height" priority="249" constant="100" id="OqR-Wx-KBC"/>
                             <constraint firstItem="IsV-NE-q96" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="F7Y-98-XwS" secondAttribute="trailing" priority="249" constant="80" id="RUF-JB-4ZJ"/>
                             <constraint firstItem="P5P-DP-GKg" firstAttribute="leading" secondItem="k0O-An-X02" secondAttribute="leading" constant="12" id="g0l-AU-eiX"/>
@@ -61,7 +62,7 @@
                         </constraints>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="254" verticalHuggingPriority="254" horizontalCompressionResistancePriority="754" verticalCompressionResistancePriority="754" text="06:40 오후" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cC7-gT-ZgX">
-                        <rect key="frame" x="42" y="81.666666666666671" width="53.333333333333343" height="14.333333333333329"/>
+                        <rect key="frame" x="26.000000000000004" y="81.666666666666671" width="53.333333333333343" height="14.333333333333329"/>
                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="11"/>
                         <color key="textColor" systemColor="secondaryLabelColor"/>
                         <nil key="highlightedColor"/>
@@ -87,8 +88,10 @@
                 <outlet property="dateLabel" destination="cC7-gT-ZgX" id="jau-hw-LmR"/>
                 <outlet property="dateLabelContainerSpacing" destination="k34-6c-eZX" id="2Q1-ss-KLM"/>
                 <outlet property="labelBottomSpacing" destination="Lkn-Ji-Fne" id="0fh-JJ-JyN"/>
-                <outlet property="messageContainerSpacing" destination="5gb-JK-yGE" id="hcT-nM-OCw"/>
+                <outlet property="messageBottomContainerSpacing" destination="gyU-L0-ldV" id="ZBj-12-t2X"/>
                 <outlet property="messageContentSpacing" destination="6Px-v6-VVZ" id="jcz-tf-Pm2"/>
+                <outlet property="messageLeadingContentSpacing" destination="g0l-AU-eiX" id="2oy-RY-sZ3"/>
+                <outlet property="messageTopContainerSpacing" destination="5gb-JK-yGE" id="khU-8E-TNP"/>
                 <outlet property="viewAllButton" destination="IsV-NE-q96" id="1mh-fB-fBJ"/>
                 <outlet property="viewAllLabel" destination="F7Y-98-XwS" id="Vy8-ds-Q7D"/>
             </connections>
