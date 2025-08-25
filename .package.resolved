@@ -1,40 +1,30 @@
 {
-  "originHash" : "5bf778c9a35e2d99268498ddd21dd6995867c24c8697b980336681bee8d0a48f",
+  "originHash" : "23d5f9c9573cb03bb922642993a972bdec7175f67f7238e858212121d94f0cab",
   "pins" : [
     {
-      "identity" : "hwan-kit",
+      "identity" : "alamofire",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hyeonghwan/hwan-kit",
+      "location" : "https://github.com/Alamofire/Alamofire.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "6db63e82a790ee81fcdaf605a91d2f19deea8694"
+        "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
+        "version" : "5.10.2"
       }
     },
     {
-      "identity" : "hwan_macro",
+      "identity" : "hwan-kit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hyeonghwan/hwan_macro",
+      "location" : "https://github.com/hyeonghwan/hwan-kit.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "c021ef2cc7d146890fc20a1261b10b6e2cdba739"
+        "revision" : "c6d72ec4ed5fafda3a914503737e520ee213b873"
       }
     },
     {
       "identity" : "kingfisher",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/onevcat/Kingfisher",
+      "location" : "https://github.com/onevcat/Kingfisher.git",
       "state" : {
         "revision" : "2015fda791daa72c8058619545a593bf8c1dd59f",
         "version" : "8.5.0"
-      }
-    },
-    {
-      "identity" : "swift-syntax",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-syntax.git",
-      "state" : {
-        "revision" : "0687f71944021d616d34d922343dcef086855920",
-        "version" : "600.0.1"
       }
     }
   ],

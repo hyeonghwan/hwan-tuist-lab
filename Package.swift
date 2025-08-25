@@ -5,7 +5,12 @@ import PackageDescription
     import ProjectDescription
     let packageSettings = PackageSettings(
         productTypes: [
-            "Kingfisher": .staticFramework
+            "Kingfisher": .staticFramework,
+            "HwanKit": .staticFramework,
+            "Alamofire": .staticFramework,
+            "CombineInterception": .staticFramework,
+            "CombineInterceptionObjC": .framework,
+            "HwanMacros": .macro
         ],
         baseSettings: .settings(
             configurations: [
@@ -14,16 +19,17 @@ import PackageDescription
             ]
         )
     )
-
 #endif
 
 let package = Package(
     name: "hwan-tuist-lab",
     platforms: [.iOS(.v12)],
     dependencies: [
-        .package(url: "https://github.com/onevcat/Kingfisher", from: "8.4.0"),
-        .package(url: "https://github.com/hyeonghwan/hwan-kit", branch: "main"),
-        .package(url: "https://github.com/hyeonghwan/hwan_macro", branch: "main")
+        .package(url: "https://github.com/onevcat/Kingfisher.git", from: "8.4.0"),
+        .package(url: "https://github.com/hyeonghwan/hwan-kit.git", branch: "main"),
+        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.10.0"),
+        .package(url: "https://github.com/chorim/CombineInterception.git", from: "0.1.0"),
+        .package(path: "Module/hwan_macro")
     ],
     swiftLanguageVersions: [.v5]
 )

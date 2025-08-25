@@ -67,6 +67,7 @@ graph.dot
 Derived/
 Config/*.xcconfig
 Projects/**/Config/*.xcconfig
+Module/
 
 ### Tuist managed dependencies ###
 Package.resolved

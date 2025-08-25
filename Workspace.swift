@@ -4,7 +4,6 @@ import ProjectDescriptionHelpers
 let workspace = Workspace(
     name: "hwan-tuist-lab",
     projects: [
-        P.travelApp,
-        P.upDownApp
+        P.networkSample
     ]
 )
