@@ -18,7 +18,7 @@ final class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addLayout()
+        configureLayout()
         startButton.addTarget(self, action: #selector(moveToVC(_:)), for: .touchUpInside)
         NotificationCenter.default
             .addObserver(
@@ -36,7 +36,8 @@ final class ViewController: UIViewController {
     
     @objc private func moveToVC(_ sender: UIButton) {
         let vc = storyboard?.instantiateViewController(withIdentifier: UpDownGameViewController.id) as! UpDownGameViewController
-        if let num = Int(textField.text!) {
+        let text = textField.text!.replacingOccurrences(of: ",", with: "")
+        if let num = Int(text) {
             if num < 1 {
                 showAlert(title: "Limit", message: "0보다 큰 값이여야 합니다.")
                 return
@@ -85,7 +86,7 @@ final class ViewController: UIViewController {
         self.view.endEditing(true)
     }
     
-    private func addLayout() {
+    private func configureLayout() {
          let awayFromTopConstraints = [
             view.keyboardLayoutGuide.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor)
          ]

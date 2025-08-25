@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ts0-JV-OR4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="YmJ-79-Ums">
     <device id="retina6_3" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
@@ -9,6 +9,53 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Tab Bar Controller-->
+        <scene sceneID="GGA-l8-58t">
+            <objects>
+                <tabBarController id="YmJ-79-Ums" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="4wk-KF-UjJ">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="selectedImageTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="heg-o1-FWe" kind="relationship" relationship="viewControllers" id="JzX-HB-cEd"/>
+                        <segue destination="oLW-yd-VRC" kind="relationship" relationship="viewControllers" id="HWo-dk-620"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l2r-Hb-b18" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1782" y="3"/>
+        </scene>
+        <!--TravelTalk-->
+        <scene sceneID="Shk-1j-QjD">
+            <objects>
+                <viewControllerPlaceholder storyboardName="TravelTalk" id="heg-o1-FWe" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Talk" image="bubble" catalog="system" id="pjr-Fv-gEL"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="o38-2u-EVA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1782" y="473"/>
+        </scene>
+        <!--UPDOWN-->
+        <scene sceneID="8Cz-It-HgE">
+            <objects>
+                <navigationController id="oLW-yd-VRC" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="UPDOWN" image="gamecontroller" catalog="system" selectedImage="gamecontroller.fill" id="AMg-Sz-5vB"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="RX5-bI-XTL">
+                        <rect key="frame" x="0.0" y="62" width="402" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="ccf-Ex-9Sl"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hJR-yp-hqU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-885" y="3"/>
+        </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -18,7 +65,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kjz-3r-AFq">
-                                <rect key="frame" x="0.0" y="62" width="402" height="778"/>
+                                <rect key="frame" x="0.0" y="106" width="402" height="685"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gPh-wo-jMf">
                                         <rect key="frame" x="0.0" y="0.0" width="402" height="725"/>
@@ -75,7 +122,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GAME" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rYZ-qS-Z0Z">
-                                                <rect key="frame" x="177.33333333333334" y="46.333333333333329" width="47.333333333333343" height="21"/>
+                                                <rect key="frame" x="177.33333333333334" y="46.333333333333343" width="47.333333333333343" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -141,25 +188,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="132.83582089552237" y="2.7459954233409607"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="mti-x1-WNb">
-            <objects>
-                <navigationController navigationBarHidden="YES" id="Ts0-JV-OR4" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Xdl-x6-pVe">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Sl4-O3-N4d">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </toolbar>
-                    <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="Tdq-Cf-VCn"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2lX-8j-JfG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-587" y="14"/>
+            <point key="canvasLocation" x="-49" y="3"/>
         </scene>
         <!--Up Down Game View Controller-->
         <scene sceneID="3zS-so-Wff">
@@ -260,11 +289,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yi5-4k-sp4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="848" y="3"/>
+            <point key="canvasLocation" x="757" y="3"/>
         </scene>
     </scenes>
     <resources>
+        <image name="bubble" catalog="system" width="128" height="110"/>
         <image name="emotion1" width="327" height="360"/>
+        <image name="gamecontroller" catalog="system" width="128" height="79"/>
+        <image name="gamecontroller.fill" catalog="system" width="128" height="79"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

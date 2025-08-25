@@ -28,15 +28,15 @@ final class RatingView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addLayout()
+        configureLayout()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        addLayout()
+        configureLayout()
     }
 
-    private func addLayout() {
+    private func configureLayout() {
         for _ in 0..<5 {
             let star = StarView()
             starViews.append(star)
@@ -70,6 +70,6 @@ final class RatingView: UIView {
     
     override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
-        addLayout()
+        configureLayout()
     }
 }

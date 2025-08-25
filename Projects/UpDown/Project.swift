@@ -17,8 +17,10 @@ let project = ProjectFactory.createApp(
         defaultSettings: .init()
     ),
     dependencies: [
+        .package(product: "Kingfisher", type: .runtime, condition: nil)
     ],
     packages: [
+        R.kingfisher
     ],
     infoPlist: .storyBoardDefault
 )

@@ -16,7 +16,7 @@ final class AddPurcasedCell: UITableViewCell, CellIdentifialble {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        addLayout()
+        configureLayout()
         addButton.addTarget(self, action: #selector(addItem(_:)), for: .touchUpInside)
     }
     
@@ -25,7 +25,7 @@ final class AddPurcasedCell: UITableViewCell, CellIdentifialble {
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
     }
     
-    private func addLayout() {
+    private func configureLayout() {
         self.contentView.backgroundColor = .systemGray6
         self.contentView.layer.cornerRadius = 8
     }
